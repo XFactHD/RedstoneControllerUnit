@@ -8,12 +8,10 @@ import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 
-@SuppressWarnings("UtilityClassWithPublicConstructor")
 @Mod(value = RedstoneControllerUnit.MOD_ID, dist = Dist.CLIENT)
 public final class RCUClient
 {
@@ -25,26 +23,22 @@ public final class RCUClient
         modBus.addListener(RCUClient::onRegisterSpriteSourceTypes);
     }
 
-    @SubscribeEvent
-    static void onClientSetup(final FMLClientSetupEvent event)
+    private static void onClientSetup(final FMLClientSetupEvent event)
     {
 
     }
 
-    @SubscribeEvent
-    static void onRegisterMenuScreens(final RegisterMenuScreensEvent event)
+    private static void onRegisterMenuScreens(final RegisterMenuScreensEvent event)
     {
         event.register(RCUContent.MENU_TYPE_CONTROLLER.get(), ControllerScreen::new);
     }
 
-    @SubscribeEvent
-    static void onRegisterGeometryLoaders(final ModelEvent.RegisterGeometryLoaders event)
+    private static void onRegisterGeometryLoaders(final ModelEvent.RegisterGeometryLoaders event)
     {
         event.register(Utils.rl("controller"), new ControllerModelLoader());
     }
 
-    @SubscribeEvent
-    static void onRegisterSpriteSourceTypes(final RegisterSpriteSourceTypesEvent event)
+    private static void onRegisterSpriteSourceTypes(final RegisterSpriteSourceTypesEvent event)
     {
         AreaMaskSource.register(event::register);
     }
