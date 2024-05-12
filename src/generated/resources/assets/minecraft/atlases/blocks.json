@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "type": "rsctrlunit:mask",
+      "height": 12,
+      "sprite": "rsctrlunit:block/pcb",
+      "src": "minecraft:block/moss_block",
+      "width": 12,
+      "x": 2,
+      "y": 2
+    }
+  ]
+}

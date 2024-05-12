@@ -1,0 +1,2110 @@
+{
+  "variants": {
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=down,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller"
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 270
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=north,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=south,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=up,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 180
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=bundled,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=none,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=bundled,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=none,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=bundled,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=none,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=bundled": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=none": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west,rs_con_0=single,rs_con_1=single,rs_con_2=single,rs_con_3=single": {
+      "model": "rsctrlunit:block/controller",
+      "x": 90,
+      "y": 90
+    }
+  }
+}
