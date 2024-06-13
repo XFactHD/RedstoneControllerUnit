@@ -13,9 +13,9 @@ import org.joml.Matrix4f;
 public final class ClientUtils
 {
     private static final WidgetSprites BTN_SPRITES = new WidgetSprites(
-            new ResourceLocation("widget/button"),
-            new ResourceLocation("widget/button_disabled"),
-            new ResourceLocation("widget/button_highlighted")
+            ResourceLocation.withDefaultNamespace("widget/button"),
+            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
+            ResourceLocation.withDefaultNamespace("widget/button_highlighted")
     );
 
     public static void drawStringInBatch(GuiGraphics graphics, Font font, String text, int x, int y, int color)

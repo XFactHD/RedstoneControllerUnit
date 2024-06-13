@@ -71,7 +71,7 @@ public final class RedstoneConfig
         }
     });
     public static final ResourceLocation BACKGROUND = Utils.rl("port_config_background");
-    private static final ResourceLocation TEXT_FIELD = new ResourceLocation("widget/text_field");
+    private static final ResourceLocation TEXT_FIELD = ResourceLocation.withDefaultNamespace("widget/text_field");
 
     private final ControllerScreen screen;
     private final int port;

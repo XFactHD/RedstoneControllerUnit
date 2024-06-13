@@ -28,12 +28,12 @@ import java.util.List;
 
 public final class ControllerScreen extends AbstractContainerScreen<ControllerMenu>
 {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/demo_background.png");
-    private static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/generic_54.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/demo_background.png");
+    private static final ResourceLocation INVENTORY = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final ResourceLocation REGISTERS = Utils.rl("textures/gui/controller_registers.png");
     private static final ResourceLocation CODE_BACKGROUND = Utils.rl("code_background");
     private static final ResourceLocation CODE_SCROLLER = Utils.rl("code_scroller_vert");
-    private static final ResourceLocation SLOT_BACKGROUND = new ResourceLocation("container/slot");
+    private static final ResourceLocation SLOT_BACKGROUND = ResourceLocation.withDefaultNamespace("container/slot");
     private static final int IMAGE_WIDTH = 360;
     private static final int IMAGE_HEIGHT = 194;
     private static final int TAB_HEIGHT = 22;

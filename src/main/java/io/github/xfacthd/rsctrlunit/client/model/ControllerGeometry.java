@@ -31,8 +31,7 @@ public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeom
             ModelBaker baker,
             Function<Material, TextureAtlasSprite> spriteGetter,
             ModelState modelState,
-            ItemOverrides overrides,
-            ResourceLocation modelLocation
+            ItemOverrides overrides
     )
     {
         BakedModel[] singleModels = new BakedModel[4];
@@ -44,15 +43,11 @@ public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeom
             ModelState rotState = UnbakedGeometryHelper.composeRootTransformIntoModelState(
                     modelState, new Transformation(null, Axis.YN.rotationDegrees(yRot), null, null).applyOrigin(new Vector3f(.5F, .5F, .5F))
             );
-            singleModels[i] = singleModel.bake(baker, singleModel, spriteGetter, rotState, modelLocation, true);
-            bundledModels[i] = bundledModel.bake(baker, bundledModel, spriteGetter, rotState, modelLocation, true);
+            singleModels[i] = singleModel.bake(baker, singleModel, spriteGetter, rotState, true);
+            bundledModels[i] = bundledModel.bake(baker, bundledModel, spriteGetter, rotState, true);
         }
 
-        return new ControllerModel(
-                baseModel.bake(baker, baseModel, spriteGetter, modelState, modelLocation, true),
-                singleModels,
-                bundledModels
-        );
+        return new ControllerModel(baseModel.bake(baker, baseModel, spriteGetter, modelState, true), singleModels, bundledModels);
     }
 
     @Override

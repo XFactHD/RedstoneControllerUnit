@@ -23,7 +23,7 @@ public final class RCUSpriteSourceProvider extends SpriteSourceProvider
     {
         atlas(BLOCKS_ATLAS)
                 .addSource(new AreaMaskSource(
-                        new ResourceLocation("block/moss_block"),
+                        ResourceLocation.withDefaultNamespace("block/moss_block"),
                         Utils.rl("block/pcb"),
                         2, 2, 12, 12
                 ));

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public final class Utils
 {
-    private static final ResourceLocation RL_TEMPLATE = new ResourceLocation(RedstoneControllerUnit.MOD_ID, "");
+    private static final ResourceLocation RL_TEMPLATE = ResourceLocation.fromNamespaceAndPath(RedstoneControllerUnit.MOD_ID, "");
     private static final Long2ObjectMap<Direction> DIRECTION_BY_NORMAL = Arrays.stream(Direction.values())
             .collect(Collectors.toMap(
                     side -> new BlockPos(side.getNormal()).asLong(),
