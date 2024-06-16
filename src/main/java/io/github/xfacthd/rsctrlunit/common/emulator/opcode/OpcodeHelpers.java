@@ -36,7 +36,7 @@ public final class OpcodeHelpers
         }
         else
         {
-            return address & 0xF0;
+            return address & 0xF8;
         }
     }
 
