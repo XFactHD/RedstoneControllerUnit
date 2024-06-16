@@ -91,7 +91,7 @@ public class ControllerMenu extends AbstractContainerMenu
         this.portConfigs = portConfigs;
         this.code = code;
         this.cardContainer = new SimpleContainer(1);
-        this.cardSlot = addSlot(new Slot(cardContainer, 0, 14, 66));
+        this.cardSlot = addSlot(new HideableSlot(cardContainer, 0, 14, 66));
 
         int x = 14;
         int y = 111;
