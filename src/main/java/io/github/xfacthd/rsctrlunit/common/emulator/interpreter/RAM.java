@@ -52,6 +52,11 @@ public final class RAM
 
     public void writeByte(int address, byte value)
     {
+        writeByte(address, value, true);
+    }
+
+    private void writeByte(int address, byte value, boolean updateParityFromPSW)
+    {
         switch (address)
         {
             case Constants.ADDRESS_IO_PORT0 -> ioPorts.writeOutputPort(0, value);
@@ -61,7 +66,7 @@ public final class RAM
             default ->
             {
                 ram[address] = value;
-                if (address == Constants.ADDRESS_ACCUMULATOR || address == Constants.ADDRESS_STATUS_WORD)
+                if (address == Constants.ADDRESS_ACCUMULATOR || (address == Constants.ADDRESS_STATUS_WORD && updateParityFromPSW))
                 {
                     updateParity(value);
                 }
@@ -86,18 +91,7 @@ public final class RAM
             case CLEAR ->       (byte) ((data & ~(1 << index)) & 0xFF);
             case COMPLEMENT ->  (byte) ((data ^  (1 << index)) & 0xFF);
         };
-        switch (address)
-        {
-            case Constants.ADDRESS_IO_PORT0 -> ioPorts.writeOutputPort(0, data);
-            case Constants.ADDRESS_IO_PORT1 -> ioPorts.writeOutputPort(1, data);
-            case Constants.ADDRESS_IO_PORT2 -> ioPorts.writeOutputPort(2, data);
-            case Constants.ADDRESS_IO_PORT3 -> ioPorts.writeOutputPort(3, data);
-            default -> ram[address] = data; // Write directly to avoid double-triggering parity updates
-        }
-        if (address == Constants.ADDRESS_ACCUMULATOR)
-        {
-            updateParity(data);
-        }
+        writeByte(address, data, false);
     }
 
     private void updateParity(byte acc)
