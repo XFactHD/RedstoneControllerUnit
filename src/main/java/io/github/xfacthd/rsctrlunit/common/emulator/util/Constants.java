@@ -22,6 +22,11 @@ public final class Constants
             new byte[] { (byte) 0x85, (byte) 0xA0, (byte) 0x80, 0x01, 0x00 },
             new Int2ObjectOpenHashMap<>(Map.of(0, "start"))
     );
+    public static final Code TEST_CODE_THREE = new Code(
+            Component.literal("RedstoneTimerBlinker"),
+            new byte[] { 0x75, (byte) 0x8C, (byte) 0xEB, 0x75, (byte) 0x8A, (byte) 0xEB, 0x43, (byte) 0x89, 0x02, 0x43, (byte) 0x88, 0x10, 0x63, (byte) 0x80, (byte) 0xFF, 0x30, (byte) 0x8D, (byte) 0xFD, (byte) 0xC2, (byte) 0x8D, 0x01, 0x0C },
+            new Int2ObjectOpenHashMap<>(Map.of(0x0C, "loop", 0x0F, "wait"))
+    );
 
     public static final int[] REGISTER_BASE_ADDRESS = new int[] { 0x00, 0x08, 0x10, 0x18 };
 
@@ -54,6 +59,7 @@ public final class Constants
     public static final int BIT_ADDRESS_OVERFLOW = ADDRESS_STATUS_WORD + 2;
     public static final int BIT_ADDRESS_AUX_CARRY = ADDRESS_STATUS_WORD + 6;
     public static final int BIT_ADDRESS_CARRY = ADDRESS_STATUS_WORD + 7;
+    public static final int BIT_ADDRESS_TIMER0_OVERFLOW = ADDRESS_TCON + 5;
 
     private Constants() { }
 }

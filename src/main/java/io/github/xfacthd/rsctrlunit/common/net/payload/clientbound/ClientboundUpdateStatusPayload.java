@@ -2,7 +2,7 @@ package io.github.xfacthd.rsctrlunit.common.net.payload.clientbound;
 
 import io.github.xfacthd.rsctrlunit.client.util.ClientAccess;
 import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.IOPorts;
-import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.StatusView;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Interpreter;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,9 +29,12 @@ public record ClientboundUpdateStatusPayload(int windowId, byte[] ram, byte[] ou
             ClientboundUpdateStatusPayload::new
     );
 
-    public ClientboundUpdateStatusPayload(int windowId, StatusView view, IOPorts ioPorts)
+    public static ClientboundUpdateStatusPayload of(int windowId, Interpreter interpreter)
     {
-        this(windowId, view.getRamView(), ioPorts.getPortStatesOut(), ioPorts.getPortStatesIn(), view.getProgramCounter());
+        byte[] ram = interpreter.getRam();
+        IOPorts ports = interpreter.getIoPorts();
+        int programCounter = interpreter.getProgramCounter();
+        return new ClientboundUpdateStatusPayload(windowId, ram, ports.getPortStatesOut(), ports.getPortStatesIn(), programCounter);
     }
 
     public void handle(@SuppressWarnings("unused") IPayloadContext ctx)

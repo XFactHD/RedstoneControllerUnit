@@ -33,12 +33,6 @@ public final class IOPorts
         portStatesOut[port] = value;
     }
 
-    void load(CompoundTag tag)
-    {
-        Utils.copyByteArray(tag.getByteArray("out"), portStatesOut);
-        Utils.copyByteArray(tag.getByteArray("in"), portStatesIn);
-    }
-
     public byte[] getPortStatesOut()
     {
         return portStatesOut;
@@ -47,6 +41,12 @@ public final class IOPorts
     public byte[] getPortStatesIn()
     {
         return portStatesIn;
+    }
+
+    void load(CompoundTag tag)
+    {
+        Utils.copyByteArray(tag.getByteArray("out"), portStatesOut);
+        Utils.copyByteArray(tag.getByteArray("in"), portStatesIn);
     }
 
     CompoundTag save()

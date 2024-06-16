@@ -34,6 +34,10 @@ public final class MemoryCardItem extends Item
             {
                 stack.set(RCUContent.COMPONENT_TYPE_CODE, Constants.TEST_CODE_TWO);
             }
+            else if (code.equals(Constants.TEST_CODE_TWO))
+            {
+                stack.set(RCUContent.COMPONENT_TYPE_CODE, Constants.TEST_CODE_THREE);
+            }
             else
             {
                 stack.set(RCUContent.COMPONENT_TYPE_CODE, Code.EMPTY);

@@ -15,12 +15,14 @@ public final class Interpreter
     private final byte[] rom = new byte[Constants.ROM_SIZE];
     private final IOPorts ioPorts = new IOPorts();
     private final RAM ram = new RAM(ioPorts);
-    private final StatusView statusView = new StatusView(this, ram);
+    private final Timers timers = new Timers(ram, ioPorts);
     private Code code = Code.EMPTY;
     private int programCounter = 0;
 
-    public void runSingleOp()
+    public void run()
     {
+        timers.run();
+
         byte romByte = readRomAndIncrementPC();
         Opcode opcode = Opcode.fromRomByte(romByte);
         switch (opcode)
@@ -551,7 +553,7 @@ public final class Interpreter
         return data;
     }
 
-    int getProgramCounter()
+    public int getProgramCounter()
     {
         return programCounter;
     }
@@ -578,14 +580,19 @@ public final class Interpreter
         return code;
     }
 
+    public byte[] getRam()
+    {
+        return ram.getBackingArray();
+    }
+
     public IOPorts getIoPorts()
     {
         return ioPorts;
     }
 
-    public StatusView getStatusView()
+    public Timers getTimers()
     {
-        return statusView;
+        return timers;
     }
 
     public void load(CompoundTag tag)

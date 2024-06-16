@@ -130,7 +130,7 @@ public class ControllerMenu extends AbstractContainerMenu
             Utils.copyArray(portConfigs, lastPortConfigs);
             PacketDistributor.sendToPlayer(player, new ClientboundUpdatePortConfigsPayload(containerId, facing, portConfigs));
         }
-        PacketDistributor.sendToPlayer(player, new ClientboundUpdateStatusPayload(containerId, interpreter.getStatusView(), interpreter.getIoPorts()));
+        PacketDistributor.sendToPlayer(player, ClientboundUpdateStatusPayload.of(containerId, interpreter));
     }
 
     public Direction getFacing()

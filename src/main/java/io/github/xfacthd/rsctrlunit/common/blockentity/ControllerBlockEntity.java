@@ -1,6 +1,7 @@
 package io.github.xfacthd.rsctrlunit.common.blockentity;
 
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Timers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Interpreter;
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
@@ -20,6 +21,7 @@ public final class ControllerBlockEntity extends BlockEntity
     public static final Component TITLE = Component.translatable("menu.rsctrlunit.controller");
 
     private final Interpreter interpreter = new Interpreter();
+    private final Timers timers = interpreter.getTimers();
     private final RedstoneInterface redstone = new RedstoneInterface(this);
 
     public ControllerBlockEntity(BlockPos pos, BlockState state)
@@ -30,7 +32,8 @@ public final class ControllerBlockEntity extends BlockEntity
 
     public void tick()
     {
-        interpreter.runSingleOp();
+        timers.tickClock();
+        interpreter.run();
         redstone.tick();
         setChangedWithoutSignalUpdate();
     }
