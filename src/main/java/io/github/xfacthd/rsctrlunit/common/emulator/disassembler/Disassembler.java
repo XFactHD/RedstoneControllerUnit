@@ -118,6 +118,9 @@ public final class Disassembler
                 case XCH_IR0, XCH_IR1, XCHD_IR0, XCHD_IR1 -> line.append("A,").append(printRegisterIndirect(opcode));
                 case XCH_DR0, XCH_DR1, XCH_DR2, XCH_DR3, XCH_DR4, XCH_DR5, XCH_DR6, XCH_DR7 ->
                         line.append("A,").append(printRegisterDirect(opcode));
+                case MOV_MEM_IMM -> line.append(printAddress(rom[counter.getAndIncrement()]))
+                        .append(",")
+                        .append(printImmediate(rom[counter.getAndIncrement()]));
                 case MOV_IR0_IMM, MOV_IR1_IMM -> line.append(printRegisterIndirect(opcode))
                         .append(",")
                         .append(printImmediate(rom[counter.getAndIncrement()]));
@@ -153,7 +156,7 @@ public final class Disassembler
                 case MOVX_ACC_IR0, MOVX_ACC_IR1 -> line.append("A,").append(printRegisterIndirect(opcode));
                 case MOVX_IDPTR_ACC -> line.append("@DPTR,A");
                 case MOVX_IR0_ACC, MOVX_IR1_ACC -> line.append(printRegisterIndirect(opcode)).append(",A");
-                default -> throw new IllegalStateException("Unrecognized opcode: " + opcode);
+                default -> throw new IllegalStateException("Unrecognized opcode: " + opcode + " at offset: " + opIndex);
             }
             disassembly.addCodeLine(opIndex, line.toString().stripTrailing());
         }
