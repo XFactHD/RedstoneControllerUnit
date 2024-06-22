@@ -9,17 +9,36 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.*;
 
 public final class Interpreter
 {
+    private final ReentrantLock lock = new ReentrantLock();
     private final byte[] rom = new byte[Constants.ROM_SIZE];
     private final IOPorts ioPorts = new IOPorts();
     private final RAM ram = new RAM(ioPorts);
     private final Timers timers = new Timers(ram, ioPorts);
     private Code code = Code.EMPTY;
     private int programCounter = 0;
+    private volatile boolean running = false;
+    private volatile boolean paused = false;
+    private volatile boolean stepRequested = false;
 
     public void run()
+    {
+        lock.lock();
+        try
+        {
+            runInternal();
+        }
+        finally
+        {
+            lock.unlock();
+        }
+    }
+
+    private void runInternal()
     {
         timers.run();
 
@@ -595,6 +614,74 @@ public final class Interpreter
         return timers;
     }
 
+    boolean isRunning()
+    {
+        return running;
+    }
+
+    public boolean isPaused()
+    {
+        return paused;
+    }
+
+    boolean isStepRequested()
+    {
+        boolean step = stepRequested;
+        stepRequested = false;
+        return step;
+    }
+
+    public void pause()
+    {
+        paused = true;
+    }
+
+    public void resume()
+    {
+        paused = false;
+    }
+
+    public void step()
+    {
+        stepRequested = true;
+    }
+
+    public void startup()
+    {
+        running = true;
+    }
+
+    public void shutdown()
+    {
+        running = false;
+    }
+
+    public <T> void writeLockGuarded(T data, BiConsumer<Interpreter, T> operation)
+    {
+        lock.lock();
+        try
+        {
+            operation.accept(this, data);
+        }
+        finally
+        {
+            lock.unlock();
+        }
+    }
+
+    public <R> R readLockGuarded(Function<Interpreter, R> operation)
+    {
+        lock.lock();
+        try
+        {
+            return operation.apply(this);
+        }
+        finally
+        {
+            lock.unlock();
+        }
+    }
+
     public void load(CompoundTag tag)
     {
         code = Code.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("code")).result().map(Pair::getFirst).orElse(Code.EMPTY);
@@ -602,6 +689,7 @@ public final class Interpreter
         Utils.copyByteArray(tag.getByteArray("ram"), ram.getBackingArray());
         ioPorts.load(tag.getCompound("io"));
         programCounter = tag.getInt("program_counter");
+        paused = tag.getBoolean("paused");
     }
 
     public CompoundTag save()
@@ -612,6 +700,7 @@ public final class Interpreter
         tag.putByteArray("ram", Arrays.copyOf(ram.getBackingArray(), ram.getBackingArray().length));
         tag.put("io", ioPorts.save());
         tag.putInt("program_counter", programCounter);
+        tag.putBoolean("paused", paused);
         return tag;
     }
 }

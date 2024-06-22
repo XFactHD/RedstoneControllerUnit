@@ -2,6 +2,7 @@ package io.github.xfacthd.rsctrlunit;
 
 import com.mojang.logging.LogUtils;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.InterpreterThreadPool;
 import io.github.xfacthd.rsctrlunit.common.net.NetworkSetup;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
@@ -19,8 +20,11 @@ public final class RedstoneControllerUnit
     public RedstoneControllerUnit(IEventBus modBus)
     {
         RCUContent.init(modBus);
+
         modBus.addListener(RedstoneControllerUnit::onBuildCreativeModeTabs);
         modBus.addListener(NetworkSetup::onRegisterPayloadHandlers);
+
+        InterpreterThreadPool.init();
     }
 
     private static void onBuildCreativeModeTabs(final BuildCreativeModeTabContentsEvent event)

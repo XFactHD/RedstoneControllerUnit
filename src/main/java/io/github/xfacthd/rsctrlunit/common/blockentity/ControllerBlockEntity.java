@@ -1,9 +1,8 @@
 package io.github.xfacthd.rsctrlunit.common.blockentity;
 
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
-import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Timers;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.*;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
-import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Interpreter;
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -23,6 +23,9 @@ public final class ControllerBlockEntity extends BlockEntity
     private final Interpreter interpreter = new Interpreter();
     private final Timers timers = interpreter.getTimers();
     private final RedstoneInterface redstone = new RedstoneInterface(this);
+    // Keep around the chunk holding this BE to avoid having to look it up every tick to mark it as unsaved
+    @Nullable
+    private LevelChunk owningChunk = null;
 
     public ControllerBlockEntity(BlockPos pos, BlockState state)
     {
@@ -33,14 +36,14 @@ public final class ControllerBlockEntity extends BlockEntity
     public void tick()
     {
         timers.tickClock();
-        interpreter.run();
         redstone.tick();
         setChangedWithoutSignalUpdate();
     }
 
     public void loadCode(@Nullable Code code)
     {
-        interpreter.loadCode(Objects.requireNonNullElse(code, Code.EMPTY));
+        code = Objects.requireNonNullElse(code, Code.EMPTY);
+        interpreter.writeLockGuarded(code, Interpreter::loadCode);
         setChangedWithoutSignalUpdate();
     }
 
@@ -76,7 +79,34 @@ public final class ControllerBlockEntity extends BlockEntity
 
     public void setChangedWithoutSignalUpdate()
     {
-        level().blockEntityChanged(worldPosition);
+        if (owningChunk != null)
+        {
+            owningChunk.setUnsaved(true);
+        }
+    }
+
+    @Override
+    public void clearRemoved()
+    {
+        super.clearRemoved();
+        owningChunk = level().getChunkAt(worldPosition);
+        if (!level().isClientSide())
+        {
+            interpreter.startup();
+            InterpreterThreadPool.addInterpreter(interpreter);
+        }
+    }
+
+    @Override
+    public void setRemoved()
+    {
+        super.setRemoved();
+        owningChunk = null;
+        if (!level().isClientSide())
+        {
+            interpreter.shutdown();
+            InterpreterThreadPool.removeInterpreter(interpreter);
+        }
     }
 
     @Override
@@ -92,7 +122,7 @@ public final class ControllerBlockEntity extends BlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup)
     {
         super.loadAdditional(tag, lookup);
-        interpreter.load(tag.getCompound("interpreter"));
+        interpreter.writeLockGuarded(tag.getCompound("interpreter"), Interpreter::load);
         redstone.load(tag.getCompound("redstone"));
     }
 
@@ -100,7 +130,7 @@ public final class ControllerBlockEntity extends BlockEntity
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup)
     {
         super.saveAdditional(tag, lookup);
-        tag.put("interpreter", interpreter.save());
+        tag.put("interpreter", interpreter.readLockGuarded(Interpreter::save));
         tag.put("redstone", redstone.save());
     }
 }
