@@ -7,7 +7,6 @@ import io.github.xfacthd.rsctrlunit.common.menu.ControllerMenu;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.github.xfacthd.rsctrlunit.common.util.property.*;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -30,17 +29,9 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ControllerBlock extends Block implements EntityBlock
 {
-    private static final VoxelShape[] SHAPES = Util.make(() ->
-    {
-        VoxelShape[] shapes = new VoxelShape[6];
-        shapes[Direction.UP.ordinal()] = box(0, 14, 0, 16, 16, 16);
-        shapes[Direction.DOWN.ordinal()] = box(0, 0, 0, 16, 2, 16);
-        shapes[Direction.NORTH.ordinal()] = box(0, 0, 0, 16, 16, 2);
-        shapes[Direction.SOUTH.ordinal()] = box(0, 0, 14, 16, 16, 16);
-        shapes[Direction.WEST.ordinal()] = box(0, 0, 0, 2, 16, 16);
-        shapes[Direction.EAST.ordinal()] = box(14, 0, 0, 16, 16, 16);
-        return shapes;
-    });
+    private static final VoxelShape[] SHAPES = makeShapes(2D);
+    // Make the collision shape slightly higher to avoid playing step sound and particles of the block below
+    private static final VoxelShape[] COLLISION_SHAPES = makeShapes(3.3D);
 
     public ControllerBlock()
     {
@@ -64,6 +55,12 @@ public final class ControllerBlock extends Block implements EntityBlock
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
         return SHAPES[state.getValue(BlockStateProperties.FACING).ordinal()];
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
+    {
+        return COLLISION_SHAPES[state.getValue(BlockStateProperties.FACING).ordinal()];
     }
 
     @Override
@@ -158,5 +155,21 @@ public final class ControllerBlock extends Block implements EntityBlock
             return Utils.createBlockEntityTicker(type, RCUContent.BE_TYPE_CONTROLLER.get(), ControllerBlockEntity::tick);
         }
         return null;
+    }
+
+
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    private static VoxelShape[] makeShapes(double height)
+    {
+        double inv = 16 - height;
+        VoxelShape[] shapes = new VoxelShape[6];
+        shapes[Direction.UP.ordinal()] =    box(  0, inv,   0,     16,     16,     16);
+        shapes[Direction.DOWN.ordinal()] =  box(  0,   0,   0,     16, height,     16);
+        shapes[Direction.NORTH.ordinal()] = box(  0,   0,   0,     16,     16, height);
+        shapes[Direction.SOUTH.ordinal()] = box(  0,   0, inv,     16,     16,     16);
+        shapes[Direction.WEST.ordinal()] =  box(  0,   0,   0, height,     16,     16);
+        shapes[Direction.EAST.ordinal()] =  box(inv,   0,   0,     16,     16,     16);
+        return shapes;
     }
 }
