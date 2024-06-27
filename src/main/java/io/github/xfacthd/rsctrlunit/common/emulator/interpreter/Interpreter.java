@@ -688,6 +688,7 @@ public final class Interpreter
         Utils.copyByteArray(code.rom(), rom);
         Utils.copyByteArray(tag.getByteArray("ram"), ram.getBackingArray());
         ioPorts.load(tag.getCompound("io"));
+        timers.load(tag.getCompound("timers"));
         programCounter = tag.getInt("program_counter");
         paused = tag.getBoolean("paused");
     }
@@ -699,6 +700,7 @@ public final class Interpreter
         tag.putByteArray("rom", Arrays.copyOf(rom, rom.length));
         tag.putByteArray("ram", Arrays.copyOf(ram.getBackingArray(), ram.getBackingArray().length));
         tag.put("io", ioPorts.save());
+        tag.put("timers", timers.save());
         tag.putInt("program_counter", programCounter);
         tag.putBoolean("paused", paused);
         return tag;

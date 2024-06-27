@@ -2,6 +2,7 @@ package io.github.xfacthd.rsctrlunit.common.emulator.interpreter;
 
 import io.github.xfacthd.rsctrlunit.common.emulator.util.BitWriteMode;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  *      |           T1         |           T0         |
@@ -9,7 +10,7 @@ import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
  * TMOD | Gate | C/T | M1 | M0 | Gate | C/T | M1 | M0 |
  *      +------+-----+----+----+------+-----+----+----+
  *      Gate:  1 => gated by INTx input
- *      C/T:   0 => Timer (internal clock), 1 => Counter (external clock, unsupported)
+ *      C/T:   0 => Timer (internal clock), 1 => Counter (external clock)
  *      M1/M0: 00 => 13bit counter, 01 => 16bit counter, 10 => 8bit counter with auto-reload, 11 => 2 8bit counters (T0 only)
  * <p>
  *      +-----+-----+-----+-----+-----+-----+-----+-----+
@@ -31,10 +32,13 @@ public final class Timers
     private static final int MASK_RUN1 = 0b01000000;
     private static final int MASK_GATE0 = 0b00001000;
     private static final int MASK_INT0 = 0b00000100;
+    private static final int MASK_CT_0 = 0b00000100;
 
     private final RAM ram;
     private final IOPorts ioPorts;
     private volatile boolean ticked = false;
+    private boolean lastTrigger0 = false;
+    private boolean lastTrigger1 = false;
 
     public Timers(RAM ram, IOPorts ioPorts)
     {
@@ -52,18 +56,32 @@ public final class Timers
         if (!ticked) return;
         ticked = false;
 
-        updateTimer(0);
-        updateTimer(1);
+        byte port3 = ioPorts.readInputPort(3);
+        boolean trigger0 = (port3 & 0b00010000) != 0;
+        boolean trigger1 = (port3 & 0b00100000) != 0;
+
+        // Counter mode triggers on falling edge
+        updateTimer(0, port3, lastTrigger0 && !trigger0);
+        updateTimer(1, port3, lastTrigger1 && !trigger1);
+
+        lastTrigger0 = trigger0;
+        lastTrigger1 = trigger1;
     }
 
-    private void updateTimer(int idx)
+    private void updateTimer(int idx, byte port3, boolean extTrigger)
     {
         byte tmod = ram.readByte(Constants.ADDRESS_TMOD);
         int mode = (tmod >>> (4 * idx)) & MASK_MODE;
         if (idx == 1 && mode == MODE_8BIT_SPLIT) return;
 
+        boolean counter = (tmod & (MASK_CT_0 << (4 * idx))) != 0;
+        if (counter && !extTrigger)
+        {
+            return;
+        }
+
         byte tcon = ram.readByte(Constants.ADDRESS_TCON);
-        boolean running = (tcon & (MASK_RUN0 << (2 * idx))) != 0 && isNotGated(tmod, idx);
+        boolean running = (tcon & (MASK_RUN0 << (2 * idx))) != 0 && isNotGated(port3, tmod, idx);
         if ((idx != 0 || mode != MODE_8BIT_SPLIT) && !running)
         {
             return;
@@ -142,11 +160,10 @@ public final class Timers
         }
     }
 
-    private boolean isNotGated(byte tmod, int idx)
+    private static boolean isNotGated(byte port3, byte tmod, int idx)
     {
         if ((tmod & (MASK_GATE0 << (4 * idx))) != 0)
         {
-            byte port3 = ioPorts.readInputPort(3);
             return (port3 & (MASK_INT0 << idx)) != 0;
         }
         return true;
@@ -155,5 +172,19 @@ public final class Timers
     private void setOverflow(int idx)
     {
         ram.writeBit(Constants.BIT_ADDRESS_TIMER0_OVERFLOW + (idx * 2), BitWriteMode.SET);
+    }
+
+    public void load(CompoundTag tag)
+    {
+        lastTrigger0 = tag.getBoolean("last_trigger_0");
+        lastTrigger1 = tag.getBoolean("last_trigger_1");
+    }
+
+    public CompoundTag save()
+    {
+        CompoundTag tag = new CompoundTag();
+        tag.putBoolean("last_trigger_0", lastTrigger0);
+        tag.putBoolean("last_trigger_1", lastTrigger1);
+        return tag;
     }
 }
