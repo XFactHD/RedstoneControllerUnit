@@ -5,7 +5,9 @@ import io.github.xfacthd.rsctrlunit.common.block.ControllerBlock;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.item.MemoryCardItem;
+import io.github.xfacthd.rsctrlunit.common.item.ProgrammerItem;
 import io.github.xfacthd.rsctrlunit.common.menu.ControllerMenu;
+import io.github.xfacthd.rsctrlunit.common.menu.ProgrammerMenu;
 import io.github.xfacthd.rsctrlunit.common.util.registration.DeferredBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.util.registration.DeferredBlockEntityRegister;
 import net.minecraft.core.Holder;
@@ -42,6 +44,7 @@ public final class RCUContent
 
     // region Items
     public static final Holder<Item> ITEM_MEMORY_CARD = ITEMS.registerItem("memory_card", MemoryCardItem::new);
+    public static final Holder<Item> ITEM_PROGRAMMER = ITEMS.registerItem("programmer", ProgrammerItem::new);
     // endregion
 
     // region BlockEntities
@@ -53,6 +56,9 @@ public final class RCUContent
     // region MenuTypes
     public static final DeferredHolder<MenuType<?>, MenuType<ControllerMenu>> MENU_TYPE_CONTROLLER = MENU_TYPES.register(
             "controller", () -> IMenuTypeExtension.create(ControllerMenu::createClient)
+    );
+    public static final DeferredHolder<MenuType<?>, MenuType<ProgrammerMenu>> MENU_TYPE_PROGRAMMER = MENU_TYPES.register(
+            "programmer", () -> IMenuTypeExtension.create(ProgrammerMenu::createClient)
     );
     // endregion
 

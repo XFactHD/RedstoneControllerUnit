@@ -3,6 +3,7 @@ package io.github.xfacthd.rsctrlunit.client;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.client.model.ControllerModelLoader;
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
+import io.github.xfacthd.rsctrlunit.client.screen.ProgrammerScreen;
 import io.github.xfacthd.rsctrlunit.client.texture.AreaMaskSource;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
@@ -31,6 +32,7 @@ public final class RCUClient
     private static void onRegisterMenuScreens(final RegisterMenuScreensEvent event)
     {
         event.register(RCUContent.MENU_TYPE_CONTROLLER.get(), ControllerScreen::new);
+        event.register(RCUContent.MENU_TYPE_PROGRAMMER.get(), ProgrammerScreen::new);
     }
 
     private static void onRegisterGeometryLoaders(final ModelEvent.RegisterGeometryLoaders event)

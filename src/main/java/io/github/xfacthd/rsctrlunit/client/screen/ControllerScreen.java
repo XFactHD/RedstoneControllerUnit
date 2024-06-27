@@ -2,8 +2,10 @@ package io.github.xfacthd.rsctrlunit.client.screen;
 
 import io.github.xfacthd.rsctrlunit.client.screen.widget.*;
 import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
+import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.emulator.disassembler.Disassembler;
 import io.github.xfacthd.rsctrlunit.common.emulator.disassembler.Disassembly;
+import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import io.github.xfacthd.rsctrlunit.common.menu.ControllerMenu;
 import io.github.xfacthd.rsctrlunit.common.menu.slot.Hideable;
@@ -13,7 +15,6 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -21,12 +22,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ControllerScreen extends AbstractContainerScreen<ControllerMenu>
+public final class ControllerScreen extends CardInventoryContainerScreen<ControllerMenu>
 {
     private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/demo_background.png");
     private static final ResourceLocation INVENTORY = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
@@ -35,7 +37,7 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
     private static final ResourceLocation CODE_SCROLLER = Utils.rl("code_scroller_vert");
     private static final ResourceLocation SLOT_BACKGROUND = ResourceLocation.withDefaultNamespace("container/slot");
     private static final int IMAGE_WIDTH = 360;
-    private static final int IMAGE_HEIGHT = 194;
+    private static final int IMAGE_HEIGHT = 218;
     private static final int TAB_HEIGHT = 22;
     private static final int TAB_EDGE_HEIGHT = 4;
     private static final int BUTTON_WIDTH = 120;
@@ -53,7 +55,6 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
     private static final int REGISTER_ENTRY_WIDTH = 27;
     private static final int INVENTORY_WIDTH = 162;
     private static final int INVENTORY_HEIGHT = 76;
-    private static final int SLOT_SIZE = 18;
     private static final int BACKGROUND_Y = TAB_HEIGHT - TAB_EDGE_HEIGHT;
     private static final int REGISTER_X = 5;
     private static final int REGISTER_LEFT_X = 20;
@@ -68,10 +69,11 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
     private static final int INVENTORY_Y = IMAGE_HEIGHT - 76 - 8;
     private static final int TITLE_Y = TAB_HEIGHT + 1;
     private static final int LABEL_PROGRAM_Y = TAB_HEIGHT + 15;
-    private static final int CARD_SLOT_Y = TAB_HEIGHT + 43;
+    private static final int CARD_SLOT_Y = TAB_HEIGHT + 55;
     private static final int BUTTON_X = INVENTORY_X + INVENTORY_WIDTH - BUTTON_WIDTH;
     private static final int LOAD_BUTTON_Y = TAB_HEIGHT + 30;
-    private static final int CLEAR_BUTTON_Y = TAB_HEIGHT + 54;
+    private static final int SAVE_BUTTON_Y = TAB_HEIGHT + 54;
+    private static final int CLEAR_BUTTON_Y = TAB_HEIGHT + 78;
     private static final int TAB_STATUS = 0;
     private static final int TAB_CODE = 1;
     private static final int TAB_REDSTONE = 2;
@@ -89,6 +91,7 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
     public static final Component TITLE_REGISTERS = Component.translatable("title.rsctrlunit.controller.registries");
     public static final Component TITLE_DISASSEMBLY = Component.translatable("title.rsctrlunit.controller.disassembly");
     public static final Component BUTTON_LOAD_ROM = Component.translatable("button.rsctrlunit.controller.load_rom");
+    public static final Component BUTTON_SAVE_ROM = Component.translatable("button.rsctrlunit.controller.save_rom");
     public static final Component BUTTON_CLEAR_ROM = Component.translatable("button.rsctrlunit.controller.clear_rom");
     public static final String LABEL_PROGRAM_KEY = "label.rsctrlunit.controller.program";
     public static final Component LABEL_PORT_REG_OUT = Component.translatable("label.rsctrlunit.controller.port.out");
@@ -100,6 +103,7 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
     private final byte[] outputs = new byte[4];
     private final byte[] inputs = new byte[4];
     private Button buttonLoad;
+    private Button buttonSave;
     private Button buttonClear;
     private int lineHeight = 0;
     private int programCounter = 0;
@@ -137,6 +141,10 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
         );
+        buttonSave = addRenderableWidget(Button.builder(BUTTON_SAVE_ROM, btn -> saveRom())
+                .pos(leftPos + BUTTON_X, topPos + SAVE_BUTTON_Y)
+                .size(BUTTON_WIDTH, BUTTON_HEIGHT)
+                .build());
         buttonClear = addRenderableWidget(Button.builder(BUTTON_CLEAR_ROM, btn -> clearRom())
                 .pos(leftPos + BUTTON_X, topPos + CLEAR_BUTTON_Y)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -360,7 +368,19 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
         graphics.drawString(font, program, leftPos + INVENTORY_X, topPos + LABEL_PROGRAM_Y, 0xFF404040, false);
 
         graphics.blitSprite(SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
-        buttonLoad.active = menu.slots.getFirst().hasItem();
+        Slot slot = menu.slots.getFirst();
+        if (slot.hasItem())
+        {
+            Code code = slot.getItem().get(RCUContent.COMPONENT_TYPE_CODE);
+            boolean hasCode = code != null && !code.equals(Code.EMPTY);
+            buttonLoad.active = hasCode;
+            buttonSave.active = !hasCode;
+        }
+        else
+        {
+            buttonLoad.active = buttonSave.active = false;
+        }
+        drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
 
         graphics.blit(INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT);
 
@@ -397,12 +417,18 @@ public final class ControllerScreen extends AbstractContainerScreen<ControllerMe
                 .map(Hideable.class::cast)
                 .forEach(slot -> slot.setActive(tab == TAB_CODE));
         buttonLoad.visible = tab == TAB_CODE;
+        buttonSave.visible = tab == TAB_CODE;
         buttonClear.visible = tab == TAB_CODE;
     }
 
     private void loadRom()
     {
         PacketDistributor.sendToServer(new ServerboundLoadRomPayload(menu.containerId));
+    }
+
+    private void saveRom()
+    {
+        PacketDistributor.sendToServer(new ServerboundSaveRomPayload(menu.containerId));
     }
 
     private void clearRom()

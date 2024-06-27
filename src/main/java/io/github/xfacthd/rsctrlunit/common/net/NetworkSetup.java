@@ -26,19 +26,40 @@ public final class NetworkSetup
                         ClientboundUpdatePortConfigsPayload.STREAM_CODEC,
                         ClientboundUpdatePortConfigsPayload::handle
                 )
+                .playToClient(
+                        ClientboundReplyCodePayload.TYPE,
+                        ClientboundReplyCodePayload.STREAM_CODEC,
+                        ClientboundReplyCodePayload::handle
+                )
                 .playToServer(
                         ServerboundSetPortConfigPayload.TYPE,
                         ServerboundSetPortConfigPayload.STREAM_CODEC,
                         ServerboundSetPortConfigPayload::handle
-                ).playToServer(
+                )
+                .playToServer(
                         ServerboundLoadRomPayload.TYPE,
                         ServerboundLoadRomPayload.STREAM_CODEC,
                         ServerboundLoadRomPayload::handle
                 )
                 .playToServer(
+                        ServerboundSaveRomPayload.TYPE,
+                        ServerboundSaveRomPayload.STREAM_CODEC,
+                        ServerboundSaveRomPayload::handle
+                )
+                .playToServer(
                         ServerboundClearRomPayload.TYPE,
                         ServerboundClearRomPayload.STREAM_CODEC,
                         ServerboundClearRomPayload::handle
+                )
+                .playToServer(
+                        ServerboundWriteToTargetPayload.TYPE,
+                        ServerboundWriteToTargetPayload.STREAM_CODEC,
+                        ServerboundWriteToTargetPayload::handle
+                )
+                .playToServer(
+                        ServerboundRequestCodePayload.TYPE,
+                        ServerboundRequestCodePayload.STREAM_CODEC,
+                        ServerboundRequestCodePayload::handle
                 );
     }
 

@@ -3,6 +3,7 @@ package io.github.xfacthd.rsctrlunit.common.block;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
+import io.github.xfacthd.rsctrlunit.common.item.ProgrammerItem;
 import io.github.xfacthd.rsctrlunit.common.menu.ControllerMenu;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
@@ -15,6 +16,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -61,6 +63,20 @@ public final class ControllerBlock extends Block implements EntityBlock
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx)
     {
         return COLLISION_SHAPES[state.getValue(BlockStateProperties.FACING).ordinal()];
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
+    {
+        if (stack.is(RCUContent.ITEM_PROGRAMMER) && level.getBlockEntity(pos) instanceof ControllerBlockEntity controller)
+        {
+            if (!level.isClientSide())
+            {
+                ProgrammerItem.openMenu(player, stack, controller);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

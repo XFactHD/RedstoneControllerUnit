@@ -2,9 +2,12 @@ package io.github.xfacthd.rsctrlunit.common.datagen.provider;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
+import io.github.xfacthd.rsctrlunit.client.screen.ProgrammerScreen;
+import io.github.xfacthd.rsctrlunit.client.screen.popup.MessageScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.widget.RedstoneConfig;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
+import io.github.xfacthd.rsctrlunit.common.menu.ProgrammerMenu;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import net.minecraft.core.Direction;
@@ -39,6 +42,7 @@ public final class RCULanguageProvider extends LanguageProvider
     private void addItemTranslations()
     {
         add(RCUContent.ITEM_MEMORY_CARD.value(), "Memory Card");
+        add(RCUContent.ITEM_PROGRAMMER.value(), "Programmer");
     }
 
     private void addGenericTranslations()
@@ -78,6 +82,7 @@ public final class RCULanguageProvider extends LanguageProvider
     private void addScreenTranslations()
     {
         add(ControllerBlockEntity.TITLE, "Controller");
+        add(ProgrammerMenu.TITLE, "Programmer");
 
         add(ControllerScreen.TAB_TITLE_STATUS, "Status");
         add(ControllerScreen.TAB_TITLE_CODE, "Code");
@@ -90,6 +95,7 @@ public final class RCULanguageProvider extends LanguageProvider
         add(ControllerScreen.TITLE_REGISTERS, "Registers");
         add(ControllerScreen.TITLE_DISASSEMBLY, "Disassembly");
         add(ControllerScreen.BUTTON_LOAD_ROM, "Load ROM from card");
+        add(ControllerScreen.BUTTON_SAVE_ROM, "Save ROM to card");
         add(ControllerScreen.BUTTON_CLEAR_ROM, "Clear ROM");
         add(ControllerScreen.LABEL_PROGRAM_KEY, "Program: %s");
         add(ControllerScreen.LABEL_PORT_REG_OUT, "Out");
@@ -105,6 +111,49 @@ public final class RCULanguageProvider extends LanguageProvider
         add(RedstoneConfig.TOOLTIP_WIRE_COLOR_KEY, "Wire color: %s");
         add(RedstoneConfig.TOOLTIP_BUNDLED_MAPPING_LOWER, "Bits 0-7 mapped to bundled wire colors 1-8 (White-Gray)");
         add(RedstoneConfig.TOOLTIP_BUNDLED_MAPPING_UPPER, "Bits 0-7 mapped to bundled wire colors 9-16 (Light Gray-Black)");
+
+        add(ProgrammerScreen.BUTTON_OPEN_SOURCE, "Open source file");
+        add(ProgrammerScreen.BUTTON_REVEAL_IN_EXPLORER, "Reveal in Explorer");
+        add(ProgrammerScreen.BUTTON_ASSEMBLE, "Assemble");
+        add(ProgrammerScreen.BUTTON_OPEN_BINARY, "Open binary file");
+        add(ProgrammerScreen.BUTTON_SAVE_BINARY, "Save binary file");
+        add(ProgrammerScreen.BUTTON_READ_BINARY_CARD, "Read ROM from card");
+        add(ProgrammerScreen.BUTTON_READ_BINARY_BLOCK, "Read ROM from controller");
+        add(ProgrammerScreen.BUTTON_WRITE_BINARY_CARD, "Write ROM to card");
+        add(ProgrammerScreen.BUTTON_WRITE_BINARY_BLOCK, "Write ROM to controller");
+        add(ProgrammerScreen.LABEL_FILE_PATH, "File Path:");
+        add(ProgrammerScreen.LABEL_FILE_TYPE, "File Type:");
+        add(ProgrammerScreen.LABEL_CODE_INFO, "Assembly:");
+        add(ProgrammerScreen.LABEL_ERROR, "Error:");
+        add(ProgrammerScreen.LABEL_INFO, "Info:");
+        add(ProgrammerScreen.DESC_PATH_NONE, "-");
+        add(ProgrammerScreen.DESC_TYPE_NONE, "-");
+        add(ProgrammerScreen.DESC_TYPE_SOURCE, "Source");
+        add(ProgrammerScreen.DESC_TYPE_BINARY, "Binary");
+        add(ProgrammerScreen.DESC_CODE_INFO, "%s (%s bytes)");
+        add(ProgrammerScreen.DESC_CODE_INFO_NONE, "-");
+        add(ProgrammerScreen.MSG_ERROR_READ_SOURCE, "Unknown error reading source file '%s'");
+        add(ProgrammerScreen.MSG_ERROR_REVEAL_IN_EXPLORER, "Unknown error revealing file '%s' in file explorer");
+        add(ProgrammerScreen.MSG_ERROR_ASSEMBLE, "Unknown error assembling source file '%s'");
+        add(ProgrammerScreen.MSG_ERROR_READ_BINARY, "Unknown error reading binary file '%s'");
+        add(ProgrammerScreen.MSG_ERROR_WRITE_BINARY, "Unknown error writing binary file '%s'");
+        add(ProgrammerScreen.MSG_ERROR_ASSEMBLY_FAILED, "Failed to assemble, see below for errors");
+        add(ProgrammerScreen.MSG_INFO_ASSEMBLY_SUCCESS, "Assembly successful");
+        add(ProgrammerScreen.MSG_INFO_ROM_READ, "ROM loaded from target");
+        add(ProgrammerScreen.MSG_INFO_WAITING_FOR_RESPONSE, "Waiting for server response");
+        add(ProgrammerScreen.MSG_INFO_ROM_WRITTEN, "ROM written to target");
+        add(ProgrammerScreen.MSG_CONFIRM_NOT_EMPTY_BLOCK, "The target Controller already has code loaded. Are you sure you want to overwrite it?");
+        add(ProgrammerScreen.MSG_CONFIRM_NOT_EMPTY_CARD, "The Memory Card already contains code. Are you sure you want to overwrite it?");
+        add(ProgrammerScreen.TOOLTIP_NO_SOURCE, "No source file loaded");
+        add(ProgrammerScreen.TOOLTIP_NO_ASSEMBLY, "No assembly available");
+        add(ProgrammerScreen.TOOLTIP_BLOCK_REMOVED, "Target controller block was removed");
+        add(ProgrammerScreen.TOOLTIP_NO_CARD_ITEM, "No memory card present in card slot");
+        add(ProgrammerScreen.TOOLTIP_NO_CODE_BLOCK, "Target controller has no code loaded");
+        add(ProgrammerScreen.TOOLTIP_NO_CODE_CARD, "Memory card is empty");
+
+        add(MessageScreen.INFO_TITLE, "Info");
+        add(MessageScreen.ERROR_TITLE, "Error");
+        add(MessageScreen.CONFIRM_TITLE, "Confirm");
     }
 
     private void add(Component key, String value)

@@ -1,6 +1,7 @@
 package io.github.xfacthd.rsctrlunit.client.util;
 
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
+import io.github.xfacthd.rsctrlunit.client.screen.ProgrammerScreen;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
 import net.minecraft.client.Minecraft;
@@ -34,6 +35,15 @@ public final class ClientAccess
         if (screen instanceof ControllerScreen ctrlScreen && ctrlScreen.getMenu().containerId == windowId)
         {
             ctrlScreen.getMenu().updatePortConfigs(facing, configs);
+        }
+    }
+
+    public static void handleCodeReply(int windowId, Code code)
+    {
+        Screen screen = Minecraft.getInstance().screen;
+        if (screen instanceof ProgrammerScreen progScreen && progScreen.getMenu().containerId == windowId)
+        {
+            progScreen.receiveBlockCodeFromServer(code);
         }
     }
 

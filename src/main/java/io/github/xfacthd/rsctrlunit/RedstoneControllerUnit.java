@@ -33,6 +33,7 @@ public final class RedstoneControllerUnit
         {
             event.accept(RCUContent.BLOCK_CONTROLLER.value());
             event.accept(RCUContent.ITEM_MEMORY_CARD.value());
+            event.accept(RCUContent.ITEM_PROGRAMMER.value());
         }
     }
 }

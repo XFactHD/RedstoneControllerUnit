@@ -16,5 +16,6 @@ public final class RCUItemModelProvider extends ItemModelProvider
     protected void registerModels()
     {
         singleTexture("memory_card", mcLoc("item/generated"), "layer0", modLoc("item/memory_card"));
+        singleTexture("programmer", mcLoc("item/generated"), "layer0", modLoc("item/programmer"));
     }
 }

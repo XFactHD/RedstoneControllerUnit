@@ -4,7 +4,6 @@ import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Interpreter;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
-import io.github.xfacthd.rsctrlunit.common.menu.slot.HideableSlot;
 import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.*;
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
@@ -14,11 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -27,13 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ControllerMenu extends AbstractContainerMenu
+public final class ControllerMenu extends CardInventoryContainerMenu
 {
-    private static final int SLOT_CARD = 0;
-    private static final int SLOT_INV_FIRST = SLOT_CARD + 1;
-    private static final int INV_SLOT_COUNT = 9 * 4;
+    private static final SlotConfig SLOT_CONFIG = new SlotConfig(true, 14, 135, 14, 78, idx -> false);
 
-    private final ContainerLevelAccess levelAccess;
     @Nullable
     private final ServerPlayer player;
     @Nullable
@@ -42,8 +35,6 @@ public class ControllerMenu extends AbstractContainerMenu
     private final RedstoneInterface redstone;
     private final PortConfig[] portConfigs;
     private final PortConfig[] lastPortConfigs = new PortConfig[4];
-    private final Container cardContainer;
-    private final Slot cardSlot;
     private Direction facing;
     private Code code;
 
@@ -53,7 +44,7 @@ public class ControllerMenu extends AbstractContainerMenu
         Code code = Code.STREAM_CODEC.decode(buf);
         Direction facing = Direction.STREAM_CODEC.decode(buf);
         PortConfig[] portConfigs = RedstoneType.PORT_ARRAY_STREAM_CODEC.decode(buf);
-        return new ControllerMenu(windowId, inventory.player.level(), pos, inventory, null, null, facing, portConfigs, code);
+        return new ControllerMenu(windowId, pos, inventory, null, null, facing, portConfigs, code);
     }
 
     public static ControllerMenu createServer(
@@ -67,12 +58,11 @@ public class ControllerMenu extends AbstractContainerMenu
         RedstoneInterface redstone = be.getRedstoneInterface();
         PortConfig[] portConfigs = redstone.getPortConfigs();
         Code code = interpreter.getCode();
-        return new ControllerMenu(windowId, be.getLevel(), be.getBlockPos(), player.getInventory(), interpreter, redstone, facing, portConfigs, code);
+        return new ControllerMenu(windowId, be.getBlockPos(), player.getInventory(), interpreter, redstone, facing, portConfigs, code);
     }
 
     private ControllerMenu(
             int windowId,
-            Level level,
             BlockPos pos,
             Inventory inventory,
             @Nullable Interpreter interpreter,
@@ -82,31 +72,13 @@ public class ControllerMenu extends AbstractContainerMenu
             Code code
     )
     {
-        super(RCUContent.MENU_TYPE_CONTROLLER.get(), windowId);
-        this.levelAccess = ContainerLevelAccess.create(level, pos);
+        super(RCUContent.MENU_TYPE_CONTROLLER.get(), windowId, inventory, pos, SLOT_CONFIG);
         this.player = inventory.player instanceof ServerPlayer serverPlayer ? serverPlayer : null;
         this.interpreter = interpreter;
         this.redstone = redstone;
         this.facing = facing;
         this.portConfigs = portConfigs;
         this.code = code;
-        this.cardContainer = new SimpleContainer(1);
-        this.cardSlot = addSlot(new HideableSlot(cardContainer, 0, 14, 66));
-
-        int x = 14;
-        int y = 111;
-        for (int row = 0; row < 3; ++row)
-        {
-            for (int col = 0; col < 9; ++col)
-            {
-                addSlot(new HideableSlot(inventory, col + row * 9 + 9, x + col * 18, y));
-            }
-            y += 18;
-        }
-        for (int col = 0; col < 9; ++col)
-        {
-            addSlot(new HideableSlot(inventory, col, x + col * 18, y + 4));
-        }
     }
 
     @Override
@@ -166,9 +138,25 @@ public class ControllerMenu extends AbstractContainerMenu
 
     public void loadRomFromCard()
     {
-        if (cardSlot.getItem().has(RCUContent.COMPONENT_TYPE_CODE))
+        if (Objects.requireNonNull(cardSlot).getItem().has(RCUContent.COMPONENT_TYPE_CODE))
         {
             loadCode(cardSlot.getItem().get(RCUContent.COMPONENT_TYPE_CODE));
+        }
+    }
+
+    public void saveRomToCard()
+    {
+        if (Objects.requireNonNull(cardSlot).getItem().has(RCUContent.COMPONENT_TYPE_CODE))
+        {
+            levelAccess.evaluate(Level::getBlockEntity)
+                    .filter(ControllerBlockEntity.class::isInstance)
+                    .map(ControllerBlockEntity.class::cast)
+                    .ifPresent(be ->
+                    {
+                        ItemStack stack = cardSlot.getItem();
+                        Code code = be.getInterpreter().getCode();
+                        stack.set(RCUContent.COMPONENT_TYPE_CODE, code);
+                    });
         }
     }
 
@@ -186,60 +174,8 @@ public class ControllerMenu extends AbstractContainerMenu
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index)
-    {
-        ItemStack remainder = ItemStack.EMPTY;
-        Slot slot = slots.get(index);
-        if (slot.hasItem())
-        {
-            ItemStack stack = slot.getItem();
-            remainder = stack.copy();
-
-            if (index == SLOT_CARD)
-            {
-                if (!moveItemStackTo(stack, SLOT_INV_FIRST, SLOT_INV_FIRST + INV_SLOT_COUNT, true))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (stack.is(RCUContent.ITEM_MEMORY_CARD))
-            {
-                if (!moveItemStackTo(stack, SLOT_CARD, SLOT_CARD + 1, false))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-
-            if (stack.isEmpty())
-            {
-                slot.set(ItemStack.EMPTY);
-            }
-            else
-            {
-                slot.setChanged();
-            }
-
-            if (stack.getCount() == remainder.getCount())
-            {
-                return ItemStack.EMPTY;
-            }
-
-            slot.onTake(player, stack);
-            broadcastChanges();
-        }
-        return remainder;
-    }
-
-    @Override
     public boolean stillValid(Player player)
     {
         return stillValid(levelAccess, player, RCUContent.BLOCK_CONTROLLER.value());
-    }
-
-    @Override
-    public void removed(Player player)
-    {
-        super.removed(player);
-        levelAccess.execute((level, pos) -> clearContainer(player, cardContainer));
     }
 }

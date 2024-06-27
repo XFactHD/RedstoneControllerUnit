@@ -6,9 +6,12 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import org.joml.Matrix4f;
+
+import java.nio.file.Path;
 
 public final class ClientUtils
 {
@@ -79,6 +82,32 @@ public final class ClientUtils
     {
         FormattedCharSequence charSeq = text.getVisualOrderText();
         graphics.drawString(font, charSeq, x - font.width(charSeq) / 2, y, color, shadow);
+    }
+
+    public static String getFileNameNoExt(Path path)
+    {
+        String fileName = path.getFileName().toString();
+        int period = fileName.lastIndexOf('.');
+        if (period > -1)
+        {
+            fileName = fileName.substring(0, period);
+        }
+        return fileName;
+    }
+
+    public static int getWrappedHeight(Font font, FormattedText text, int width)
+    {
+        return font.split(text, width).size() * font.lineHeight;
+    }
+
+    public static int getMaxWidth(Font font, Component... lines)
+    {
+        int maxWidth = 0;
+        for (Component line : lines)
+        {
+            maxWidth = Math.max(maxWidth, font.width(line));
+        }
+        return maxWidth;
     }
 
 

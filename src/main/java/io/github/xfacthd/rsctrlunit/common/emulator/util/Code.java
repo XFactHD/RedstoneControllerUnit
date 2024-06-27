@@ -40,6 +40,11 @@ public record Code(Component name, byte[] rom, Int2ObjectMap<String> labels) imp
             Int2ObjectMaps.emptyMap()
     );
 
+    public Code(Component name, byte[] rom)
+    {
+        this(name, rom, Int2ObjectMaps.emptyMap());
+    }
+
     @Override
     public boolean equals(Object o)
     {
