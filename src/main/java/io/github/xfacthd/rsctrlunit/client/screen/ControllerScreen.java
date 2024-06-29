@@ -364,7 +364,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
     private void renderCodeTab(GuiGraphics graphics, int mouseX, int mouseY)
     {
-        Component program = Component.translatable(LABEL_PROGRAM_KEY, menu.getCode().name());
+        Component program = Component.translatable(LABEL_PROGRAM_KEY, menu.getCode().displayName());
         graphics.drawString(font, program, leftPos + INVENTORY_X, topPos + LABEL_PROGRAM_Y, 0xFF404040, false);
 
         graphics.blitSprite(SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);

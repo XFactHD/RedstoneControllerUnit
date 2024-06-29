@@ -1,7 +1,6 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 
@@ -13,17 +12,17 @@ public final class Constants
     public static final int INITIAL_STACK_POINTER = 0x07;
 
     public static final Code TEST_CODE = new Code(
-            Component.literal("RedstoneBlinker"),
+            "RedstoneBlinker",
             new byte[] { 0x63, (byte) 0x80, (byte) 0xFF, 0x74, 0x14, (byte) 0xD5, (byte) 0xE0, (byte) 0xFD, 0x01, 0x00 },
             new Int2ObjectOpenHashMap<>(Map.of(0, "start", 5, "loop"))
     );
     public static final Code TEST_CODE_TWO = new Code(
-            Component.literal("RedstoneForward"),
+            "RedstoneForward",
             new byte[] { (byte) 0x85, (byte) 0xA0, (byte) 0x80, 0x01, 0x00 },
             new Int2ObjectOpenHashMap<>(Map.of(0, "start"))
     );
     public static final Code TEST_CODE_THREE = new Code(
-            Component.literal("RedstoneTimerBlinker"),
+            "RedstoneTimerBlinker",
             new byte[] { 0x75, (byte) 0x8C, (byte) 0xEB, 0x75, (byte) 0x8A, (byte) 0xEB, 0x43, (byte) 0x89, 0x02, 0x43, (byte) 0x88, 0x10, 0x63, (byte) 0x80, (byte) 0xFF, 0x30, (byte) 0x8D, (byte) 0xFD, (byte) 0xC2, (byte) 0x8D, 0x01, 0x0C },
             new Int2ObjectOpenHashMap<>(Map.of(0x0C, "loop", 0x0F, "wait"))
     );

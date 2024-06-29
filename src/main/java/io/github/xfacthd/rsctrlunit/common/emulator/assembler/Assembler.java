@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -337,7 +336,7 @@ public final class Assembler
             }
         }
 
-        return new Code(Component.literal(name), codeBytes, labelsByPosition);
+        return new Code(name, codeBytes, labelsByPosition);
     }
 
     private static int calculateShortJumpOffset(int src, int dest)

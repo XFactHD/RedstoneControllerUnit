@@ -367,7 +367,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     private void setAssembledCode(@Nullable Code code)
     {
         assembledCode = code;
-        if (code != null)
+        if (code != null && !code.equals(Code.EMPTY))
         {
             codeInfo = Component.translatable(DESC_CODE_INFO, code.name(), code.rom().length);
             int maxWidth = buttonX - descX - PADDING;
@@ -481,7 +481,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         {
             byte[] bytes = Files.readAllBytes(filePath);
             String fileName = ClientUtils.getFileNameNoExt(filePath);
-            return new Code(Component.literal(fileName), bytes);
+            return new Code(fileName, bytes);
         }, () -> Component.translatable(MSG_ERROR_READ_BINARY, filePath.getFileName().toString())));
     }
 
