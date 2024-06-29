@@ -47,8 +47,10 @@ public final class Assembler
         {
             while (reader.ready())
             {
-                int lineNum = reader.getLineNumber();
+                int lineNum = reader.getLineNumber() + 1;
                 String line = reader.readLine();
+                if (line == null) break;
+
                 int commentStart = line.indexOf(';');
                 if (commentStart >= 0)
                 {

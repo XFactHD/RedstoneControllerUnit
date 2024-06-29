@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 public final class ParseHelpers
 {
-    private static final Pattern HEX_PATTERN = Pattern.compile("[0-9][0-9a-f]*h");
-    private static final Pattern BIN_PATTERN = Pattern.compile("[01]+b");
+    private static final Pattern HEX_PATTERN = Pattern.compile("[0-9][0-9a-fA-F]*h");
+    private static final Pattern BIN_PATTERN = Pattern.compile("[01]{1,16}b");
 
     private ParseHelpers() { }
 
@@ -24,7 +24,7 @@ public final class ParseHelpers
             {
                 return new NoArgOpNode(line, op);
             }
-            return ErrorNode.invalidOperand(op, operands, line);
+            return null;
         };
     }
 
@@ -36,7 +36,7 @@ public final class ParseHelpers
             {
                 return new NoArgOpNode(line, op);
             }
-            return ErrorNode.invalidOperand(op, operands, line);
+            return null;
         };
     }
 
@@ -86,9 +86,10 @@ public final class ParseHelpers
             if (!operands[constOpIndex].equalsIgnoreCase(constOperand)) return null;
 
             int addrOpIndex = secondConst ? 0 : 1;
-            if (isNumber(operands[addrOpIndex]))
+            Byte addrOperand = parseAddressOperand(operands[addrOpIndex]);
+            if (addrOperand != null)
             {
-                return new SimpleOpNode(line, op, parseByte(operands[addrOpIndex]));
+                return new SimpleOpNode(line, op, addrOperand);
             }
             return null;
         };
@@ -98,10 +99,11 @@ public final class ParseHelpers
     {
         return (line, op, operands) ->
         {
+            Byte addrOperand = parseAddressOperand(operands[0]);
             Byte immediateOp = parseImmediateOperand(operands[1]);
-            if (immediateOp != null && isNumber(operands[0]))
+            if (addrOperand != null && immediateOp != null)
             {
-                return new SimpleOpNode(line, op, parseByte(operands[0]), immediateOp);
+                return new SimpleOpNode(line, op, addrOperand, immediateOp);
             }
             return null;
         };
@@ -111,9 +113,10 @@ public final class ParseHelpers
     {
         return (line, op, operands) ->
         {
-            if (isNumber(operands[0]))
+            Byte operandZero = parseAddressOperand(operands[0]);
+            if (operandZero != null)
             {
-                return new SimpleOpNode(line, op, parseByte(operands[0]));
+                return new SimpleOpNode(line, op, operandZero);
             }
             return null;
         };
@@ -123,9 +126,11 @@ public final class ParseHelpers
     {
         return (line, op, operands) ->
         {
-            if (isNumber(operands[0]) && isNumber(operands[1]))
+            Byte operandZero = parseAddressOperand(operands[0]);
+            Byte operandOne = parseAddressOperand(operands[1]);
+            if (operandZero != null && operandOne != null)
             {
-                return new SimpleOpNode(line, op, parseByte(operands[0]), parseByte(operands[1]));
+                return new SimpleOpNode(line, op, operandZero, operandOne);
             }
             return null;
         };
@@ -204,7 +209,31 @@ public final class ParseHelpers
         {
             return parseByte(operand);
         }
-        return null;
+        return switch (operand)
+        {
+            case "p0" ->   (byte) Constants.ADDRESS_IO_PORT0;
+            case "sp" ->   (byte) Constants.ADDRESS_STACK_POINTER;
+            case "dpl" ->  (byte) Constants.ADDRESS_DATA_POINTER_LOWER;
+            case "dph" ->  (byte) Constants.ADDRESS_DATA_POINTER_UPPER;
+            case "pcon" -> (byte) Constants.ADDRESS_PCON;
+            case "tcon" -> (byte) Constants.ADDRESS_TCON;
+            case "tmod" -> (byte) Constants.ADDRESS_TMOD;
+            case "tl0" ->  (byte) Constants.ADDRESS_TL0;
+            case "tl1" ->  (byte) Constants.ADDRESS_TL1;
+            case "th0" ->  (byte) Constants.ADDRESS_TH0;
+            case "th1" ->  (byte) Constants.ADDRESS_TH1;
+            case "p1" ->   (byte) Constants.ADDRESS_IO_PORT1;
+            case "scon" -> (byte) Constants.ADDRESS_SCON;
+            case "sbuf" -> (byte) Constants.ADDRESS_SBUF;
+            case "p2" ->   (byte) Constants.ADDRESS_IO_PORT2;
+            case "ie" ->   (byte) Constants.ADDRESS_IE;
+            case "p3" ->   (byte) Constants.ADDRESS_IO_PORT3;
+            case "ip" ->   (byte) Constants.ADDRESS_IP;
+            case "psw" ->  (byte) Constants.ADDRESS_STATUS_WORD;
+            case "a" ->    (byte) Constants.ADDRESS_ACCUMULATOR;
+            case "b" ->    (byte) Constants.ADDRESS_REGISTER_B;
+            default -> null;
+        };
     }
 
     public static Byte parseImmediateOperand(String operand)
@@ -212,7 +241,11 @@ public final class ParseHelpers
         if (!operand.startsWith("#")) return null;
 
         String immOperand = operand.substring(1);
-        return parseAddressOperand(immOperand);
+        if (isNumber(immOperand))
+        {
+            return parseByte(immOperand);
+        }
+        return null;
     }
 
     public static Byte parseBitOperand(String operand, boolean bitComplement)
@@ -233,8 +266,46 @@ public final class ParseHelpers
                 {
                     return (byte) (value & 0xFF);
                 }
+                return null;
             }
-            return null;
+            return switch (operand.toLowerCase())
+            {
+                case "it0" -> (byte) Constants.BIT_ADDRESS_TCON_IT0;
+                case "ie0" -> (byte) Constants.BIT_ADDRESS_TCON_IE0;
+                case "it1" -> (byte) Constants.BIT_ADDRESS_TCON_IT1;
+                case "ie1" -> (byte) Constants.BIT_ADDRESS_TCON_IE1;
+                case "tr0" -> (byte) Constants.BIT_ADDRESS_TIMER0_RUNNING;
+                case "tf0" -> (byte) Constants.BIT_ADDRESS_TIMER0_OVERFLOW;
+                case "tr1" -> (byte) Constants.BIT_ADDRESS_TIMER1_RUNNING;
+                case "tf1" -> (byte) Constants.BIT_ADDRESS_TIMER1_OVERFLOW;
+                case "ri" -> (byte) Constants.BIT_ADDRESS_SCON_RI;
+                case "ti" -> (byte) Constants.BIT_ADDRESS_SCON_TI;
+                case "rb8" -> (byte) Constants.BIT_ADDRESS_SCON_RB8;
+                case "tb8" -> (byte) Constants.BIT_ADDRESS_SCRON_TB8;
+                case "ren" -> (byte) Constants.BIT_ADDRESS_SCON_REN;
+                case "sm2" -> (byte) Constants.BIT_ADDRESS_SCON_SM2;
+                case "sm1" -> (byte) Constants.BIT_ADDRESS_SCON_SM1;
+                case "sm0" -> (byte) Constants.BIT_ADDRESS_SCON_SM0;
+                case "ex0" -> (byte) Constants.BIT_ADDRESS_IE_EX0;
+                case "et0" -> (byte) Constants.BIT_ADDRESS_IE_ET0;
+                case "ex1" -> (byte) Constants.BIT_ADDRESS_IE_EX1;
+                case "et1" -> (byte) Constants.BIT_ADDRESS_IE_ET1;
+                case "es" -> (byte) Constants.BIT_ADDRESS_IE_ES;
+                case "ea" -> (byte) Constants.BIT_ADDRESS_IE_EA;
+                case "px0" -> (byte) Constants.BIT_ADDRESS_IP_PX0;
+                case "pt0" -> (byte) Constants.BIT_ADDRESS_IP_PT0;
+                case "px1" -> (byte) Constants.BIT_ADDRESS_IP_PX1;
+                case "pt1" -> (byte) Constants.BIT_ADDRESS_IP_PT1;
+                case "ps" -> (byte) Constants.BIT_ADDRESS_IP_PS;
+                case "p" -> (byte) Constants.BIT_ADDRESS_PARITY;
+                case "ov" -> (byte) Constants.BIT_ADDRESS_OVERFLOW;
+                case "rs0" -> (byte) Constants.BIT_ADDRESS_REGISTER_SELECT_0;
+                case "rs1" -> (byte) Constants.BIT_ADDRESS_REGISTER_SELECT_1;
+                case "f0" -> (byte) Constants.BIT_ADDRESS_FLAG0;
+                case "ac" -> (byte) Constants.BIT_ADDRESS_AUX_CARRY;
+                case "cy" -> (byte) Constants.BIT_ADDRESS_CARRY;
+                default -> null;
+            };
         }
 
         String[] parts = operand.split("\\.");

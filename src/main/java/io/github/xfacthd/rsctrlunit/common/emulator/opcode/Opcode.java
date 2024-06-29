@@ -141,7 +141,7 @@ public enum Opcode
     JMP             ("JMP",     1, 0, ParseHelpers.makeOneConstArgParser("@A+DPTR")),
     //Regular 0x74-0x7F
     MOV_ACC_IMM     ("MOV",     2, 1, ParseHelpers.makeTwoArgOneConstOneImmediateParser("A", false)),
-    MOV_MEM_IMM     ("MOV",     2, 2, ParseHelpers.makeTwoArgOneConstOneAddressParser("A", false)),
+    MOV_MEM_IMM     ("MOV",     2, 2, ParseHelpers.makeTwoArgOneAddressOneImmediateParser()),
     MOV_IR0_IMM     ("MOV",     2, 1, ParseHelpers.makeTwoConstArgParser("A", "@R0")),
     MOV_IR1_IMM     ("MOV",     2, 1, ParseHelpers.makeTwoConstArgParser("A", "@R1")),
     MOV_DR0_IMM     ("MOV",     2, 1, ParseHelpers.makeTwoConstArgParser("A", "R0")),
@@ -210,7 +210,7 @@ public enum Opcode
     ANL_C_NBIT      ("ANL",     2, 1, ParseHelpers.makeTwoArgOneConstOneBitParser("C", false, true)),
     ACALL_101       ("ACALL",   1, 1, ParseHelpers.makeOneLabelArgJumpParser()),
     CPL_BIT         ("CPL",     1, 1, ParseHelpers.makeOneBitArgParser(false)),
-    CPL_C           ("CPL",     1, 0, ParseHelpers.makeOneConstArgParser("C")),
+    CPL_C           ("CPL",     1, 0, ParseHelpers.makeOneConstArgParser("C"), 1),
     //Regular 0xB4-0xBF
     CJNE_ACC_IMM    ("CJNE",    3, 2, ParseHelpers.makeThreeArgJumpParser("A", ParseHelpers::parseImmediateOperand)),
     CJNE_ACC_MEM    ("CJNE",    3, 2, ParseHelpers.makeThreeArgJumpParser("A", ParseHelpers::parseAddressOperand)),
@@ -228,7 +228,7 @@ public enum Opcode
     PUSH            ("PUSH",    1, 1, ParseHelpers.makeOneAddressArgParser()),
     AJMP_110        ("AJMP",    1, 1, ParseHelpers.makeOneLabelArgJumpParser()),
     CLR_BIT         ("CLR",     1, 1, ParseHelpers.makeOneBitArgParser(false)),
-    CLR_C           ("CLR",     1, 0, ParseHelpers.makeOneConstArgParser("C")),
+    CLR_C           ("CLR",     1, 0, ParseHelpers.makeOneConstArgParser("C"), 1),
     //Regular 0xC4-0xCF
     SWAP            ("SWAP",    1, 0, ParseHelpers.makeOneConstArgParser("A")),
     XCH_MEM         ("XCH",     2, 1, ParseHelpers.makeTwoArgOneConstOneAddressParser("A", false)),
@@ -246,7 +246,7 @@ public enum Opcode
     POP             ("POP",     1, 1, ParseHelpers.makeOneAddressArgParser()),
     ACALL_110       ("ACALL",   1, 1, ParseHelpers.makeOneLabelArgJumpParser()),
     SETB_BIT        ("SETB",    1, 1, ParseHelpers.makeOneBitArgParser(false)),
-    SETB_C          ("SETB",    1, 0, ParseHelpers.makeOneConstArgParser("C")),
+    SETB_C          ("SETB",    1, 0, ParseHelpers.makeOneConstArgParser("C"), 1),
     //Regular 0xD4-0xDF
     DA              ("DA",      1, 0, ParseHelpers.makeOneConstArgParser("A")),
     DJNZ_MEM        ("DJNZ",    2, 2, ParseHelpers.makeTwoArgJumpParser(ParseHelpers::parseAddressOperand)),
@@ -306,6 +306,14 @@ public enum Opcode
             if (opcode == RESERVED) continue;
             map.computeIfAbsent(opcode.mnemonic.toLowerCase(Locale.ROOT), $ -> new ArrayList<>()).add(opcode);
         }
+        map.values().forEach(list -> list.sort((a, b) ->
+        {
+            if (a.priority != b.priority)
+            {
+                return Integer.compare(b.priority, a.priority);
+            }
+            return Integer.compare(a.ordinal(), b.ordinal());
+        }));
     });
 
     private final String mnemonic;
@@ -314,13 +322,21 @@ public enum Opcode
     // The amount of program memory bytes consumed by operands in machine code representation
     private final int operandBytes;
     private final NodeParser parser;
+    // Parser priority, opcodes with higher values are tried first
+    private final int priority;
 
     Opcode(String mnemonic, int operands, int operandBytes, NodeParser parser)
+    {
+        this(mnemonic, operands, operandBytes, parser, 0);
+    }
+
+    Opcode(String mnemonic, int operands, int operandBytes, NodeParser parser, int priority)
     {
         this.mnemonic = mnemonic;
         this.operands = operands;
         this.operandBytes = operandBytes;
         this.parser = parser;
+        this.priority = priority;
     }
 
     public String getMnemonic()

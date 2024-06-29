@@ -18,7 +18,7 @@ public final class Disassembler
 
     public static Disassembly disassemble(@Nullable Code code)
     {
-        if (code == null || code == Code.EMPTY) return Disassembly.EMPTY;
+        if (code == null || code.equals(Code.EMPTY)) return Disassembly.EMPTY;
 
         Disassembly disassembly = new Disassembly();
 

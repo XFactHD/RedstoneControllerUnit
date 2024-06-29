@@ -55,11 +55,40 @@ public final class Constants
             ADDRESS_IO_PORT0, ADDRESS_IO_PORT1, ADDRESS_IO_PORT2, ADDRESS_IO_PORT3
     };
 
+    public static final int BIT_ADDRESS_TCON_IT0 = ADDRESS_TCON;
+    public static final int BIT_ADDRESS_TCON_IE0 = ADDRESS_TCON + 1;
+    public static final int BIT_ADDRESS_TCON_IT1 = ADDRESS_TCON + 2;
+    public static final int BIT_ADDRESS_TCON_IE1 = ADDRESS_TCON + 3;
+    public static final int BIT_ADDRESS_TIMER0_RUNNING = ADDRESS_TCON + 4;
+    public static final int BIT_ADDRESS_TIMER0_OVERFLOW = ADDRESS_TCON + 5;
+    public static final int BIT_ADDRESS_TIMER1_RUNNING = ADDRESS_TCON + 6;
+    public static final int BIT_ADDRESS_TIMER1_OVERFLOW = ADDRESS_TCON + 7;
+    public static final int BIT_ADDRESS_SCON_RI = ADDRESS_SCON;
+    public static final int BIT_ADDRESS_SCON_TI = ADDRESS_SCON + 1;
+    public static final int BIT_ADDRESS_SCON_RB8 = ADDRESS_SCON + 2;
+    public static final int BIT_ADDRESS_SCRON_TB8 = ADDRESS_SCON + 3;
+    public static final int BIT_ADDRESS_SCON_REN = ADDRESS_SCON + 4;
+    public static final int BIT_ADDRESS_SCON_SM2 = ADDRESS_SCON + 5;
+    public static final int BIT_ADDRESS_SCON_SM1 = ADDRESS_SCON + 6;
+    public static final int BIT_ADDRESS_SCON_SM0 = ADDRESS_SCON + 7;
+    public static final int BIT_ADDRESS_IE_EX0 = ADDRESS_IE;
+    public static final int BIT_ADDRESS_IE_ET0 = ADDRESS_IE + 1;
+    public static final int BIT_ADDRESS_IE_EX1 = ADDRESS_IE + 2;
+    public static final int BIT_ADDRESS_IE_ET1 = ADDRESS_IE + 3;
+    public static final int BIT_ADDRESS_IE_ES = ADDRESS_IE + 4;
+    public static final int BIT_ADDRESS_IE_EA = ADDRESS_IE + 7;
+    public static final int BIT_ADDRESS_IP_PX0 = ADDRESS_IP;
+    public static final int BIT_ADDRESS_IP_PT0 = ADDRESS_IP + 1;
+    public static final int BIT_ADDRESS_IP_PX1 = ADDRESS_IP + 2;
+    public static final int BIT_ADDRESS_IP_PT1 = ADDRESS_IP + 3;
+    public static final int BIT_ADDRESS_IP_PS = ADDRESS_IP + 4;
     public static final int BIT_ADDRESS_PARITY = ADDRESS_STATUS_WORD;
     public static final int BIT_ADDRESS_OVERFLOW = ADDRESS_STATUS_WORD + 2;
+    public static final int BIT_ADDRESS_REGISTER_SELECT_0 = ADDRESS_STATUS_WORD + 3;
+    public static final int BIT_ADDRESS_REGISTER_SELECT_1 = ADDRESS_STATUS_WORD + 4;
+    public static final int BIT_ADDRESS_FLAG0 = ADDRESS_STATUS_WORD + 5;
     public static final int BIT_ADDRESS_AUX_CARRY = ADDRESS_STATUS_WORD + 6;
     public static final int BIT_ADDRESS_CARRY = ADDRESS_STATUS_WORD + 7;
-    public static final int BIT_ADDRESS_TIMER0_OVERFLOW = ADDRESS_TCON + 5;
 
     private Constants() { }
 }
