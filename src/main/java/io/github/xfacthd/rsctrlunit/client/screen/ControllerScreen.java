@@ -34,7 +34,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static final ResourceLocation INVENTORY = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final ResourceLocation REGISTERS = Utils.rl("textures/gui/controller_registers.png");
     private static final ResourceLocation CODE_BACKGROUND = Utils.rl("code_background");
-    private static final ResourceLocation CODE_SCROLLER = Utils.rl("code_scroller_vert");
+    private static final ResourceLocation CODE_SCROLLER_VERT = Utils.rl("code_scroller_vert");
+    private static final ResourceLocation CODE_SCROLLER_HOR = Utils.rl("code_scroller_hor");
     private static final ResourceLocation SLOT_BACKGROUND = ResourceLocation.withDefaultNamespace("container/slot");
     private static final int IMAGE_WIDTH = 360;
     private static final int IMAGE_HEIGHT = 218;
@@ -300,7 +301,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
     private static int scroll(int offset, double scrollOffset, int codeSize, int frameSize)
     {
-        return (int) Mth.clamp(offset - scrollOffset * 2, 0, Math.max(codeSize - frameSize, 0));
+        return (int) Mth.clamp(offset - scrollOffset * 2, 0, Math.max(codeSize - (frameSize - 4), 0));
     }
 
     private void renderDisassembly(GuiGraphics graphics, boolean renderCursor)
@@ -315,14 +316,14 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         {
             graphics.blitSprite(CODE_BACKGROUND, x + width, y, SCROLL_BAR_WIDTH + 2, height);
             int off = (int)((float)codeVertOffset / (codeHeight - height + 4) * (height - 2 - SCROLL_BAR_HEIGHT));
-            graphics.blitSprite(CODE_SCROLLER, x + width + 1, y + 1 + off, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
+            graphics.blitSprite(CODE_SCROLLER_VERT, x + width + 1, y + 1 + off, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
         }
         if (horScrollBar)
         {
             graphics.blitSprite(CODE_BACKGROUND, x, y + height, width, SCROLL_BAR_WIDTH + 2);
             int off = (int)((float)codeHorOffset / (codeWidth - width + 4) * (width - 2 - SCROLL_BAR_HEIGHT));
             //noinspection SuspiciousNameCombination
-            graphics.blitSprite(CODE_SCROLLER, x + 1 + off, y + height + 1, SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH);
+            graphics.blitSprite(CODE_SCROLLER_HOR, x + 1 + off, y + height + 1, SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH);
         }
         graphics.blitSprite(CODE_BACKGROUND, x, y, width, height);
 
