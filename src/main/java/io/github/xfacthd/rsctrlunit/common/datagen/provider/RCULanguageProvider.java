@@ -7,6 +7,7 @@ import io.github.xfacthd.rsctrlunit.client.screen.popup.MessageScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.widget.RedstoneConfig;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
+import io.github.xfacthd.rsctrlunit.common.compat.atlasviewer.AtlasViewerCompat;
 import io.github.xfacthd.rsctrlunit.common.menu.ProgrammerMenu;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
@@ -32,6 +33,7 @@ public final class RCULanguageProvider extends LanguageProvider
         addItemTranslations();
         addGenericTranslations();
         addScreenTranslations();
+        addSpecialTranslations();
     }
 
     private void addBlockTranslations()
@@ -154,6 +156,14 @@ public final class RCULanguageProvider extends LanguageProvider
         add(MessageScreen.INFO_TITLE, "Info");
         add(MessageScreen.ERROR_TITLE, "Error");
         add(MessageScreen.CONFIRM_TITLE, "Confirm");
+    }
+
+    private void addSpecialTranslations()
+    {
+        add(AtlasViewerCompat.LABEL_TEXTURE, "Texture");
+        add(AtlasViewerCompat.LABEL_SPRITE, "Sprite");
+        add(AtlasViewerCompat.LABEL_AREA, "Area");
+        add(AtlasViewerCompat.VALUE_AREA, "X: %s Y: %s Width: %s Height: %s");
     }
 
     private void add(Component key, String value)

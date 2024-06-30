@@ -17,7 +17,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.*;
 
-// TODO: AtlasViewer integration
 public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int x, int y, int w, int h) implements SpriteSource
 {
     private static SpriteSourceType TYPE = null;
@@ -58,7 +57,7 @@ public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int 
         return Objects.requireNonNull(TYPE);
     }
 
-    private record AreaMaskInstance(
+    public record AreaMaskInstance(
             ResourceLocation srcPath,
             Resource srcRes,
             LazyLoadedImage srcImg,

@@ -56,6 +56,9 @@
   "label.rsctrlunit.programmer.file_path": "File Path:",
   "label.rsctrlunit.programmer.file_type": "File Type:",
   "label.rsctrlunit.programmer.info": "Info:",
+  "label.rsctrlunit.source_tooltip.area_mask.area": "Area",
+  "label.rsctrlunit.source_tooltip.area_mask.sprite": "Sprite",
+  "label.rsctrlunit.source_tooltip.area_mask.texture": "Texture",
   "menu.rsctrlunit.controller": "Controller",
   "menu.rsctrlunit.programmer": "Programmer",
   "msg.rsctrlunit.programmer.confirm.overwrite_block": "The target Controller already has code loaded. Are you sure you want to overwrite it?",
@@ -97,5 +100,6 @@
   "tooltip.rsctrlunit.programmer.no_source": "No source file loaded",
   "tooltip.rsctrlunit.redstone_type.bundled": "8-bit redstone output to bundled redstone wires",
   "tooltip.rsctrlunit.redstone_type.none": "No redstone output",
-  "tooltip.rsctrlunit.redstone_type.single": "1-bit redstone output to vanilla redstone"
+  "tooltip.rsctrlunit.redstone_type.single": "1-bit redstone output to vanilla redstone",
+  "value.rsctrlunit.source_tooltip.area_mask.area": "X: %s Y: %s Width: %s Height: %s"
 }

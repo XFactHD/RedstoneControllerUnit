@@ -28,3 +28,10 @@ issueTrackerURL="https://github.com/XFactHD/RedstoneControlUnit"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.rsctrlunit]]
+    modId="atlasviewer"
+    type="optional"
+    versionRange="[${atlasviewer_version},)"
+    ordering="NONE"
+    side="CLIENT"
