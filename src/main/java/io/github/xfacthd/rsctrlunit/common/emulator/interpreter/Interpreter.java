@@ -475,8 +475,8 @@ public final class Interpreter
                     OpcodeHelpers.writeRegisterDirect(ram, romByte & 0b00000111, readRomAndIncrementPC());
             case MOV_MEM_MEM ->
             {
-                int srcAddr = readRomAndIncrementPC() & 0xFF;
                 int destAddr = readRomAndIncrementPC() & 0xFF;
+                int srcAddr = readRomAndIncrementPC() & 0xFF;
                 ram.writeByte(destAddr, ram.readByte(srcAddr));
             }
             case MOV_MEM_IR0, MOV_MEM_IR1 ->
