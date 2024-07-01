@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
+import java.util.Locale;
 import java.util.function.IntSupplier;
 import java.util.function.ToIntFunction;
 
@@ -54,7 +55,7 @@ public sealed class Register
         ClientUtils.drawStringInBatch(graphics, font, name, tooltipRect.getX(), y + 2, 0xFF404040);
 
         int value = reader.applyAsInt(ram);
-        ClientUtils.drawStringInBatch(graphics, font, valFormat.formatted(value), x + 2, y + 2, 0xFF000000);
+        ClientUtils.drawStringInBatch(graphics, font, String.format(Locale.ROOT, valFormat, value), x + 2, y + 2, 0xFF000000);
     }
 
     public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, int mouseX, int mouseY)
@@ -62,7 +63,7 @@ public sealed class Register
         if (tooltipRect.contains(mouseX, mouseY))
         {
             int addr = address.applyAsInt(ram);
-            Component text = Component.literal(name + ": 0x%02X".formatted(addr));
+            Component text = Component.literal(String.format(Locale.ROOT, "%s: 0x%02X", name, addr));
             graphics.renderTooltip(font, text, mouseX, mouseY);
         }
     }
@@ -71,7 +72,7 @@ public sealed class Register
     {
         int minX = x - 1 - font.width(name);
         tooltipRect.setX(minX);
-        int valWidth = font.width(valFormat.formatted(0));
+        int valWidth = font.width(String.format(Locale.ROOT, valFormat, 0));
         tooltipRect.setWidth(x - minX + 2 + valWidth);
         tooltipRect.setHeight(font.lineHeight + 1);
     }
@@ -96,7 +97,7 @@ public sealed class Register
             super.draw(graphics, font, ram);
 
             int value = inputs[port] & 0xFF;
-            ClientUtils.drawStringInBatch(graphics, font, valFormat.formatted(value), x + 29, y + 2, 0xFF000000);
+            ClientUtils.drawStringInBatch(graphics, font, String.format(Locale.ROOT, valFormat, value), x + 29, y + 2, 0xFF000000);
         }
 
         @Override
@@ -104,7 +105,7 @@ public sealed class Register
         {
             int minX = x - 1 - font.width(name);
             tooltipRect.setX(minX);
-            int valWidth = font.width(valFormat.formatted(0));
+            int valWidth = font.width(String.format(Locale.ROOT, valFormat, 0));
             tooltipRect.setWidth(x - minX + 5 + valWidth * 2);
             tooltipRect.setHeight(font.lineHeight + 1);
         }

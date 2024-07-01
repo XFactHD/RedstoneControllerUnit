@@ -10,6 +10,8 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
+import java.util.Locale;
+
 public final class Disassembler
 {
     @VisibleForTesting
@@ -33,12 +35,12 @@ public final class Disassembler
             String label = labels.get(opIndex);
             if (label != null)
             {
-                disassembly.addLabelLine(LABEL_LINE_TEMPLATE.formatted(label));
+                disassembly.addLabelLine(String.format(Locale.ROOT, LABEL_LINE_TEMPLATE, label));
             }
 
             byte romByte = rom[opIndex];
             Opcode opcode = Opcode.fromRomByte(romByte);
-            StringBuilder line = new StringBuilder(CODE_LINE_TEMPLATE.formatted(opIndex, opcode.getMnemonic())).append(" ");
+            StringBuilder line = new StringBuilder(String.format(Locale.ROOT, CODE_LINE_TEMPLATE, opIndex, opcode.getMnemonic())).append(" ");
             switch (opcode)
             {
                 case NOP, RET, RETI -> {}
@@ -149,7 +151,7 @@ public final class Disassembler
                 {
                     int upper = rom[counter.getAndIncrement()] & 0xFF;
                     int lower = rom[counter.getAndIncrement()] & 0xFF;
-                    line.append("DPTR,#").append(prefixHex("%04Xh".formatted((upper << 8) | lower)));
+                    line.append("DPTR,#").append(prefixHex(String.format(Locale.ROOT, "%04Xh", (upper << 8) | lower)));
                 }
                 case MOV_BIT_C -> line.append(printBitAddress(rom[counter.getAndIncrement()])).append(",C");
                 case MOV_C_BIT -> line.append("C,").append(printBitAddress(rom[counter.getAndIncrement()]));
@@ -236,7 +238,7 @@ public final class Disassembler
         {
             return label;
         }
-        return prefixHex("%04Xh".formatted(addressOrOffset));
+        return prefixHex(String.format(Locale.ROOT, "%04Xh", addressOrOffset));
     }
 
     private static int computeJumpTarget(MutableInt currCounter, int addressOrOffset, boolean absolute)
@@ -279,7 +281,7 @@ public final class Disassembler
 
     private static String printAddress(int byteValue)
     {
-        return prefixHex("%02Xh".formatted(byteValue & 0xFF));
+        return prefixHex(String.format(Locale.ROOT, "%02Xh", byteValue & 0xFF));
     }
 
     private static String printImmediate(byte immediate)

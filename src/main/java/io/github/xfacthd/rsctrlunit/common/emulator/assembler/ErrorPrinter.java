@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
+import java.util.Locale;
 
 public interface ErrorPrinter
 {
@@ -28,7 +29,7 @@ public interface ErrorPrinter
         @Override
         public void warning(String msg, Object... args)
         {
-            warning(msg.formatted(args));
+            warning(String.format(Locale.ROOT, msg, args));
         }
 
         @Override
@@ -40,7 +41,7 @@ public interface ErrorPrinter
         @Override
         public void error(String msg, Object... args)
         {
-            error(msg.formatted(args));
+            error(String.format(Locale.ROOT, msg, args));
         }
     }
 }
