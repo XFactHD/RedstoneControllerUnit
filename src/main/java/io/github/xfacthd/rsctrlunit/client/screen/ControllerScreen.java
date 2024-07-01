@@ -37,8 +37,10 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static final ResourceLocation CODE_SCROLLER_VERT = Utils.rl("code_scroller_vert");
     private static final ResourceLocation CODE_SCROLLER_HOR = Utils.rl("code_scroller_hor");
     private static final ResourceLocation SLOT_BACKGROUND = ResourceLocation.withDefaultNamespace("container/slot");
+    private static final ResourceLocation INDICATOR_RUNNING = Utils.rl("indicator_green");
+    private static final ResourceLocation INDICATOR_STOPPED = Utils.rl("indicator_red");
     private static final int IMAGE_WIDTH = 360;
-    private static final int IMAGE_HEIGHT = 218;
+    private static final int IMAGE_HEIGHT = 221;
     private static final int TAB_HEIGHT = 22;
     private static final int TAB_EDGE_HEIGHT = 4;
     private static final int BUTTON_WIDTH = 120;
@@ -56,6 +58,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static final int REGISTER_ENTRY_WIDTH = 27;
     private static final int INVENTORY_WIDTH = 162;
     private static final int INVENTORY_HEIGHT = 76;
+    private static final int INDICATOR_SIZE = 12;
     private static final int BACKGROUND_Y = TAB_HEIGHT - TAB_EDGE_HEIGHT;
     private static final int REGISTER_X = 5;
     private static final int REGISTER_LEFT_X = 20;
@@ -75,6 +78,12 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static final int LOAD_BUTTON_Y = TAB_HEIGHT + 30;
     private static final int SAVE_BUTTON_Y = TAB_HEIGHT + 54;
     private static final int CLEAR_BUTTON_Y = TAB_HEIGHT + 78;
+    private static final int INDICATOR_X = REGISTER_X + 2;
+    private static final int INDICATOR_Y = IMAGE_HEIGHT - 11 - INDICATOR_SIZE;
+    private static final int CTRL_BUTTON_Y = INDICATOR_Y - 2;
+    private static final int CTRL_BUTTON_WIDTH = (REGISTER_WIDTH - (INDICATOR_X - REGISTER_X) - INDICATOR_SIZE - 10) / 2;
+    private static final int PAUSE_BUTTON_X = INDICATOR_X + INDICATOR_SIZE + 5;
+    private static final int STEP_BUTTON_X = PAUSE_BUTTON_X + CTRL_BUTTON_WIDTH + 5;
     private static final int TAB_STATUS = 0;
     private static final int TAB_CODE = 1;
     private static final int TAB_REDSTONE = 2;
@@ -94,9 +103,14 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     public static final Component BUTTON_LOAD_ROM = Component.translatable("button.rsctrlunit.controller.load_rom");
     public static final Component BUTTON_SAVE_ROM = Component.translatable("button.rsctrlunit.controller.save_rom");
     public static final Component BUTTON_CLEAR_ROM = Component.translatable("button.rsctrlunit.controller.clear_rom");
+    public static final Component BUTTON_PAUSE = Component.translatable("button.rsctrlunit.controller.pause");
+    public static final Component BUTTON_RESUME = Component.translatable("button.rsctrlunit.controller.resume");
+    public static final Component BUTTON_STEP = Component.translatable("button.rsctrlunit.controller.step");
     public static final String LABEL_PROGRAM_KEY = "label.rsctrlunit.controller.program";
     public static final Component LABEL_PORT_REG_OUT = Component.translatable("label.rsctrlunit.controller.port.out");
     public static final Component LABEL_PORT_REG_IN = Component.translatable("label.rsctrlunit.controller.port.in");
+    public static final Component TOOLTIP_RUNNING = Component.translatable("tooltip.rsctrlunit.controller.running");
+    public static final Component TOOLTIP_PAUSED = Component.translatable("tooltip.rsctrlunit.controller.paused");
 
     private final List<Register> registers = new ArrayList<>();
     private final List<RedstoneConfig> redstoneConfigs = new ArrayList<>();
@@ -106,6 +120,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private Button buttonLoad;
     private Button buttonSave;
     private Button buttonClear;
+    private Button buttonPauseResume;
+    private Button buttonStep;
     private int lineHeight = 0;
     private int programCounter = 0;
     private Disassembly disassembly = Disassembly.EMPTY;
@@ -145,12 +161,25 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         buttonSave = addRenderableWidget(Button.builder(BUTTON_SAVE_ROM, btn -> saveRom())
                 .pos(leftPos + BUTTON_X, topPos + SAVE_BUTTON_Y)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-                .build());
+                .build()
+        );
         buttonClear = addRenderableWidget(Button.builder(BUTTON_CLEAR_ROM, btn -> clearRom())
                 .pos(leftPos + BUTTON_X, topPos + CLEAR_BUTTON_Y)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
         );
+        buttonPauseResume = addRenderableWidget(Button.builder(BUTTON_PAUSE, btn -> togglePauseResume())
+                .pos(leftPos + PAUSE_BUTTON_X, topPos + CTRL_BUTTON_Y)
+                .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
+                .build()
+        );
+        buttonStep = addRenderableWidget(Button.builder(BUTTON_STEP, btn -> step())
+                .pos(leftPos + STEP_BUTTON_X, topPos + CTRL_BUTTON_Y)
+                .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
+                .build()
+        );
+
+        buttonStep.active = false;
 
         lineHeight = font.lineHeight + 1;
 
@@ -242,6 +271,11 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
                 {
                     reg.drawTooltip(graphics, font, ramView, mouseX, mouseY);
                 }
+                if (mouseX >= leftPos + INDICATOR_X && mouseX < leftPos + INDICATOR_X + INDICATOR_SIZE && mouseY >= topPos + INDICATOR_Y && mouseY < topPos + INDICATOR_Y + INDICATOR_SIZE)
+                {
+                    Component tooltip = menu.isRunning() ? TOOLTIP_RUNNING : TOOLTIP_PAUSED;
+                    graphics.renderTooltip(font, tooltip, mouseX, mouseY);
+                }
             }
             case TAB_CODE -> { }
             case TAB_REDSTONE ->
@@ -253,6 +287,14 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
                 }
             }
         }
+    }
+
+    @Override
+    protected void containerTick()
+    {
+        boolean running = menu.isRunning();
+        buttonPauseResume.setMessage(running ? BUTTON_PAUSE : BUTTON_RESUME);
+        buttonStep.active = !running;
     }
 
     @Override
@@ -360,6 +402,10 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         x += REGISTER_ENTRY_WIDTH;
         ClientUtils.drawCenteredString(graphics, font, LABEL_PORT_REG_IN, x, y, 0xFF404040, false);
 
+        boolean running = menu.isRunning();
+        ResourceLocation indicator = running ? INDICATOR_RUNNING : INDICATOR_STOPPED;
+        graphics.blitSprite(indicator, leftPos + INDICATOR_X, topPos + INDICATOR_Y, 0, INDICATOR_SIZE, INDICATOR_SIZE);
+
         renderDisassembly(graphics, true);
     }
 
@@ -420,6 +466,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         buttonLoad.visible = tab == TAB_CODE;
         buttonSave.visible = tab == TAB_CODE;
         buttonClear.visible = tab == TAB_CODE;
+        buttonPauseResume.visible = tab == TAB_STATUS;
+        buttonStep.visible = tab == TAB_STATUS;
     }
 
     private void loadRom()
@@ -435,6 +483,16 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private void clearRom()
     {
         PacketDistributor.sendToServer(new ServerboundClearRomPayload(menu.containerId));
+    }
+
+    private void togglePauseResume()
+    {
+        PacketDistributor.sendToServer(new ServerboundTogglePauseResumePayload(menu.containerId));
+    }
+
+    private void step()
+    {
+        PacketDistributor.sendToServer(new ServerboundRequestStepPayload(menu.containerId));
     }
 
     public void updateStatus(byte[] ram, byte[] output, byte[] input, int programCounter)

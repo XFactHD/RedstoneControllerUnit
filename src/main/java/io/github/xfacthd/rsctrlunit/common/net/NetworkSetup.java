@@ -60,6 +60,16 @@ public final class NetworkSetup
                         ServerboundRequestCodePayload.TYPE,
                         ServerboundRequestCodePayload.STREAM_CODEC,
                         ServerboundRequestCodePayload::handle
+                )
+                .playToServer(
+                        ServerboundTogglePauseResumePayload.TYPE,
+                        ServerboundTogglePauseResumePayload.STREAM_CODEC,
+                        ServerboundTogglePauseResumePayload::handle
+                )
+                .playToServer(
+                        ServerboundRequestStepPayload.TYPE,
+                        ServerboundRequestStepPayload.STREAM_CODEC,
+                        ServerboundRequestStepPayload::handle
                 );
     }
 

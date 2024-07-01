@@ -15,6 +15,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -25,7 +26,7 @@ import java.util.Objects;
 
 public final class ControllerMenu extends CardInventoryContainerMenu
 {
-    private static final SlotConfig SLOT_CONFIG = new SlotConfig(true, 14, 135, 14, 78, idx -> false);
+    private static final SlotConfig SLOT_CONFIG = new SlotConfig(true, 14, 138, 14, 78, idx -> false);
 
     @Nullable
     private final ServerPlayer player;
@@ -35,6 +36,7 @@ public final class ControllerMenu extends CardInventoryContainerMenu
     private final RedstoneInterface redstone;
     private final PortConfig[] portConfigs;
     private final PortConfig[] lastPortConfigs = new PortConfig[4];
+    private final DataSlot runningSlot;
     private Direction facing;
     private Code code;
 
@@ -78,12 +80,18 @@ public final class ControllerMenu extends CardInventoryContainerMenu
         this.redstone = redstone;
         this.facing = facing;
         this.portConfigs = portConfigs;
+        this.runningSlot = addDataSlot(DataSlot.standalone());
         this.code = code;
     }
 
     @Override
     public void broadcastChanges()
     {
+        if (interpreter != null)
+        {
+            runningSlot.set(interpreter.isPaused() ? 0 : 1);
+        }
+
         super.broadcastChanges();
         if (player == null) return;
 
@@ -118,6 +126,11 @@ public final class ControllerMenu extends CardInventoryContainerMenu
     public Code getCode()
     {
         return code;
+    }
+
+    public boolean isRunning()
+    {
+        return runningSlot.get() != 0;
     }
 
     public void updatePortConfigs(Direction facing, PortConfig[] configs)
@@ -171,6 +184,28 @@ public final class ControllerMenu extends CardInventoryContainerMenu
                 .filter(ControllerBlockEntity.class::isInstance)
                 .map(ControllerBlockEntity.class::cast)
                 .ifPresent(be -> be.loadCode(code));
+    }
+
+    public void togglePauseResume()
+    {
+        if (interpreter == null) return;
+
+        if (interpreter.isPaused())
+        {
+            interpreter.resume();
+        }
+        else
+        {
+            interpreter.pause();
+        }
+    }
+
+    public void requestStep()
+    {
+        if (interpreter != null && interpreter.isPaused())
+        {
+            interpreter.step();
+        }
     }
 
     @Override

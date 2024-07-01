@@ -99,9 +99,14 @@ public final class RCULanguageProvider extends LanguageProvider
         add(ControllerScreen.BUTTON_LOAD_ROM, "Load ROM from card");
         add(ControllerScreen.BUTTON_SAVE_ROM, "Save ROM to card");
         add(ControllerScreen.BUTTON_CLEAR_ROM, "Clear ROM");
+        add(ControllerScreen.BUTTON_PAUSE, "Pause");
+        add(ControllerScreen.BUTTON_RESUME, "Resume");
+        add(ControllerScreen.BUTTON_STEP, "Step");
         add(ControllerScreen.LABEL_PROGRAM_KEY, "Program: %s");
         add(ControllerScreen.LABEL_PORT_REG_OUT, "Out");
         add(ControllerScreen.LABEL_PORT_REG_IN, "In");
+        add(ControllerScreen.TOOLTIP_RUNNING, "Interpreter is running");
+        add(ControllerScreen.TOOLTIP_PAUSED, "Interpreter is paused");
 
         add(RedstoneConfig.TEXT_PORT_IDX_KEY, "Port %s");
         add(RedstoneConfig.TEXT_INPUT, "Input");
