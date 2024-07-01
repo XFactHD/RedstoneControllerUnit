@@ -81,6 +81,7 @@ public final class Assembler
                 else if (directiveNode != null)
                 {
                     nodes.add(directiveNode);
+                    continue;
                 }
 
                 String[] operands = extractOperands(parts);
