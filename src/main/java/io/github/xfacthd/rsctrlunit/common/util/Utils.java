@@ -13,6 +13,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.*;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -70,6 +71,21 @@ public final class Utils
     public static <T> void copyArray(T[] src, T[] dest)
     {
         System.arraycopy(src, 0, dest, 0, Math.min(src.length, dest.length));
+    }
+
+    public static String toHexString(byte[] bytes)
+    {
+        StringBuilder builder = new StringBuilder("[");
+        for (int i = 0; i < bytes.length; i++)
+        {
+            if (i > 0)
+            {
+                builder.append(", ");
+            }
+            int value = bytes[i] & 0xFF;
+            builder.append(String.format(Locale.ROOT, "0x%02X", value));
+        }
+        return builder.append("]").toString();
     }
 
     @SuppressWarnings("unchecked")

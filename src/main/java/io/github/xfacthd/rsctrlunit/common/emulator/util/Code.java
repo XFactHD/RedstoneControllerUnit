@@ -3,6 +3,7 @@ package io.github.xfacthd.rsctrlunit.common.emulator.util;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.rsctrlunit.common.util.RCUCodecs;
+import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.*;
 import net.minecraft.ChatFormatting;
@@ -13,8 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implements TooltipProvider
@@ -59,6 +59,12 @@ public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implem
     public int hashCode()
     {
         return Objects.hash(Arrays.hashCode(rom), labels);
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.ROOT, "Code[name=%s, rom=%s, labels=%s]", name, Utils.toHexString(rom), labels);
     }
 
     @Override

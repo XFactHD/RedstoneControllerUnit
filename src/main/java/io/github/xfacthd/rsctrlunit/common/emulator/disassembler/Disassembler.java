@@ -8,11 +8,14 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 
 public final class Disassembler
 {
-    private static final String LABEL_LINE_TEMPLATE = "        %s:";
-    private static final String CODE_LINE_TEMPLATE = "%04X | %s";
+    @VisibleForTesting
+    public static final String LABEL_LINE_TEMPLATE = "        %s:";
+    @VisibleForTesting
+    public static final String CODE_LINE_TEMPLATE = "%04X | %s";
 
     private Disassembler() { }
 
