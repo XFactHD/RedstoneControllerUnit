@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -68,7 +67,7 @@ public final class Assembler
                 }
 
                 String[] parts = line.split(" ");
-                Node directiveNode = parseDirective(lineNum, parts[0], Arrays.copyOfRange(parts, 1, parts.length));
+                Node directiveNode = Directive.parseDirective(lineNum, parts);
                 if (directiveNode instanceof ErrorNode error)
                 {
                     errorPrinter.error(error.error());
@@ -99,66 +98,6 @@ public final class Assembler
             return List.of();
         }
         return nodes;
-    }
-
-    @Nullable
-    private static Node parseDirective(int line, String directive, String[] params)
-    {
-        return switch (directive.toLowerCase(Locale.ROOT))
-        {
-            case "org" ->
-            {
-                if (params.length == 0)
-                {
-                    yield new ErrorNode(line, "Expected address parameter for ORG directive");
-                }
-                if (params.length == 1)
-                {
-                    String lowerParam = params[0].toLowerCase(Locale.ROOT);
-                    if (ParseHelpers.isNumber(lowerParam))
-                    {
-                        int address = ParseHelpers.parseInt(lowerParam);
-                        if (address >= 0 && address < Constants.ROM_SIZE)
-                        {
-                            yield new OriginDirectiveNode(line, address);
-                        }
-                    }
-                }
-                yield new ErrorNode(line, "Unexpected or invalid parameters for ORG directive: " + Arrays.toString(params));
-            }
-            case "equ" -> new ErrorNode(line, "EQU directive unsupported");
-            case "set" -> new ErrorNode(line, "SET directive unsupported");
-            case "bit" -> new ErrorNode(line, "BIT directive unsupported");
-            case "code" -> new ErrorNode(line, "CODE directive unsupported");
-            case "data" -> new ErrorNode(line, "DATA directive unsupported");
-            case "idata" -> new ErrorNode(line, "IDATA directive unsupported");
-            case "xdata" -> new ErrorNode(line, "XDATA directive unsupported");
-            case "using" ->
-            {
-                if (params.length == 1)
-                {
-                    String bank = params[0];
-                    switch (bank)
-                    {
-                        case "0": yield new UsingDirectiveNode(line, 0);
-                        case "1": yield new UsingDirectiveNode(line, 1);
-                        case "2": yield new UsingDirectiveNode(line, 2);
-                        case "3": yield new UsingDirectiveNode(line, 3);
-                    }
-                }
-                yield new ErrorNode(line, "Unexpected or invalid parameters for USING directive: " + Arrays.toString(params));
-            }
-            case "end" ->
-            {
-                if (params.length == 0)
-                {
-                    yield new EndDirectiveNode(line);
-                }
-                yield new ErrorNode(line, "Unexpected parameters for END directive: " + Arrays.toString(params));
-            }
-            case "db" -> new ErrorNode(line, "DB directive unsupported");
-            default -> null;
-        };
     }
 
     private static String[] extractOperands(String[] parts)
@@ -223,15 +162,28 @@ public final class Assembler
     private static int computeCodeSize(List<Node> nodes, ErrorPrinter errorPrinter)
     {
         int size = 0;
+        boolean skip = false;
         for (Node node : nodes)
         {
-            if (node instanceof OpNode opNode)
+            if (node instanceof OpNode opNode && !skip)
             {
                 size += 1 + opNode.opcode().getOperandBytes();
             }
-            else if (node instanceof OriginDirectiveNode org && size < org.origin())
+            else if (node instanceof OriginDirectiveNode org)
             {
-                size = org.origin();
+                if (size < org.origin())
+                {
+                    size = org.origin();
+                    skip = false;
+                }
+                else
+                {
+                    skip = true;
+                }
+            }
+            else if (node instanceof DefineByteDirectiveNode dbNode && !skip)
+            {
+                size += dbNode.data().length;
             }
         }
         if (size > Constants.ROM_SIZE)
@@ -259,6 +211,12 @@ public final class Assembler
             if (node instanceof OriginDirectiveNode orgNode)
             {
                 pointer = orgNode.origin();
+                continue;
+            }
+            if (node instanceof DefineByteDirectiveNode dbNode)
+            {
+                System.arraycopy(dbNode.data(), 0, codeBytes, pointer, dbNode.data().length);
+                pointer += dbNode.data().length;
                 continue;
             }
 

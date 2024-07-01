@@ -362,7 +362,7 @@ public final class ParseHelpers
         return StringUtils.isNumeric(operand);
     }
 
-    private static byte parseByte(String operand)
+    public static byte parseByte(String operand)
     {
         return (byte) (parseInt(operand) & 0xFF);
     }
