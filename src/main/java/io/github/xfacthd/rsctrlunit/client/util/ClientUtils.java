@@ -11,8 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import org.joml.Matrix4f;
 
-import java.nio.file.Path;
-
 public final class ClientUtils
 {
     private static final WidgetSprites BTN_SPRITES = new WidgetSprites(
@@ -82,17 +80,6 @@ public final class ClientUtils
     {
         FormattedCharSequence charSeq = text.getVisualOrderText();
         graphics.drawString(font, charSeq, x - font.width(charSeq) / 2, y, color, shadow);
-    }
-
-    public static String getFileNameNoExt(Path path)
-    {
-        String fileName = path.getFileName().toString();
-        int period = fileName.lastIndexOf('.');
-        if (period > -1)
-        {
-            fileName = fileName.substring(0, period);
-        }
-        return fileName;
     }
 
     public static int getWrappedHeight(Font font, FormattedText text, int width)

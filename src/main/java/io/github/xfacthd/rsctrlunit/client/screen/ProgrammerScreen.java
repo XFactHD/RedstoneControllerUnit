@@ -6,11 +6,13 @@ import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.Assembler;
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.ErrorPrinter;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
+import io.github.xfacthd.rsctrlunit.common.emulator.util.Labels;
 import io.github.xfacthd.rsctrlunit.common.menu.ProgrammerMenu;
 import io.github.xfacthd.rsctrlunit.common.menu.slot.Lockable;
 import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundRequestCodePayload;
 import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundWriteToTargetPayload;
 import io.github.xfacthd.rsctrlunit.common.util.ThrowingSupplier;
+import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -444,7 +446,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         );
         if (source == null || source.isBlank()) return;
 
-        String name = ClientUtils.getFileNameNoExt(filePath);
+        String name = Utils.getFileNameNoExt(filePath);
         List<Component> lines = new ArrayList<>();
         Code code = guardOperation(
                 () -> Assembler.assemble(name, source, new ErrorPrinter.Collecting(lines)),
@@ -480,8 +482,9 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         setAssembledCode(guardOperation(() ->
         {
             byte[] bytes = Files.readAllBytes(filePath);
-            String fileName = ClientUtils.getFileNameNoExt(filePath);
-            return new Code(fileName, bytes);
+            String fileName = Utils.getFileNameNoExt(filePath);
+            Labels labels = Labels.readFromFile(filePath, bytes);
+            return new Code(fileName, bytes, labels.labels());
         }, () -> Component.translatable(MSG_ERROR_READ_BINARY, filePath.getFileName().toString())));
     }
 
@@ -489,7 +492,12 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     {
         if (assembledCode == null) return;
         FileDialog.openFileDialog(this, LAST_PATH_STORAGE, "Save binary file", BINARY_FILTER, true, path -> guardOperation(
-                () -> Files.write(path, assembledCode.rom(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE),
+                () ->
+                {
+                    Files.write(path, assembledCode.rom(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+                    Labels.of(assembledCode).writeToFile(path);
+                    return null;
+                },
                 () -> Component.translatable(MSG_ERROR_WRITE_BINARY, filePath.getFileName().toString())
         ));
     }

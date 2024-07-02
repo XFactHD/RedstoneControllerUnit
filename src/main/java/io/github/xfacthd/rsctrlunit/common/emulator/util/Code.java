@@ -36,11 +36,6 @@ public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implem
     public static final Code EMPTY = new Code("", new byte[0], Int2ObjectMaps.emptyMap());
     public static final Component EMPTY_NAME = Component.translatable("rsctrlunit.code.name.empty").withStyle(ChatFormatting.ITALIC);
 
-    public Code(String name, byte[] rom)
-    {
-        this(name, rom, Int2ObjectMaps.emptyMap());
-    }
-
     public Component displayName()
     {
         return EMPTY.equals(this) ? EMPTY_NAME : Component.literal(name);

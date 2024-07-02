@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.*;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -101,6 +102,17 @@ public final class Utils
     )
     {
         return createBlockEntityTicker(type, actualType, (level, pos, state, be) -> ticker.accept(be));
+    }
+
+    public static String getFileNameNoExt(Path path)
+    {
+        String fileName = path.getFileName().toString();
+        int period = fileName.lastIndexOf('.');
+        if (period > -1)
+        {
+            fileName = fileName.substring(0, period);
+        }
+        return fileName;
     }
 
 
