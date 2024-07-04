@@ -4,6 +4,7 @@ public final class Constants
 {
     public static final int ROM_SIZE = 65536;
     public static final int RAM_SIZE = 256;
+    public static final int EXT_RAM_SIZE = 8192; // Could support up to 64k but this seems more reasonable
     public static final int INITIAL_PROGRAM_COUNTER = 0;
     public static final int INITIAL_STACK_POINTER = 0x07;
 

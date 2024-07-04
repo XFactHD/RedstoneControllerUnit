@@ -19,6 +19,7 @@ public final class Interpreter
     private final IOPorts ioPorts = new IOPorts();
     private final RAM ram = new RAM(ioPorts);
     private final Timers timers = new Timers(ram, ioPorts);
+    private final byte[] extRam = new byte[Constants.EXT_RAM_SIZE];
     private Code code = Code.EMPTY;
     private int programCounter = 0;
     private volatile boolean running = false;
@@ -527,15 +528,32 @@ public final class Interpreter
                 ram.writeByte(Constants.ADDRESS_ACCUMULATOR, rom[address]);
             }
             case MOVX_ACC_IDPTR ->
-                    throw new IllegalStateException("External memory unsupported");
-            case MOVX_ACC_IR0, MOVX_ACC_IR1 -> //noinspection DuplicateBranchesInSwitch
-                    throw new IllegalStateException("External memory unsupported");
-            case MOVX_IDPTR_ACC -> //noinspection DuplicateBranchesInSwitch
-                    throw new IllegalStateException("External memory unsupported");
-            case MOVX_IR0_ACC, MOVX_IR1_ACC -> //noinspection DuplicateBranchesInSwitch
-                    throw new IllegalStateException("External memory unsupported");
-            default ->
-                    throw new IllegalStateException("Unrecognized opcode: " + opcode);
+            {
+                int addr = OpcodeHelpers.readDataPointer(ram);
+                addr %= Constants.EXT_RAM_SIZE;
+                extRam[addr] = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
+            }
+            case MOVX_ACC_IR0, MOVX_ACC_IR1 ->
+            {
+                int addr = OpcodeHelpers.readRegisterDirect(ram, romByte & 0b00000001);
+                addr |= ram.read(Constants.ADDRESS_IO_PORT2) << 8;
+                addr %= Constants.EXT_RAM_SIZE;
+                extRam[addr] = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
+            }
+            case MOVX_IDPTR_ACC ->
+            {
+                int addr = OpcodeHelpers.readDataPointer(ram);
+                addr %= Constants.EXT_RAM_SIZE;
+                ram.writeByte(Constants.ADDRESS_ACCUMULATOR, extRam[addr]);
+            }
+            case MOVX_IR0_ACC, MOVX_IR1_ACC ->
+            {
+                int addr = OpcodeHelpers.readRegisterDirect(ram, romByte & 0b00000001);
+                addr |= ram.read(Constants.ADDRESS_IO_PORT2) << 8;
+                addr %= Constants.EXT_RAM_SIZE;
+                ram.writeByte(Constants.ADDRESS_ACCUMULATOR, extRam[addr]);
+            }
+            default -> throw new IllegalStateException("Unrecognized opcode: " + opcode);
         }
     }
 
@@ -581,6 +599,7 @@ public final class Interpreter
     {
         programCounter = Constants.INITIAL_PROGRAM_COUNTER;
         ram.reset();
+        Arrays.fill(extRam, (byte) 0);
         if (clearRom)
         {
             Arrays.fill(rom, (byte) 0);
@@ -689,6 +708,7 @@ public final class Interpreter
         Utils.copyByteArray(tag.getByteArray("ram"), ram.getBackingArray());
         ioPorts.load(tag.getCompound("io"));
         timers.load(tag.getCompound("timers"));
+        Utils.copyByteArray(tag.getByteArray("external_ram"), extRam);
         programCounter = tag.getInt("program_counter");
         paused = tag.getBoolean("paused");
     }
@@ -701,6 +721,7 @@ public final class Interpreter
         tag.putByteArray("ram", Arrays.copyOf(ram.getBackingArray(), ram.getBackingArray().length));
         tag.put("io", ioPorts.save());
         tag.put("timers", timers.save());
+        tag.putByteArray("external_ram", Arrays.copyOf(extRam, extRam.length));
         tag.putInt("program_counter", programCounter);
         tag.putBoolean("paused", paused);
         return tag;
