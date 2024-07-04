@@ -161,6 +161,7 @@ public final class Disassembler
                 case MOVX_ACC_IR0, MOVX_ACC_IR1 -> line.append("A,").append(printRegisterIndirect(opcode));
                 case MOVX_IDPTR_ACC -> line.append("@DPTR,A");
                 case MOVX_IR0_ACC, MOVX_IR1_ACC -> line.append(printRegisterIndirect(opcode)).append(",A");
+                case RESERVED -> line.append("???");
                 default -> throw new IllegalStateException("Unrecognized opcode: " + opcode + " at offset: " + opIndex);
             }
             disassembly.addCodeLine(opIndex, line.toString().stripTrailing());
