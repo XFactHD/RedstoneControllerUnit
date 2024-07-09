@@ -3,6 +3,7 @@
   "button.rsctrlunit.controller.clear_rom": "Clear ROM",
   "button.rsctrlunit.controller.load_rom": "Load ROM from card",
   "button.rsctrlunit.controller.pause": "Pause",
+  "button.rsctrlunit.controller.reset": "Reset",
   "button.rsctrlunit.controller.resume": "Resume",
   "button.rsctrlunit.controller.save_rom": "Save ROM to card",
   "button.rsctrlunit.controller.step": "Step",

@@ -102,6 +102,7 @@ public final class RCULanguageProvider extends LanguageProvider
         add(ControllerScreen.BUTTON_PAUSE, "Pause");
         add(ControllerScreen.BUTTON_RESUME, "Resume");
         add(ControllerScreen.BUTTON_STEP, "Step");
+        add(ControllerScreen.BUTTON_RESET, "Reset");
         add(ControllerScreen.LABEL_PROGRAM_KEY, "Program: %s");
         add(ControllerScreen.LABEL_PORT_REG_OUT, "Out");
         add(ControllerScreen.LABEL_PORT_REG_IN, "In");

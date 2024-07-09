@@ -70,6 +70,11 @@ public final class NetworkSetup
                         ServerboundRequestStepPayload.TYPE,
                         ServerboundRequestStepPayload.STREAM_CODEC,
                         ServerboundRequestStepPayload::handle
+                )
+                .playToServer(
+                        ServerboundRequestResetPayload.TYPE,
+                        ServerboundRequestResetPayload.STREAM_CODEC,
+                        ServerboundRequestResetPayload::handle
                 );
     }
 

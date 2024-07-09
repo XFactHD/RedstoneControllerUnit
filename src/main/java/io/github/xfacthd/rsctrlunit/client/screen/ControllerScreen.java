@@ -78,12 +78,13 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static final int LOAD_BUTTON_Y = TAB_HEIGHT + 30;
     private static final int SAVE_BUTTON_Y = TAB_HEIGHT + 54;
     private static final int CLEAR_BUTTON_Y = TAB_HEIGHT + 78;
-    private static final int INDICATOR_X = REGISTER_X + 2;
+    private static final int INDICATOR_X = REGISTER_X + 4;
     private static final int INDICATOR_Y = IMAGE_HEIGHT - 11 - INDICATOR_SIZE;
     private static final int CTRL_BUTTON_Y = INDICATOR_Y - 2;
-    private static final int CTRL_BUTTON_WIDTH = (REGISTER_WIDTH - (INDICATOR_X - REGISTER_X) - INDICATOR_SIZE - 10) / 2;
+    private static final int CTRL_BUTTON_WIDTH = (REGISTER_WIDTH - (INDICATOR_X - REGISTER_X) - INDICATOR_SIZE - 15) / 3;
     private static final int PAUSE_BUTTON_X = INDICATOR_X + INDICATOR_SIZE + 5;
     private static final int STEP_BUTTON_X = PAUSE_BUTTON_X + CTRL_BUTTON_WIDTH + 5;
+    private static final int RESET_BUTTON_X = STEP_BUTTON_X + CTRL_BUTTON_WIDTH + 5;
     private static final int TAB_STATUS = 0;
     private static final int TAB_CODE = 1;
     private static final int TAB_REDSTONE = 2;
@@ -106,6 +107,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     public static final Component BUTTON_PAUSE = Component.translatable("button.rsctrlunit.controller.pause");
     public static final Component BUTTON_RESUME = Component.translatable("button.rsctrlunit.controller.resume");
     public static final Component BUTTON_STEP = Component.translatable("button.rsctrlunit.controller.step");
+    public static final Component BUTTON_RESET = Component.translatable("button.rsctrlunit.controller.reset");
     public static final String LABEL_PROGRAM_KEY = "label.rsctrlunit.controller.program";
     public static final Component LABEL_PORT_REG_OUT = Component.translatable("label.rsctrlunit.controller.port.out");
     public static final Component LABEL_PORT_REG_IN = Component.translatable("label.rsctrlunit.controller.port.in");
@@ -122,6 +124,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private Button buttonClear;
     private Button buttonPauseResume;
     private Button buttonStep;
+    private Button buttonReset;
     private int lineHeight = 0;
     private int programCounter = 0;
     private Disassembly disassembly = Disassembly.EMPTY;
@@ -175,6 +178,11 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         );
         buttonStep = addRenderableWidget(Button.builder(BUTTON_STEP, btn -> step())
                 .pos(leftPos + STEP_BUTTON_X, topPos + CTRL_BUTTON_Y)
+                .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
+                .build()
+        );
+        buttonReset = addRenderableWidget(Button.builder(BUTTON_RESET, btn -> reset())
+                .pos(leftPos + RESET_BUTTON_X, topPos + CTRL_BUTTON_Y)
                 .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
                 .build()
         );
@@ -468,6 +476,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         buttonClear.visible = tab == TAB_CODE;
         buttonPauseResume.visible = tab == TAB_STATUS;
         buttonStep.visible = tab == TAB_STATUS;
+        buttonReset.visible = tab == TAB_STATUS;
     }
 
     private void loadRom()
@@ -493,6 +502,11 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private void step()
     {
         PacketDistributor.sendToServer(new ServerboundRequestStepPayload(menu.containerId));
+    }
+
+    private void reset()
+    {
+        PacketDistributor.sendToServer(new ServerboundRequestResetPayload(menu.containerId));
     }
 
     public void updateStatus(byte[] ram, byte[] output, byte[] input, int programCounter)

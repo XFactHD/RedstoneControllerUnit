@@ -208,6 +208,14 @@ public final class ControllerMenu extends CardInventoryContainerMenu
         }
     }
 
+    public void requestReset()
+    {
+        if (interpreter != null)
+        {
+            interpreter.reset(false);
+        }
+    }
+
     @Override
     public boolean stillValid(Player player)
     {
