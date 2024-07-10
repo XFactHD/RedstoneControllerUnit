@@ -5,6 +5,7 @@ import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.item.ProgrammerItem;
 import io.github.xfacthd.rsctrlunit.common.menu.ControllerMenu;
+import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.github.xfacthd.rsctrlunit.common.util.property.*;
@@ -38,12 +39,13 @@ public final class ControllerBlock extends Block implements EntityBlock
     public ControllerBlock()
     {
         super(Properties.of().strength(1.5F, 6.0F));
+        registerDefaultState(defaultBlockState().setValue(PropertyHolder.SHOW_PORT_MAPPING, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
-        builder.add(BlockStateProperties.FACING);
+        builder.add(BlockStateProperties.FACING, PropertyHolder.SHOW_PORT_MAPPING);
         builder.add(PropertyHolder.RS_CON_PROPS);
     }
 
@@ -104,6 +106,7 @@ public final class ControllerBlock extends Block implements EntityBlock
                 Code.STREAM_CODEC.encode(buf, be.getInterpreter().getCode());
                 Direction.STREAM_CODEC.encode(buf, facing);
                 RedstoneType.PORT_ARRAY_STREAM_CODEC.encode(buf, be.getRedstoneInterface().getPortConfigs());
+                RedstoneInterface.PORT_MAPPING_STREAM_CODEC.encode(buf, be.getRedstoneInterface().getPortMapping());
             });
         }
         return InteractionResult.sidedSuccess(level.isClientSide());

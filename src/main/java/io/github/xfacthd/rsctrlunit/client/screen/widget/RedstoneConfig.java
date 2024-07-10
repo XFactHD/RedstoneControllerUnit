@@ -17,7 +17,7 @@ import java.util.List;
 
 public final class RedstoneConfig
 {
-    private static final int HEIGHT = 16;
+    public static final int HEIGHT = 16;
     public static final int FRAME_PADDING = 2;
     public static final int HEIGHT_PADDED = HEIGHT + FRAME_PADDING * 2;
     private static final int PADDING = 5;
@@ -26,7 +26,7 @@ public final class RedstoneConfig
     public static final int WIDTH_TYPE = 40;
     private static final int WIDTH_BUNDLE_BIT = 11;
     public static final int WIDTH_DIR = WIDTH_BUNDLE_BIT * 8;
-    private static final int WIDTH_PIN_BTN = 11;
+    public static final int WIDTH_PIN_BTN = 11;
     private static final int WIDTH_PIN_FIELD = 23;
     public static final int WIDTH_PIN = WIDTH_PIN_BTN * 2 + WIDTH_PIN_FIELD + 2;
     public static final int X_SIDE = WIDTH_PORT + PADDING;
@@ -63,7 +63,7 @@ public final class RedstoneConfig
     public static final Component TOOLTIP_BUNDLED_MAPPING_LOWER = Component.translatable("tooltip.rsctrlunit.port_config.bundled.mapping_lower");
     public static final Component TOOLTIP_BUNDLED_MAPPING_UPPER = Component.translatable("tooltip.rsctrlunit.port_config.bundled.mapping_upper");
     public static final String TEXT_PORT_IDX_KEY = "desc.rsctrlunit.port_config.port_index";
-    private static final Component[] TEXT_PORT_IDX = Util.make(new Component[4], arr ->
+    public static final Component[] TEXT_PORT_IDX = Util.make(new Component[4], arr ->
     {
         for (int i = 0; i < arr.length; i++)
         {
@@ -71,7 +71,7 @@ public final class RedstoneConfig
         }
     });
     public static final ResourceLocation BACKGROUND = Utils.rl("port_config_background");
-    private static final ResourceLocation TEXT_FIELD = ResourceLocation.withDefaultNamespace("widget/text_field");
+    public static final ResourceLocation TEXT_FIELD = ResourceLocation.withDefaultNamespace("widget/text_field");
 
     private final ControllerScreen screen;
     private final int port;
@@ -94,7 +94,8 @@ public final class RedstoneConfig
 
         graphics.drawString(font, TEXT_PORT_IDX[port], x + 4, y + 4, 0xFF000000, false);
 
-        Direction side = PortMapping.getPortSide(facing, port);
+        int mapped = screen.getMenu().getPortMapping()[port];
+        Direction side = PortMapping.getPortSide(facing, mapped);
         graphics.drawString(font, Utils.DIRECTION_NAMES[side.ordinal()], x + X_SIDE + 4, y + 4, 0xFF000000, false);
 
         ClientUtils.drawButton(graphics, font, x + X_TYPE, y, WIDTH_TYPE, HEIGHT, cfg.getType().getTranslatedName(), true, true, true, 0, mouseX, mouseY);

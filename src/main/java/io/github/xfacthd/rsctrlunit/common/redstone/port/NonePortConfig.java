@@ -36,6 +36,18 @@ public final class NonePortConfig implements PortConfig
     }
 
     @Override
+    public boolean hasInputs()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean hasOutputs()
+    {
+        return false;
+    }
+
+    @Override
     public RedstoneType getType()
     {
         return RedstoneType.NONE;

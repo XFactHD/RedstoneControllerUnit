@@ -81,6 +81,18 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
     }
 
     @Override
+    public boolean hasInputs()
+    {
+        return inputMask != 0;
+    }
+
+    @Override
+    public boolean hasOutputs()
+    {
+        return ~inputMask != 0;
+    }
+
+    @Override
     public RedstoneType getType()
     {
         return RedstoneType.BUNDLED;

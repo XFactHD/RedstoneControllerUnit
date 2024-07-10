@@ -1,5 +1,6 @@
 package io.github.xfacthd.rsctrlunit.client.screen;
 
+import io.github.xfacthd.rsctrlunit.client.screen.popup.EditPortMappingScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.widget.*;
 import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
@@ -67,8 +68,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static final int REGISTER_Y = TAB_HEIGHT + 13;
     private static final int REGISTER_PC_PSW_X = 105;
     private static final int REDSTONE_CFG_X = (IMAGE_WIDTH / 2) - (RedstoneConfig.WIDTH / 2);
-    private static final int REDSTONE_HEADER_Y = TAB_HEIGHT + ((IMAGE_HEIGHT - TAB_HEIGHT) / 2) - (RedstoneConfig.HEIGHT_PADDED * 5 / 2);
-    private static final int REDSTONE_CFG_Y = TAB_HEIGHT + ((IMAGE_HEIGHT - TAB_HEIGHT) / 2) - (RedstoneConfig.HEIGHT_PADDED * 3 / 2);
+    private static final int REDSTONE_CFG_Y = TAB_HEIGHT + ((IMAGE_HEIGHT - TAB_HEIGHT) / 2) - (RedstoneConfig.HEIGHT_PADDED * 3 / 2) - BUTTON_HEIGHT - 5;
+    private static final int REDSTONE_HEADER_Y = REDSTONE_CFG_Y - RedstoneConfig.HEIGHT_PADDED;
     private static final int INVENTORY_X = DISASSEMBLY_X / 2 - INVENTORY_WIDTH / 2 + 1;
     private static final int INVENTORY_Y = IMAGE_HEIGHT - 76 - 8;
     private static final int TITLE_Y = TAB_HEIGHT + 1;
@@ -82,9 +83,13 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static final int INDICATOR_Y = IMAGE_HEIGHT - 11 - INDICATOR_SIZE;
     private static final int CTRL_BUTTON_Y = INDICATOR_Y - 2;
     private static final int CTRL_BUTTON_WIDTH = (REGISTER_WIDTH - (INDICATOR_X - REGISTER_X) - INDICATOR_SIZE - 15) / 3;
+    private static final int PORT_MAP_BUTTON_WIDTH = 140;
     private static final int PAUSE_BUTTON_X = INDICATOR_X + INDICATOR_SIZE + 5;
     private static final int STEP_BUTTON_X = PAUSE_BUTTON_X + CTRL_BUTTON_WIDTH + 5;
     private static final int RESET_BUTTON_X = STEP_BUTTON_X + CTRL_BUTTON_WIDTH + 5;
+    private static final int PORT_MAP_BUTTON_X = IMAGE_WIDTH / 2 - PORT_MAP_BUTTON_WIDTH / 2;
+    private static final int EDIT_PORT_MAP_BUTTON_Y = REDSTONE_CFG_Y + RedstoneConfig.HEIGHT_PADDED * 4 + 10;
+    private static final int TOGGLE_PORT_MAP_BUTTON_Y = EDIT_PORT_MAP_BUTTON_Y + BUTTON_HEIGHT + 5;
     private static final int TAB_STATUS = 0;
     private static final int TAB_CODE = 1;
     private static final int TAB_REDSTONE = 2;
@@ -108,6 +113,9 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     public static final Component BUTTON_RESUME = Component.translatable("button.rsctrlunit.controller.resume");
     public static final Component BUTTON_STEP = Component.translatable("button.rsctrlunit.controller.step");
     public static final Component BUTTON_RESET = Component.translatable("button.rsctrlunit.controller.reset");
+    public static final Component BUTTON_EDIT_PORT_MAP = Component.translatable("button.rsctrlunit.controller.edit_port_map");
+    public static final Component BUTTON_SHOW_PORT_MAP = Component.translatable("button.rsctrlunit.controller.show_port_map");
+    public static final Component BUTTON_HIDE_PORT_MAP = Component.translatable("button.rsctrlunit.controller.hide_port_map");
     public static final String LABEL_PROGRAM_KEY = "label.rsctrlunit.controller.program";
     public static final Component LABEL_PORT_REG_OUT = Component.translatable("label.rsctrlunit.controller.port.out");
     public static final Component LABEL_PORT_REG_IN = Component.translatable("label.rsctrlunit.controller.port.in");
@@ -125,6 +133,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private Button buttonPauseResume;
     private Button buttonStep;
     private Button buttonReset;
+    private Button buttonEditPortMap;
+    private Button buttonTogglePortMap;
     private int lineHeight = 0;
     private int programCounter = 0;
     private Disassembly disassembly = Disassembly.EMPTY;
@@ -184,6 +194,16 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         buttonReset = addRenderableWidget(Button.builder(BUTTON_RESET, btn -> reset())
                 .pos(leftPos + RESET_BUTTON_X, topPos + CTRL_BUTTON_Y)
                 .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
+                .build()
+        );
+        buttonEditPortMap = addRenderableWidget(Button.builder(BUTTON_EDIT_PORT_MAP, btn -> editPortMap())
+                .pos(leftPos + PORT_MAP_BUTTON_X, topPos + EDIT_PORT_MAP_BUTTON_Y)
+                .size(PORT_MAP_BUTTON_WIDTH, BUTTON_HEIGHT)
+                .build()
+        );
+        buttonTogglePortMap = addRenderableWidget(Button.builder(BUTTON_SHOW_PORT_MAP, btn -> togglePortMap())
+                .pos(leftPos + PORT_MAP_BUTTON_X, topPos + TOGGLE_PORT_MAP_BUTTON_Y)
+                .size(PORT_MAP_BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
         );
 
@@ -303,6 +323,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         boolean running = menu.isRunning();
         buttonPauseResume.setMessage(running ? BUTTON_PAUSE : BUTTON_RESUME);
         buttonStep.active = !running;
+        boolean showPortMap = menu.isPortMapShown();
+        buttonTogglePortMap.setMessage(showPortMap ? BUTTON_HIDE_PORT_MAP : BUTTON_SHOW_PORT_MAP);
     }
 
     @Override
@@ -477,6 +499,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         buttonPauseResume.visible = tab == TAB_STATUS;
         buttonStep.visible = tab == TAB_STATUS;
         buttonReset.visible = tab == TAB_STATUS;
+        buttonEditPortMap.visible = tab == TAB_REDSTONE;
+        buttonTogglePortMap.visible = tab == TAB_REDSTONE;
     }
 
     private void loadRom()
@@ -507,6 +531,16 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private void reset()
     {
         PacketDistributor.sendToServer(new ServerboundRequestResetPayload(menu.containerId));
+    }
+
+    private void editPortMap()
+    {
+        Minecraft.getInstance().pushGuiLayer(new EditPortMappingScreen(this));
+    }
+
+    private void togglePortMap()
+    {
+        PacketDistributor.sendToServer(new ServerboundTogglePortMapRenderPayload(menu.containerId));
     }
 
     public void updateStatus(byte[] ram, byte[] output, byte[] input, int programCounter)

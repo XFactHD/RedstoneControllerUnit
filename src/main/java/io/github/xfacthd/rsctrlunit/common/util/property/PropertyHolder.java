@@ -1,5 +1,7 @@
 package io.github.xfacthd.rsctrlunit.common.util.property;
 
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+
 public final class PropertyHolder
 {
     public static final RedstoneTypeProperty RS_CON_0 = RedstoneTypeProperty.create("rs_con_0");
@@ -9,6 +11,8 @@ public final class PropertyHolder
     public static final RedstoneTypeProperty[] RS_CON_PROPS = new RedstoneTypeProperty[] {
             RS_CON_0, RS_CON_1, RS_CON_2, RS_CON_3
     };
+
+    public static final BooleanProperty SHOW_PORT_MAPPING = BooleanProperty.create("show_port_mapping");
 
     private PropertyHolder() { }
 }

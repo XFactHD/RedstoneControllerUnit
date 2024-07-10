@@ -6,12 +6,19 @@ import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -19,6 +26,7 @@ import java.util.Objects;
 public final class ControllerBlockEntity extends BlockEntity
 {
     public static final Component TITLE = Component.translatable("menu.rsctrlunit.controller");
+    public static final ModelProperty<int[]> PORT_MAPPING_PROPERTY = new ModelProperty<>();
 
     private final Interpreter interpreter = new Interpreter();
     private final Timers timers = interpreter.getTimers();
@@ -83,6 +91,50 @@ public final class ControllerBlockEntity extends BlockEntity
         {
             owningChunk.setUnsaved(true);
         }
+    }
+
+    public void markForSyncAndSave()
+    {
+        level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        setChangedWithoutSignalUpdate();
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+    {
+        CompoundTag tag = new CompoundTag();
+        tag.put("redstone", redstone.writeToNetwork());
+        return tag;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries)
+    {
+        redstone.readFromNetwork(tag.getCompound("redstone"));
+        requestModelDataUpdate();
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket()
+    {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registries)
+    {
+        CompoundTag tag = pkt.getTag();
+        if (!tag.isEmpty() && redstone.readFromNetwork(tag.getCompound("redstone")))
+        {
+            requestModelDataUpdate();
+            level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public ModelData getModelData()
+    {
+        return ModelData.builder().with(PORT_MAPPING_PROPERTY, redstone.getPortMapping().clone()).build();
     }
 
     @Override

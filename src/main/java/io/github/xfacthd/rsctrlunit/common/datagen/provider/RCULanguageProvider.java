@@ -3,6 +3,7 @@ package io.github.xfacthd.rsctrlunit.common.datagen.provider;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.ProgrammerScreen;
+import io.github.xfacthd.rsctrlunit.client.screen.popup.EditPortMappingScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.popup.MessageScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.widget.RedstoneConfig;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
@@ -103,6 +104,9 @@ public final class RCULanguageProvider extends LanguageProvider
         add(ControllerScreen.BUTTON_RESUME, "Resume");
         add(ControllerScreen.BUTTON_STEP, "Step");
         add(ControllerScreen.BUTTON_RESET, "Reset");
+        add(ControllerScreen.BUTTON_EDIT_PORT_MAP, "Edit port mapping");
+        add(ControllerScreen.BUTTON_SHOW_PORT_MAP, "Show port mapping");
+        add(ControllerScreen.BUTTON_HIDE_PORT_MAP, "Hide port mapping");
         add(ControllerScreen.LABEL_PROGRAM_KEY, "Program: %s");
         add(ControllerScreen.LABEL_PORT_REG_OUT, "Out");
         add(ControllerScreen.LABEL_PORT_REG_IN, "In");
@@ -162,6 +166,8 @@ public final class RCULanguageProvider extends LanguageProvider
         add(MessageScreen.INFO_TITLE, "Info");
         add(MessageScreen.ERROR_TITLE, "Error");
         add(MessageScreen.CONFIRM_TITLE, "Confirm");
+
+        add(EditPortMappingScreen.TITLE, "Port Mapping");
     }
 
     private void addSpecialTranslations()

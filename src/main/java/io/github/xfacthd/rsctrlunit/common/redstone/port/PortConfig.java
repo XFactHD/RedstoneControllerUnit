@@ -14,6 +14,10 @@ public sealed interface PortConfig permits NonePortConfig, SinglePortConfig, Bun
 
     byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side, byte portState);
 
+    boolean hasInputs();
+
+    boolean hasOutputs();
+
     RedstoneType getType();
 
     default PortConfig cycleType()

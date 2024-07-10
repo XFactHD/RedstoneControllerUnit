@@ -55,6 +55,18 @@ public record SinglePortConfig(int pin, boolean input) implements PortConfig
     }
 
     @Override
+    public boolean hasInputs()
+    {
+        return input;
+    }
+
+    @Override
+    public boolean hasOutputs()
+    {
+        return !input;
+    }
+
+    @Override
     public RedstoneType getType()
     {
         return RedstoneType.SINGLE;

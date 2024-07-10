@@ -1,5 +1,6 @@
 package io.github.xfacthd.rsctrlunit.client.model;
 
+import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import net.minecraft.client.renderer.RenderType;
@@ -19,12 +20,14 @@ public final class ControllerModel extends BakedModelWrapper<BakedModel>
 {
     private final BakedModel[] singleModels;
     private final BakedModel[] bundledModels;
+    private final BakedModel[][] portIndexModels;
 
-    ControllerModel(BakedModel baseModel, BakedModel[] singleModels, BakedModel[] bundledModels)
+    ControllerModel(BakedModel baseModel, BakedModel[] singleModels, BakedModel[] bundledModels, BakedModel[][] portIndexModels)
     {
         super(baseModel);
         this.singleModels = singleModels;
         this.bundledModels = bundledModels;
+        this.portIndexModels = portIndexModels;
     }
 
     @Override
@@ -47,6 +50,21 @@ public final class ControllerModel extends BakedModelWrapper<BakedModel>
 
                 BakedModel model = type == RedstoneType.SINGLE ? singleModels[i] : bundledModels[i];
                 quads.addAll(model.getQuads(state, side, rand, extraData, renderType));
+            }
+            int[] portMapping = extraData.get(ControllerBlockEntity.PORT_MAPPING_PROPERTY);
+            if (portMapping != null && state.getValue(PropertyHolder.SHOW_PORT_MAPPING))
+            {
+                if (!copied)
+                {
+                    quads = new ArrayList<>(quads);
+                }
+
+                for (int port = 0; port < 4; port++)
+                {
+                    int extPort = portMapping[port];
+                    BakedModel model = portIndexModels[extPort][port];
+                    quads.addAll(model.getQuads(state, side, rand, extraData, renderType));
+                }
             }
         }
         return quads;

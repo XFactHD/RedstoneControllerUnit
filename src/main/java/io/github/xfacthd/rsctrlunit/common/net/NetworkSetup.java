@@ -31,6 +31,11 @@ public final class NetworkSetup
                         ClientboundReplyCodePayload.STREAM_CODEC,
                         ClientboundReplyCodePayload::handle
                 )
+                .playToClient(
+                        ClientboundUpdatePortMappingPayload.TYPE,
+                        ClientboundUpdatePortMappingPayload.STREAM_CODEC,
+                        ClientboundUpdatePortMappingPayload::handle
+                )
                 .playToServer(
                         ServerboundSetPortConfigPayload.TYPE,
                         ServerboundSetPortConfigPayload.STREAM_CODEC,
@@ -75,6 +80,16 @@ public final class NetworkSetup
                         ServerboundRequestResetPayload.TYPE,
                         ServerboundRequestResetPayload.STREAM_CODEC,
                         ServerboundRequestResetPayload::handle
+                )
+                .playToServer(
+                        ServerboundTogglePortMapRenderPayload.TYPE,
+                        ServerboundTogglePortMapRenderPayload.STREAM_CODEC,
+                        ServerboundTogglePortMapRenderPayload::handle
+                )
+                .playToServer(
+                        ServerboundSetPortMappingPayload.TYPE,
+                        ServerboundSetPortMappingPayload.STREAM_CODEC,
+                        ServerboundSetPortMappingPayload::handle
                 );
     }
 

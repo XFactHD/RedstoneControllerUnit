@@ -17,12 +17,14 @@ public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeom
     private final BlockModel baseModel;
     private final BlockModel singleModel;
     private final BlockModel bundledModel;
+    private final BlockModel[] portIndexModels;
 
-    ControllerGeometry(BlockModel baseModel, BlockModel singleModel, BlockModel bundledModel)
+    ControllerGeometry(BlockModel baseModel, BlockModel singleModel, BlockModel bundledModel, BlockModel[] portIndexModels)
     {
         this.baseModel = baseModel;
         this.singleModel = singleModel;
         this.bundledModel = bundledModel;
+        this.portIndexModels = portIndexModels;
     }
 
     @Override
@@ -36,6 +38,7 @@ public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeom
     {
         BakedModel[] singleModels = new BakedModel[4];
         BakedModel[] bundledModels = new BakedModel[4];
+        BakedModel[][] portModels = new BakedModel[4][4];
 
         for (int i = 0; i < 4; i++)
         {
@@ -45,9 +48,14 @@ public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeom
             );
             singleModels[i] = singleModel.bake(baker, singleModel, spriteGetter, rotState, true);
             bundledModels[i] = bundledModel.bake(baker, bundledModel, spriteGetter, rotState, true);
+            for (int j = 0; j < 4; j++)
+            {
+                BlockModel portModel = portIndexModels[j];
+                portModels[i][j] = portModel.bake(baker, portModel, spriteGetter, rotState, true);
+            }
         }
 
-        return new ControllerModel(baseModel.bake(baker, baseModel, spriteGetter, modelState, true), singleModels, bundledModels);
+        return new ControllerModel(baseModel.bake(baker, baseModel, spriteGetter, modelState, true), singleModels, bundledModels, portModels);
     }
 
     @Override

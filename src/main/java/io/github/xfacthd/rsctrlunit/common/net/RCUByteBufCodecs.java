@@ -1,6 +1,8 @@
 package io.github.xfacthd.rsctrlunit.common.net;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.EncoderException;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -32,6 +34,28 @@ public final class RCUByteBufCodecs
                     arr[i] = wrapped.decode(buf);
                 }
                 return arr;
+            }
+        };
+    }
+
+    public static <B extends FriendlyByteBuf> StreamCodec<B, int[]> intArray(int maxSize)
+    {
+        return new StreamCodec<>()
+        {
+            @Override
+            public int[] decode(B buffer)
+            {
+                return buffer.readVarIntArray(maxSize);
+            }
+
+            @Override
+            public void encode(B buffer, int[] value)
+            {
+                if (value.length > maxSize)
+                {
+                    throw new EncoderException("ByteArray with size " + value.length + " is bigger than allowed " + maxSize);
+                }
+                buffer.writeVarIntArray(value);
             }
         };
     }

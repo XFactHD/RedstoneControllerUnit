@@ -8,6 +8,7 @@ import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.*;
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
+import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,12 +33,17 @@ public final class ControllerMenu extends CardInventoryContainerMenu
     @Nullable
     private final ServerPlayer player;
     @Nullable
+    private final ControllerBlockEntity blockEntity;
+    @Nullable
     private final Interpreter interpreter;
     @Nullable
     private final RedstoneInterface redstone;
     private final PortConfig[] portConfigs;
     private final PortConfig[] lastPortConfigs = new PortConfig[4];
+    private final int[] portMapping;
+    private final int[] lastPortMapping = new int[4];
     private final DataSlot runningSlot;
+    private final DataSlot showPortMapSlot;
     private Direction facing;
     private Code code;
 
@@ -46,7 +53,8 @@ public final class ControllerMenu extends CardInventoryContainerMenu
         Code code = Code.STREAM_CODEC.decode(buf);
         Direction facing = Direction.STREAM_CODEC.decode(buf);
         PortConfig[] portConfigs = RedstoneType.PORT_ARRAY_STREAM_CODEC.decode(buf);
-        return new ControllerMenu(windowId, pos, inventory, null, null, facing, portConfigs, code);
+        int[] portMapping = RedstoneInterface.PORT_MAPPING_STREAM_CODEC.decode(buf);
+        return new ControllerMenu(windowId, pos, inventory, null, facing, portConfigs, portMapping, code);
     }
 
     public static ControllerMenu createServer(
@@ -56,31 +64,35 @@ public final class ControllerMenu extends CardInventoryContainerMenu
             Direction facing
     )
     {
-        Interpreter interpreter = be.getInterpreter();
-        RedstoneInterface redstone = be.getRedstoneInterface();
-        PortConfig[] portConfigs = redstone.getPortConfigs();
-        Code code = interpreter.getCode();
-        return new ControllerMenu(windowId, be.getBlockPos(), player.getInventory(), interpreter, redstone, facing, portConfigs, code);
+        PortConfig[] portConfigs = be.getRedstoneInterface().getPortConfigs();
+        int[] portMapping = be.getRedstoneInterface().getPortMapping();
+        Code code = be.getInterpreter().getCode();
+        return new ControllerMenu(windowId, be.getBlockPos(), player.getInventory(), be, facing, portConfigs, portMapping, code);
     }
 
     private ControllerMenu(
             int windowId,
             BlockPos pos,
             Inventory inventory,
-            @Nullable Interpreter interpreter,
-            @Nullable RedstoneInterface redstone,
+            @Nullable ControllerBlockEntity blockEntity,
             Direction facing,
             PortConfig[] portConfigs,
+            int[] portMapping,
             Code code
     )
     {
         super(RCUContent.MENU_TYPE_CONTROLLER.get(), windowId, inventory, pos, SLOT_CONFIG);
         this.player = inventory.player instanceof ServerPlayer serverPlayer ? serverPlayer : null;
-        this.interpreter = interpreter;
-        this.redstone = redstone;
+        this.blockEntity = blockEntity;
+        this.interpreter = blockEntity != null ? blockEntity.getInterpreter() : null;
+        this.redstone = blockEntity != null ? blockEntity.getRedstoneInterface() : null;
         this.facing = facing;
         this.portConfigs = portConfigs;
+        Utils.copyArray(portConfigs, lastPortConfigs);
+        this.portMapping = portMapping;
+        Utils.copyIntArray(portMapping, lastPortMapping);
         this.runningSlot = addDataSlot(DataSlot.standalone());
+        this.showPortMapSlot = addDataSlot(DataSlot.standalone());
         this.code = code;
     }
 
@@ -90,6 +102,10 @@ public final class ControllerMenu extends CardInventoryContainerMenu
         if (interpreter != null)
         {
             runningSlot.set(interpreter.isPaused() ? 0 : 1);
+        }
+        if (blockEntity != null)
+        {
+            showPortMapSlot.set(blockEntity.getBlockState().getValue(PropertyHolder.SHOW_PORT_MAPPING) ? 1 : 0);
         }
 
         super.broadcastChanges();
@@ -109,6 +125,11 @@ public final class ControllerMenu extends CardInventoryContainerMenu
             facing = newFacing;
             Utils.copyArray(portConfigs, lastPortConfigs);
             PacketDistributor.sendToPlayer(player, new ClientboundUpdatePortConfigsPayload(containerId, facing, portConfigs));
+        }
+        if (!Arrays.equals(lastPortMapping, portMapping))
+        {
+            Utils.copyIntArray(portMapping, lastPortMapping);
+            PacketDistributor.sendToPlayer(player, new ClientboundUpdatePortMappingPayload(containerId, portMapping));
         }
         PacketDistributor.sendToPlayer(player, ClientboundUpdateStatusPayload.of(containerId, interpreter));
     }
@@ -213,6 +234,38 @@ public final class ControllerMenu extends CardInventoryContainerMenu
         if (interpreter != null)
         {
             interpreter.reset(false);
+        }
+    }
+
+    public boolean isPortMapShown()
+    {
+        return showPortMapSlot.get() != 0;
+    }
+
+    public void togglePortMapRender()
+    {
+        if (blockEntity != null)
+        {
+            BlockState state = blockEntity.getBlockState().cycle(PropertyHolder.SHOW_PORT_MAPPING);
+            blockEntity.level().setBlockAndUpdate(blockEntity.getBlockPos(), state);
+        }
+    }
+
+    public int[] getPortMapping()
+    {
+        return portMapping;
+    }
+
+    public void updatePortMapping(int[] mapping)
+    {
+        Utils.copyIntArray(mapping, this.portMapping);
+    }
+
+    public void setPortMapping(int[] mapping)
+    {
+        if (RedstoneInterface.validatePortMapping(mapping))
+        {
+            Objects.requireNonNull(redstone).setPortMapping(mapping);
         }
     }
 

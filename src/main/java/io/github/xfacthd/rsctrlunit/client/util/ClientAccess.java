@@ -47,6 +47,15 @@ public final class ClientAccess
         }
     }
 
+    public static void handlePortMappingUpdate(int windowId, int[] portMapping)
+    {
+        Screen screen = Minecraft.getInstance().screen;
+        if (screen instanceof ControllerScreen ctrlScreen && ctrlScreen.getMenu().containerId == windowId)
+        {
+            ctrlScreen.getMenu().updatePortMapping(portMapping);
+        }
+    }
+
 
 
     private ClientAccess() { }
