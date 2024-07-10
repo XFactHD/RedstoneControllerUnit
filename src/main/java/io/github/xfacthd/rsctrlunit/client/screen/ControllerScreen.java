@@ -166,45 +166,45 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
                 .addButton(TAB_TITLES[TAB_REDSTONE])
                 .build(this::addRenderableWidget, tab);
 
-        buttonLoad = addRenderableWidget(Button.builder(BUTTON_LOAD_ROM, btn -> loadRom())
+        buttonLoad = addRenderableWidget(ActionButton.builder(BUTTON_LOAD_ROM)
                 .pos(leftPos + BUTTON_X, topPos + LOAD_BUTTON_Y)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-                .build()
+                .build(this, ServerboundControllerActionPayload.Action.LOAD_ROM)
         );
-        buttonSave = addRenderableWidget(Button.builder(BUTTON_SAVE_ROM, btn -> saveRom())
+        buttonSave = addRenderableWidget(ActionButton.builder(BUTTON_SAVE_ROM)
                 .pos(leftPos + BUTTON_X, topPos + SAVE_BUTTON_Y)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-                .build()
+                .build(this, ServerboundControllerActionPayload.Action.SAVE_ROM)
         );
-        buttonClear = addRenderableWidget(Button.builder(BUTTON_CLEAR_ROM, btn -> clearRom())
+        buttonClear = addRenderableWidget(ActionButton.builder(BUTTON_CLEAR_ROM)
                 .pos(leftPos + BUTTON_X, topPos + CLEAR_BUTTON_Y)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
-                .build()
+                .build(this, ServerboundControllerActionPayload.Action.CLEAR_ROM)
         );
-        buttonPauseResume = addRenderableWidget(Button.builder(BUTTON_PAUSE, btn -> togglePauseResume())
+        buttonPauseResume = addRenderableWidget(ActionButton.builder(BUTTON_PAUSE)
                 .pos(leftPos + PAUSE_BUTTON_X, topPos + CTRL_BUTTON_Y)
                 .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
-                .build()
+                .build(this, ServerboundControllerActionPayload.Action.PAUSE_RESUME)
         );
-        buttonStep = addRenderableWidget(Button.builder(BUTTON_STEP, btn -> step())
+        buttonStep = addRenderableWidget(ActionButton.builder(BUTTON_STEP)
                 .pos(leftPos + STEP_BUTTON_X, topPos + CTRL_BUTTON_Y)
                 .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
-                .build()
+                .build(this, ServerboundControllerActionPayload.Action.STEP)
         );
-        buttonReset = addRenderableWidget(Button.builder(BUTTON_RESET, btn -> reset())
+        buttonReset = addRenderableWidget(ActionButton.builder(BUTTON_RESET)
                 .pos(leftPos + RESET_BUTTON_X, topPos + CTRL_BUTTON_Y)
                 .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
-                .build()
+                .build(this, ServerboundControllerActionPayload.Action.RESET)
         );
         buttonEditPortMap = addRenderableWidget(Button.builder(BUTTON_EDIT_PORT_MAP, btn -> editPortMap())
                 .pos(leftPos + PORT_MAP_BUTTON_X, topPos + EDIT_PORT_MAP_BUTTON_Y)
                 .size(PORT_MAP_BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
         );
-        buttonTogglePortMap = addRenderableWidget(Button.builder(BUTTON_SHOW_PORT_MAP, btn -> togglePortMap())
+        buttonTogglePortMap = addRenderableWidget(ActionButton.builder(BUTTON_SHOW_PORT_MAP)
                 .pos(leftPos + PORT_MAP_BUTTON_X, topPos + TOGGLE_PORT_MAP_BUTTON_Y)
                 .size(PORT_MAP_BUTTON_WIDTH, BUTTON_HEIGHT)
-                .build()
+                .build(this, ServerboundControllerActionPayload.Action.TOGGLE_PORT_MAP)
         );
 
         buttonStep.active = false;
@@ -503,44 +503,9 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         buttonTogglePortMap.visible = tab == TAB_REDSTONE;
     }
 
-    private void loadRom()
-    {
-        PacketDistributor.sendToServer(new ServerboundLoadRomPayload(menu.containerId));
-    }
-
-    private void saveRom()
-    {
-        PacketDistributor.sendToServer(new ServerboundSaveRomPayload(menu.containerId));
-    }
-
-    private void clearRom()
-    {
-        PacketDistributor.sendToServer(new ServerboundClearRomPayload(menu.containerId));
-    }
-
-    private void togglePauseResume()
-    {
-        PacketDistributor.sendToServer(new ServerboundTogglePauseResumePayload(menu.containerId));
-    }
-
-    private void step()
-    {
-        PacketDistributor.sendToServer(new ServerboundRequestStepPayload(menu.containerId));
-    }
-
-    private void reset()
-    {
-        PacketDistributor.sendToServer(new ServerboundRequestResetPayload(menu.containerId));
-    }
-
     private void editPortMap()
     {
         Minecraft.getInstance().pushGuiLayer(new EditPortMappingScreen(this));
-    }
-
-    private void togglePortMap()
-    {
-        PacketDistributor.sendToServer(new ServerboundTogglePortMapRenderPayload(menu.containerId));
     }
 
     public void updateStatus(byte[] ram, byte[] output, byte[] input, int programCounter)

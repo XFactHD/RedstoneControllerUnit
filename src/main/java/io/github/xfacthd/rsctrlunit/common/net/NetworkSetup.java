@@ -42,19 +42,9 @@ public final class NetworkSetup
                         ServerboundSetPortConfigPayload::handle
                 )
                 .playToServer(
-                        ServerboundLoadRomPayload.TYPE,
-                        ServerboundLoadRomPayload.STREAM_CODEC,
-                        ServerboundLoadRomPayload::handle
-                )
-                .playToServer(
-                        ServerboundSaveRomPayload.TYPE,
-                        ServerboundSaveRomPayload.STREAM_CODEC,
-                        ServerboundSaveRomPayload::handle
-                )
-                .playToServer(
-                        ServerboundClearRomPayload.TYPE,
-                        ServerboundClearRomPayload.STREAM_CODEC,
-                        ServerboundClearRomPayload::handle
+                        ServerboundControllerActionPayload.TYPE,
+                        ServerboundControllerActionPayload.STREAM_CODEC,
+                        ServerboundControllerActionPayload::handle
                 )
                 .playToServer(
                         ServerboundWriteToTargetPayload.TYPE,
@@ -65,26 +55,6 @@ public final class NetworkSetup
                         ServerboundRequestCodePayload.TYPE,
                         ServerboundRequestCodePayload.STREAM_CODEC,
                         ServerboundRequestCodePayload::handle
-                )
-                .playToServer(
-                        ServerboundTogglePauseResumePayload.TYPE,
-                        ServerboundTogglePauseResumePayload.STREAM_CODEC,
-                        ServerboundTogglePauseResumePayload::handle
-                )
-                .playToServer(
-                        ServerboundRequestStepPayload.TYPE,
-                        ServerboundRequestStepPayload.STREAM_CODEC,
-                        ServerboundRequestStepPayload::handle
-                )
-                .playToServer(
-                        ServerboundRequestResetPayload.TYPE,
-                        ServerboundRequestResetPayload.STREAM_CODEC,
-                        ServerboundRequestResetPayload::handle
-                )
-                .playToServer(
-                        ServerboundTogglePortMapRenderPayload.TYPE,
-                        ServerboundTogglePortMapRenderPayload.STREAM_CODEC,
-                        ServerboundTogglePortMapRenderPayload::handle
                 )
                 .playToServer(
                         ServerboundSetPortMappingPayload.TYPE,
