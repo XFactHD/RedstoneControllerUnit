@@ -172,6 +172,8 @@ public final class RCULanguageProvider extends LanguageProvider
 
     private void addSpecialTranslations()
     {
+        add(RCUContent.CREATIVE_TAB.value().getDisplayName(), "RedstoneControllerUnit");
+
         add(AtlasViewerCompat.LABEL_TEXTURE, "Texture");
         add(AtlasViewerCompat.LABEL_SPRITE, "Sprite");
         add(AtlasViewerCompat.LABEL_AREA, "Area");

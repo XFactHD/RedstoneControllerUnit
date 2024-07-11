@@ -13,9 +13,9 @@ import io.github.xfacthd.rsctrlunit.common.util.registration.DeferredBlockEntity
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -31,6 +31,7 @@ public final class RCUContent
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(RedstoneControllerUnit.MOD_ID);
     private static final DeferredBlockEntityRegister BLOCK_ENTITIES = DeferredBlockEntityRegister.create(RedstoneControllerUnit.MOD_ID);
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, RedstoneControllerUnit.MOD_ID);
+    private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, RedstoneControllerUnit.MOD_ID);
 
     // region Blocks
     public static final Holder<Block> BLOCK_CONTROLLER = registerBlock("controller", ControllerBlock::new);
@@ -62,6 +63,21 @@ public final class RCUContent
     );
     // endregion
 
+    // region CreativeModeTabs
+    public static final Holder<CreativeModeTab> CREATIVE_TAB = CREATIVE_TABS.register("main", () ->
+            CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.rsctrlunit"))
+                    .icon(() -> BLOCK_CONTROLLER.value().asItem().getDefaultInstance())
+                    .displayItems((params, output) ->
+                    {
+                        output.accept(BLOCK_CONTROLLER.value());
+                        output.accept(ITEM_MEMORY_CARD.value());
+                        output.accept(ITEM_PROGRAMMER.value());
+                    })
+                    .build()
+    );
+    // endregion
+
     private static Holder<Block> registerBlock(String name, Supplier<Block> blockFactory)
     {
         Holder<Block> block = BLOCKS.register(name, blockFactory);
@@ -76,6 +92,7 @@ public final class RCUContent
         ITEMS.register(modBus);
         BLOCK_ENTITIES.register(modBus);
         MENU_TYPES.register(modBus);
+        CREATIVE_TABS.register(modBus);
     }
 
     private RCUContent() { }

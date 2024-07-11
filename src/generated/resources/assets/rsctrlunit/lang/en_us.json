@@ -55,6 +55,7 @@
   "desc.rsctrlunit.redstone_type.single": "Single",
   "item.rsctrlunit.memory_card": "Memory Card",
   "item.rsctrlunit.programmer": "Programmer",
+  "itemGroup.rsctrlunit": "RedstoneControllerUnit",
   "label.rsctrlunit.controller.port.in": "In",
   "label.rsctrlunit.controller.port.out": "Out",
   "label.rsctrlunit.controller.program": "Program: %s",

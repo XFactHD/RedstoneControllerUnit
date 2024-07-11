@@ -5,10 +5,8 @@ import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.compat.CompatHandler;
 import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.InterpreterThreadPool;
 import io.github.xfacthd.rsctrlunit.common.net.NetworkSetup;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.slf4j.Logger;
 
 @Mod(RedstoneControllerUnit.MOD_ID)
@@ -22,20 +20,9 @@ public final class RedstoneControllerUnit
     {
         RCUContent.init(modBus);
 
-        modBus.addListener(RedstoneControllerUnit::onBuildCreativeModeTabs);
         modBus.addListener(NetworkSetup::onRegisterPayloadHandlers);
 
         InterpreterThreadPool.init();
         CompatHandler.init(modBus);
-    }
-
-    private static void onBuildCreativeModeTabs(final BuildCreativeModeTabContentsEvent event)
-    {
-        if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS)
-        {
-            event.accept(RCUContent.BLOCK_CONTROLLER.value());
-            event.accept(RCUContent.ITEM_MEMORY_CARD.value());
-            event.accept(RCUContent.ITEM_PROGRAMMER.value());
-        }
     }
 }
