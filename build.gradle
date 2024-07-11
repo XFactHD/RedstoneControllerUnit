@@ -10,7 +10,7 @@ version = mod_version
 group = 'io.github.xfacthd'
 
 base {
-    archivesName = 'rsctrlunit'
+    archivesName = 'RedstoneControllerUnit'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
