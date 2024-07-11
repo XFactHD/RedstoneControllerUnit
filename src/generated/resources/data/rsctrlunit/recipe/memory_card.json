@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "D": {
+      "tag": "c:dusts/redstone"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    " TD",
+    "TGT",
+    "DTD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "rsctrlunit:memory_card"
+  }
+}

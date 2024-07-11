@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "D": {
+      "tag": "c:dusts/redstone"
+    },
+    "R": {
+      "item": "minecraft:repeater"
+    },
+    "S": {
+      "item": "minecraft:stone_slab"
+    }
+  },
+  "pattern": [
+    "DRD",
+    "RCR",
+    "SRS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "rsctrlunit:controller"
+  }
+}

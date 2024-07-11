@@ -31,5 +31,6 @@ public final class GeneratorHandler
         generator.addProvider(event.includeClient(), new RCUSpriteSourceProvider(output, lookupProvider, fileHelper));
 
         generator.addProvider(event.includeServer(), new RCUBlockTagsProvider(output, lookupProvider, fileHelper));
+        generator.addProvider(event.includeServer(), new RCURecipeProvider(output, lookupProvider));
     }
 }
