@@ -13,32 +13,42 @@ import java.io.*;
 
 public final class ControllerModelLoader implements IGeometryLoader<ControllerGeometry>
 {
-    private static final ResourceLocation FILE_SINGLE = ModelBakery.MODEL_LISTER.idToFile(Utils.rl("block/type_single"));
-    private static final ResourceLocation FILE_BUNDLED = ModelBakery.MODEL_LISTER.idToFile(Utils.rl("block/type_bundled"));
-    private static final ResourceLocation FILE_PORT0 = ModelBakery.MODEL_LISTER.idToFile(Utils.rl("block/port_0"));
-    private static final ResourceLocation FILE_PORT1 = ModelBakery.MODEL_LISTER.idToFile(Utils.rl("block/port_1"));
-    private static final ResourceLocation FILE_PORT2 = ModelBakery.MODEL_LISTER.idToFile(Utils.rl("block/port_2"));
-    private static final ResourceLocation FILE_PORT3 = ModelBakery.MODEL_LISTER.idToFile(Utils.rl("block/port_3"));
+    private static final String[] EDGE_SUFFIXES = new String[] { "s", "w", "n", "e" };
+    public static final ResourceLocation[] LOCATIONS_SINGLE = Utils.makeArray(new ResourceLocation[4], edge ->
+            Utils.rl("block/type_single_" + EDGE_SUFFIXES[edge])
+    );
+    public static final ResourceLocation[] LOCATIONS_BUNDLED = Utils.makeArray(new ResourceLocation[4], edge ->
+            Utils.rl("block/type_bundled_" + EDGE_SUFFIXES[edge])
+    );
+    public static final ResourceLocation[][] LOCATIONS_PORT = Utils.makeArray(new ResourceLocation[4][4], edge ->
+            Utils.makeArray(new ResourceLocation[4], port -> Utils.rl("block/port_" + port + "_" + EDGE_SUFFIXES[edge]))
+    );
 
     @Override
     public ControllerGeometry read(JsonObject json, JsonDeserializationContext ctx) throws JsonParseException
     {
-        BlockModel singleModel = loadModel(FILE_SINGLE);
-        BlockModel bundledModel = loadModel(FILE_BUNDLED);
-        BlockModel[] portModels = new BlockModel[] {
-                loadModel(FILE_PORT0),
-                loadModel(FILE_PORT1),
-                loadModel(FILE_PORT2),
-                loadModel(FILE_PORT3),
-        };
+        BlockModel[] singleModels = new BlockModel[4];
+        BlockModel[] bundledModels = new BlockModel[4];
+        BlockModel[][] portIndexModels = new BlockModel[4][4];
+
+        for (int edge = 0; edge < 4; edge++)
+        {
+            singleModels[edge] = loadModel(LOCATIONS_SINGLE[edge]);
+            bundledModels[edge] = loadModel(LOCATIONS_BUNDLED[edge]);
+            for (int port = 0; port < 4; port++)
+            {
+                portIndexModels[edge][port] = loadModel(LOCATIONS_PORT[edge][port]);
+            }
+        }
 
         json.remove("loader");
-        return new ControllerGeometry(ctx.deserialize(json, BlockModel.class), singleModel, bundledModel, portModels);
+        return new ControllerGeometry(ctx.deserialize(json, BlockModel.class), singleModels, bundledModels, portIndexModels);
     }
 
-    private static BlockModel loadModel(ResourceLocation file)
+    private static BlockModel loadModel(ResourceLocation location)
     {
         ResourceManager manager = Minecraft.getInstance().getResourceManager();
+        ResourceLocation file = ModelBakery.MODEL_LISTER.idToFile(location);
         try (InputStream stream = manager.getResourceOrThrow(file).open())
         {
             return BlockModel.fromStream(new InputStreamReader(stream));

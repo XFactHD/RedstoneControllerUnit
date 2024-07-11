@@ -15,8 +15,7 @@ import net.minecraft.world.level.block.entity.*;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 public final class Utils
@@ -84,6 +83,15 @@ public final class Utils
         T[] newArr = Arrays.copyOf(arr, arr.length + 1, type);
         newArr[newArr.length - 1] = toAdd;
         return newArr;
+    }
+
+    public static <T> T[] makeArray(T[] arr, IntFunction<T> initializer)
+    {
+        for (int i = 0; i < arr.length; i++)
+        {
+            arr[i] = initializer.apply(i);
+        }
+        return arr;
     }
 
     public static String toHexString(byte[] bytes)
