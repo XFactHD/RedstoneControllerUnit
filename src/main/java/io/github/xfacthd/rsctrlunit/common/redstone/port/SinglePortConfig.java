@@ -3,6 +3,7 @@ package io.github.xfacthd.rsctrlunit.common.redstone.port;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.xfacthd.rsctrlunit.common.net.RCUByteBufCodecs;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -15,11 +16,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public record SinglePortConfig(int pin, boolean input) implements PortConfig
 {
     public static final MapCodec<SinglePortConfig> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            Codec.INT.fieldOf("pin").forGetter(SinglePortConfig::pin),
+            Codec.intRange(0, 7).fieldOf("pin").forGetter(SinglePortConfig::pin),
             Codec.BOOL.fieldOf("input").forGetter(SinglePortConfig::input)
     ).apply(inst, SinglePortConfig::new));
     public static final StreamCodec<ByteBuf, SinglePortConfig> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BYTE.map(Byte::toUnsignedInt, Integer::byteValue),
+            RCUByteBufCodecs.intRange(0, 7),
             SinglePortConfig::pin,
             ByteBufCodecs.BOOL,
             SinglePortConfig::input,
