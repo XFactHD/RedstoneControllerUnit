@@ -11,9 +11,11 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.github.xfacthd.rsctrlunit.common.util.property.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -53,6 +55,19 @@ public final class ControllerBlock extends Block implements EntityBlock
     public BlockState getStateForPlacement(BlockPlaceContext ctx)
     {
         return defaultBlockState().setValue(BlockStateProperties.FACING, ctx.getClickedFace().getOpposite());
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    {
+        if (stack.has(DataComponents.BLOCK_ENTITY_DATA) && level.getBlockEntity(pos) instanceof ControllerBlockEntity be)
+        {
+            BlockState newState = be.getRedstoneInterface().updateStateFromConfigs(state);
+            if (newState != state)
+            {
+                level.setBlockAndUpdate(pos, newState);
+            }
+        }
     }
 
     @Override

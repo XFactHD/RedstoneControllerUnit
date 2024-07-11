@@ -144,7 +144,7 @@ public final class RedstoneInterface
             int extPort = portMapping[port];
             state = state.setValue(PropertyHolder.RS_CON_PROPS[extPort], config.getType());
             Direction side = PortMapping.getPortSide(facing, extPort);
-            updateInputOnSide(be.getBlockState(), be.getBlockPos().relative(side), side, true);
+            updateInputOnSide(state, be.getBlockPos().relative(side), side, true);
             updateOutputOnSide(port, true);
         }
         be.level().setBlockAndUpdate(be.getBlockPos(), state);
@@ -168,6 +168,17 @@ public final class RedstoneInterface
     private void updateNeighborOnSide(Direction side)
     {
         be.level().neighborChanged(be.getBlockPos().relative(side), be.getBlockState().getBlock(), be.getBlockPos());
+    }
+
+    public BlockState updateStateFromConfigs(BlockState state)
+    {
+        for (int port = 0; port < 4; port++)
+        {
+            PortConfig config = portConfigs[port];
+            int extPort = portMapping[port];
+            state = state.setValue(PropertyHolder.RS_CON_PROPS[extPort], config.getType());
+        }
+        return state;
     }
 
     public boolean readFromNetwork(CompoundTag tag)
