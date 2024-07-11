@@ -145,6 +145,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private int codeHeight = 0;
     private int codeHorOffset = 0;
     private int codeVertOffset = 0;
+    private boolean dragScrollingHor = false;
+    private boolean dragScrollingVert = false;
 
     public ControllerScreen(ControllerMenu menu, Inventory inventory, Component title)
     {
@@ -342,7 +344,42 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
                 }
             }
         }
+        else if (horScrollBar && isHoveringHorBar(mouseX, mouseY))
+        {
+            dragScrollingHor = true;
+        }
+        else if (vertScrollBar && isHoveringVertBar(mouseX, mouseY))
+        {
+            dragScrollingVert = true;
+        }
         return super.mouseClicked(mouseX, mouseY, btn);
+    }
+
+    private boolean isHoveringHorBar(double mouseX, double mouseY)
+    {
+        int x = leftPos + DISASSEMBLY_X + 1;
+        int y = topPos + DISASSEMBLY_Y + DISASSEMBLY_HEIGHT_HOR_SCROLL + 1;
+        int width = (vertScrollBar ? DISASSEMBLY_WIDTH_VERT_SCROLL : DISASSEMBLY_WIDTH) - 2;
+        return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + SCROLL_BAR_WIDTH;
+    }
+
+    private boolean isHoveringVertBar(double mouseX, double mouseY)
+    {
+        int x = leftPos + DISASSEMBLY_X + DISASSEMBLY_WIDTH_VERT_SCROLL + 1;
+        int y = topPos + DISASSEMBLY_Y + 1;
+        int height = (horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT) - 2;
+        return mouseX >= x && mouseX < x + SCROLL_BAR_WIDTH && mouseY >= y && mouseY < y + height;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button)
+    {
+        if (button == 0)
+        {
+            dragScrollingHor = false;
+            dragScrollingVert = false;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -374,6 +411,30 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private static int scroll(int offset, double scrollOffset, int codeSize, int frameSize)
     {
         return (int) Mth.clamp(offset - scrollOffset * 2, 0, Math.max(codeSize - (frameSize - 4), 0));
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY)
+    {
+        if (dragScrollingHor)
+        {
+            int width = vertScrollBar ? DISASSEMBLY_WIDTH_VERT_SCROLL : DISASSEMBLY_WIDTH;
+            codeHorOffset = drag(leftPos + DISASSEMBLY_X, width, mouseX, codeWidth);
+        }
+        else if (dragScrollingVert)
+        {
+            int height = horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT;
+            codeVertOffset = drag(topPos + DISASSEMBLY_Y, height, mouseY, codeHeight);
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    private static int drag(int origin, int barSize, double mousePos, int codeSize)
+    {
+        float freeScrollWidth = barSize - SCROLL_BAR_HEIGHT;
+        float factor = ((float) mousePos - origin - (SCROLL_BAR_HEIGHT / 2F)) / freeScrollWidth;
+        float size = codeSize - (barSize - 4);
+        return (int) Mth.clamp(factor * size, 0, Math.max(size, 0));
     }
 
     private void renderDisassembly(GuiGraphics graphics, boolean renderCursor)
