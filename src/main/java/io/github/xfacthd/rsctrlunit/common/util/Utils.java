@@ -1,11 +1,14 @@
 package io.github.xfacthd.rsctrlunit.common.util;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -133,6 +136,16 @@ public final class Utils
             fileName = fileName.substring(0, period);
         }
         return fileName;
+    }
+
+    public static <T> T fromNbt(Codec<T> codec, Tag tag, T defaultValue)
+    {
+        return codec.decode(NbtOps.INSTANCE, tag).result().map(Pair::getFirst).orElse(defaultValue);
+    }
+
+    public static <T> Tag toNbt(Codec<T> codec, T value)
+    {
+        return codec.encodeStart(NbtOps.INSTANCE, value).result().orElseGet(CompoundTag::new);
     }
 
 

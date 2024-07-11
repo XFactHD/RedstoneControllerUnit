@@ -1,12 +1,10 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.interpreter;
 
-import com.mojang.datafixers.util.Pair;
 import io.github.xfacthd.rsctrlunit.common.emulator.opcode.Opcode;
 import io.github.xfacthd.rsctrlunit.common.emulator.opcode.OpcodeHelpers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.*;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,6 +17,7 @@ public final class Interpreter
     private final IOPorts ioPorts = new IOPorts();
     private final RAM ram = new RAM(ioPorts);
     private final Timers timers = new Timers(ram, ioPorts);
+    private final Interrupts interrupts = new Interrupts(ram);
     private final byte[] extRam = new byte[Constants.EXT_RAM_SIZE];
     private Code code = Code.EMPTY;
     private int programCounter = 0;
@@ -42,6 +41,13 @@ public final class Interpreter
     private void runInternal()
     {
         timers.run();
+        ioPorts.run(ram);
+        int isrAddress = interrupts.run();
+        if (isrAddress != -1)
+        {
+            pushStateBeforeCall();
+            programCounter = isrAddress;
+        }
 
         byte romByte = readRomAndIncrementPC();
         Opcode opcode = Opcode.fromRomByte(romByte);
@@ -87,6 +93,11 @@ public final class Interpreter
                 int upper = popStack() & 0xFF;
                 int lower = popStack() & 0xFF;
                 programCounter = (upper << 8) | lower;
+
+                if (opcode == Opcode.RETI)
+                {
+                    interrupts.returnFromIsr();
+                }
             }
             case JBC ->
             {
@@ -703,11 +714,12 @@ public final class Interpreter
 
     public void load(CompoundTag tag)
     {
-        code = Code.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("code")).result().map(Pair::getFirst).orElse(Code.EMPTY);
+        code = Utils.fromNbt(Code.CODEC, tag.getCompound("code"), Code.EMPTY);
         Utils.copyByteArray(code.rom(), rom);
         Utils.copyByteArray(tag.getByteArray("ram"), ram.getBackingArray());
         ioPorts.load(tag.getCompound("io"));
         timers.load(tag.getCompound("timers"));
+        interrupts.load(tag.getCompound("interrupts"));
         Utils.copyByteArray(tag.getByteArray("external_ram"), extRam);
         programCounter = tag.getInt("program_counter");
         paused = tag.getBoolean("paused");
@@ -716,11 +728,12 @@ public final class Interpreter
     public CompoundTag save()
     {
         CompoundTag tag = new CompoundTag();
-        tag.put("code", Code.CODEC.encodeStart(NbtOps.INSTANCE, code).result().orElseGet(CompoundTag::new));
+        tag.put("code", Utils.toNbt(Code.CODEC, code));
         tag.putByteArray("rom", Arrays.copyOf(rom, rom.length));
         tag.putByteArray("ram", Arrays.copyOf(ram.getBackingArray(), ram.getBackingArray().length));
         tag.put("io", ioPorts.save());
         tag.put("timers", timers.save());
+        tag.put("interrupts", interrupts.save());
         tag.putByteArray("external_ram", Arrays.copyOf(extRam, extRam.length));
         tag.putInt("program_counter", programCounter);
         tag.putBoolean("paused", paused);

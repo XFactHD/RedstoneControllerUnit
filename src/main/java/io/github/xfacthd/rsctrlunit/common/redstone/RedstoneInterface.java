@@ -1,6 +1,5 @@
 package io.github.xfacthd.rsctrlunit.common.redstone;
 
-import com.mojang.datafixers.util.Pair;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.IOPorts;
 import io.github.xfacthd.rsctrlunit.common.net.RCUByteBufCodecs;
@@ -10,7 +9,6 @@ import io.github.xfacthd.rsctrlunit.common.util.property.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.block.state.BlockState;
@@ -176,11 +174,8 @@ public final class RedstoneInterface
 
     public void load(CompoundTag tag)
     {
-        RedstoneType.PORT_LIST_CODEC.decode(NbtOps.INSTANCE, tag.get("config"))
-                .result()
-                .map(Pair::getFirst)
-                .map(list -> list.toArray(PortConfig[]::new))
-                .ifPresent(arr -> System.arraycopy(arr, 0, portConfigs, 0, Math.min(arr.length, portConfigs.length)));
+        List<PortConfig> configs = Utils.fromNbt(RedstoneType.PORT_LIST_CODEC, tag.get("config"), List.of());
+        Utils.copyArray(configs.toArray(PortConfig[]::new), portConfigs);
         Utils.copyByteArray(tag.getByteArray("states_out"), portStatesOut);
         Utils.copyByteArray(tag.getByteArray("states_in"), portStatesIn);
         Utils.copyIntArray(tag.getIntArray("mapping"), portMapping);
@@ -191,7 +186,7 @@ public final class RedstoneInterface
     {
         CompoundTag tag = new CompoundTag();
         List<PortConfig> list = Arrays.asList(portConfigs);
-        tag.put("config", RedstoneType.PORT_LIST_CODEC.encodeStart(NbtOps.INSTANCE, list).result().orElseGet(CompoundTag::new));
+        tag.put("config", Utils.toNbt(RedstoneType.PORT_LIST_CODEC, list));
         tag.putByteArray("states_out", Arrays.copyOf(portStatesOut, portStatesOut.length));
         tag.putByteArray("states_in", Arrays.copyOf(portStatesIn, portStatesIn.length));
         tag.putIntArray("mapping", Arrays.copyOf(portMapping, portMapping.length));
