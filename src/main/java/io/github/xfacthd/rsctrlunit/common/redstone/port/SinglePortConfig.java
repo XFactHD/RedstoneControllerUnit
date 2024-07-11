@@ -40,19 +40,13 @@ public record SinglePortConfig(int pin, boolean input) implements PortConfig
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side, byte portState)
+    public byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side)
     {
-        if (input)
+        if (input && level.hasSignal(adjPos, side.getOpposite()))
         {
-            boolean set = ((portState >> pin) & 0x01) != 0;
-            if (set != level.hasSignal(adjPos, side.getOpposite()))
-            {
-                int mask = 1 << pin;
-                int pinState = set ? 0 : mask;
-                portState = (byte) ((portState & ~mask) | pinState);
-            }
+            return (byte) (1 << pin);
         }
-        return portState;
+        return 0;
     }
 
     @Override

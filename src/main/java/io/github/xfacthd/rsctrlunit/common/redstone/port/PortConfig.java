@@ -12,7 +12,7 @@ public sealed interface PortConfig permits NonePortConfig, SinglePortConfig, Bun
 
     int getBundledOutput(byte portState, int channel);
 
-    byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side, byte portState);
+    byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side);
 
     boolean hasInputs();
 

@@ -42,34 +42,45 @@ public final class RedstoneInterface
     {
         for (int port = 0; port < portStatesOut.length; port++)
         {
-            if (!portConfigs[port].hasOutputs()) continue;
-
-            byte portState = ports.readOutputPort(port);
-            if (portState != portStatesOut[port])
+            if (portConfigs[port].hasOutputs())
             {
-                portStatesOut[port] = portState;
-                int extPort = portMapping[port];
-                updateNeighborOnSide(PortMapping.getPortSide(facing, extPort));
+                updateOutputOnSide(port, false);
             }
         }
     }
 
     public void handleNeighborUpdate(BlockState state, BlockPos adjPos, Direction side)
     {
+        updateInputOnSide(state, adjPos, side, false);
+    }
+
+    private void updateInputOnSide(BlockState state, BlockPos adjPos, Direction side, boolean force)
+    {
         int extPort = PortMapping.getPortIndex(facing, side);
         if (extPort == -1) return;
 
         int port = invPortMapping[extPort];
         PortConfig config = portConfigs[port];
-        if (!config.hasInputs()) return;
+        if (!config.hasInputs() && !force) return;
 
         byte portState = portStatesIn[port];
-        byte newState = config.updateInput(be.level(), state, facing, adjPos, side, portState);
+        byte newState = config.updateInput(be.level(), state, facing, adjPos, side);
         if (portState != newState)
         {
             portStatesIn[port] = newState;
             ports.writeInputPort(port, newState);
             be.setChangedWithoutSignalUpdate();
+        }
+    }
+
+    private void updateOutputOnSide(int port, boolean force)
+    {
+        byte portState = ports.readOutputPort(port);
+        if (portState != portStatesOut[port] || force)
+        {
+            portStatesOut[port] = portState;
+            int extPort = portMapping[port];
+            updateNeighborOnSide(PortMapping.getPortSide(facing, extPort));
         }
     }
 
@@ -114,6 +125,9 @@ public final class RedstoneInterface
         {
             updateNeighborOnSide(PortMapping.getPortSide(facing, extPort));
         }
+        Direction side = PortMapping.getPortSide(facing, extPort);
+        updateInputOnSide(be.getBlockState(), be.getBlockPos().relative(side), side, true);
+        updateOutputOnSide(port, true);
         be.setChangedWithoutSignalUpdate();
     }
 
@@ -129,6 +143,9 @@ public final class RedstoneInterface
             PortConfig config = portConfigs[port];
             int extPort = portMapping[port];
             state = state.setValue(PropertyHolder.RS_CON_PROPS[extPort], config.getType());
+            Direction side = PortMapping.getPortSide(facing, extPort);
+            updateInputOnSide(be.getBlockState(), be.getBlockPos().relative(side), side, true);
+            updateOutputOnSide(port, true);
         }
         be.level().setBlockAndUpdate(be.getBlockPos(), state);
     }

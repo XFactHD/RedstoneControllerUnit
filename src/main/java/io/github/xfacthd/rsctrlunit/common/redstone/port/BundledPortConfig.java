@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
+import io.github.xfacthd.rsctrlunit.common.compat.morered.MoreRedCompat;
 import io.github.xfacthd.rsctrlunit.common.util.property.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -51,7 +52,7 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side, byte portState)
+    public byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side)
     {
         BlockState adjState = level.getBlockState(adjPos);
         if (adjState.is(RCUContent.BLOCK_CONTROLLER) && level.getBlockEntity(adjPos) instanceof ControllerBlockEntity be)
@@ -65,7 +66,7 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
                 int offset = upper ? 8 : 0;
                 for (int i = 0; i < 8; i++)
                 {
-                    if (be.getBundledOutput(adjSide, i + offset) > 0)
+                    if ((inputMask & (1 << i)) != 0 && be.getBundledOutput(adjSide, i + offset) > 0)
                     {
                         newPortState |= 1 << i;
                     }
@@ -73,11 +74,12 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
                 return (byte) newPortState;
             }
         }
-        else
+        else if (MoreRedCompat.isBundledCable(level, adjState, adjPos, side.getOpposite()))
         {
             // TODO: implement More Red bundled wire integration
+            return 0;
         }
-        return portState;
+        return 0;
     }
 
     @Override
@@ -89,7 +91,7 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
     @Override
     public boolean hasOutputs()
     {
-        return ~inputMask != 0;
+        return (~inputMask & 0xFF) != 0;
     }
 
     @Override
