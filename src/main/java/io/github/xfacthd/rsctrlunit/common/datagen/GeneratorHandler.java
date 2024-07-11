@@ -29,5 +29,7 @@ public final class GeneratorHandler
         generator.addProvider(event.includeClient(), new RCUItemModelProvider(output, fileHelper));
         generator.addProvider(event.includeClient(), new RCULanguageProvider(output));
         generator.addProvider(event.includeClient(), new RCUSpriteSourceProvider(output, lookupProvider, fileHelper));
+
+        generator.addProvider(event.includeServer(), new RCUBlockTagsProvider(output, lookupProvider, fileHelper));
     }
 }
