@@ -46,13 +46,13 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
         if (channel >= 0 && channel < 8)
         {
             boolean output = (inputMask & (1 << channel)) == 0;
-            return output ? ((portState >> channel) & 0x01) * 15 : 0;
+            return output ? ((portState >> channel) & 0x01) : 0;
         }
         return 0;
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side)
+    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side)
     {
         BlockState adjState = level.getBlockState(adjPos);
         if (adjState.is(RCUContent.BLOCK_CONTROLLER) && level.getBlockEntity(adjPos) instanceof ControllerBlockEntity be)
@@ -74,10 +74,9 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
                 return (byte) newPortState;
             }
         }
-        else if (MoreRedCompat.isBundledCable(level, adjState, adjPos, side.getOpposite()))
+        else if (MoreRedCompat.isBundledCable(level, state, pos, adjState, adjPos, facing, side.getOpposite()))
         {
-            // TODO: implement More Red bundled wire integration
-            return 0;
+            return MoreRedCompat.getBundledPower(level, state, pos, adjPos, facing, side.getOpposite(), upper, inputMask);
         }
         return 0;
     }

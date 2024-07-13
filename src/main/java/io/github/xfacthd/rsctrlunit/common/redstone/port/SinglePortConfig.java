@@ -40,7 +40,7 @@ public record SinglePortConfig(int pin, boolean input) implements PortConfig
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side)
+    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side)
     {
         if (input && level.hasSignal(adjPos, side.getOpposite()))
         {

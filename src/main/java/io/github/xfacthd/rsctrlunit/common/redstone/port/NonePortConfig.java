@@ -30,7 +30,7 @@ public final class NonePortConfig implements PortConfig
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side)
+    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side)
     {
         return 0;
     }

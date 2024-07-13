@@ -8,11 +8,19 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public sealed interface PortConfig permits NonePortConfig, SinglePortConfig, BundledPortConfig
 {
+    /**
+     * Returns the vanilla redstone output (0-15) for the given port state on this port config
+     */
     int getRedstoneOutput(byte portState);
 
+    /**
+     * Returns the output state of the given channel for the given port state on this port config.
+     * The returned values is either 0 or 1 and the called must multiply it by the target power value of the
+     * respective bundled cable implementation
+     */
     int getBundledOutput(byte portState, int channel);
 
-    byte updateInput(Level level, BlockState state, Direction facing, BlockPos adjPos, Direction side);
+    byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side);
 
     boolean hasInputs();
 

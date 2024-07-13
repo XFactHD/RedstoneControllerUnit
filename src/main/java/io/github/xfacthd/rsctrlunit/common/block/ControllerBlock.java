@@ -8,7 +8,8 @@ import io.github.xfacthd.rsctrlunit.common.menu.ControllerMenu;
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
-import io.github.xfacthd.rsctrlunit.common.util.property.*;
+import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
+import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -21,15 +22,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.*;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public final class ControllerBlock extends Block implements EntityBlock
@@ -163,6 +165,12 @@ public final class ControllerBlock extends Block implements EntityBlock
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block adjBlock, BlockPos adjPos, boolean moved)
+    {
+        onNeighborChange(state, level, pos, adjPos);
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos adjPos)
     {
         if (level.isClientSide()) return;
 

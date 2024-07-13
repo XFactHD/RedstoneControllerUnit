@@ -91,10 +91,17 @@ repositories {
             includeGroup('curse.maven')
         }
     }
+    maven {
+        url = "https://cubicinterpolation.net/maven/"
+        content {
+            includeGroup('net.commoble.morered')
+        }
+    }
 }
 
 dependencies {
     implementation("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
+    implementation("net.commoble.morered:morered-${morered_mc_version}:${morered_version}")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -111,7 +118,8 @@ tasks.withType(ProcessResources).configureEach {
             neo_version            : neo_version,
             neo_version_range      : neo_version_range,
             mod_version            : mod_version,
-            atlasviewer_version    : atlasviewer_version
+            atlasviewer_version    : atlasviewer_version,
+            morered_version        : morered_version
     ]
     inputs.properties replaceProperties
 

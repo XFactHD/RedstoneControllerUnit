@@ -35,3 +35,10 @@ issueTrackerURL="https://github.com/XFactHD/RedstoneControlUnit"
     versionRange="[${atlasviewer_version},)"
     ordering="NONE"
     side="CLIENT"
+
+[[dependencies.rsctrlunit]]
+    modId="morered"
+    type="optional"
+    versionRange="[${morered_version},)"
+    ordering="NONE"
+    side="BOTH"

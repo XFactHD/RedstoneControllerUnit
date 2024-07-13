@@ -64,7 +64,7 @@ public final class RedstoneInterface
         if (!config.hasInputs() && !force) return;
 
         byte portState = portStatesIn[port];
-        byte newState = config.updateInput(be.level(), state, facing, adjPos, side);
+        byte newState = config.updateInput(be.level(), state, be.getBlockPos(), facing, adjPos, side);
         if (portState != newState)
         {
             portStatesIn[port] = newState;
@@ -167,7 +167,9 @@ public final class RedstoneInterface
 
     private void updateNeighborOnSide(Direction side)
     {
+        BlockPos adjPos = be.getBlockPos().relative(side);
         be.level().neighborChanged(be.getBlockPos().relative(side), be.getBlockState().getBlock(), be.getBlockPos());
+        be.level().getBlockState(adjPos).onNeighborChange(be.level(), adjPos, be.getBlockPos());
     }
 
     public BlockState updateStateFromConfigs(BlockState state)
