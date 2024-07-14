@@ -42,7 +42,7 @@ public final class ClientUtils
             int mouseY
     )
     {
-        drawButton(graphics, font, x, y, width, height, Component.literal(text), enabled, shadow, centered, xTextOff, mouseX, mouseY);
+        drawButton(graphics, font, x, y, width, height, Component.literal(text), enabled, shadow, centered, false, xTextOff, mouseX, mouseY);
     }
 
     public static void drawButton(
@@ -56,12 +56,13 @@ public final class ClientUtils
             boolean enabled,
             boolean shadow,
             boolean centered,
+            boolean hoverOverride,
             int xTextOff,
             int mouseX,
             int mouseY
     )
     {
-        boolean hovered = enabled && mouseY >= y && mouseY < y + height && mouseX >= x && mouseX < x + width;
+        boolean hovered = enabled && (hoverOverride || (mouseY >= y && mouseY < y + height && mouseX >= x && mouseX < x + width));
         ResourceLocation sprite = BTN_SPRITES.get(enabled, hovered);
         graphics.blitSprite(sprite, x, y, width, height);
 

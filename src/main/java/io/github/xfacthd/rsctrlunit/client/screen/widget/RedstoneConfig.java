@@ -7,6 +7,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -98,7 +99,7 @@ public final class RedstoneConfig
         Direction side = PortMapping.getPortSide(facing, mapped);
         graphics.drawString(font, Utils.DIRECTION_NAMES[side.ordinal()], x + X_SIDE + 4, y + 4, 0xFF000000, false);
 
-        ClientUtils.drawButton(graphics, font, x + X_TYPE, y, WIDTH_TYPE, HEIGHT, cfg.getType().getTranslatedName(), true, true, true, 0, mouseX, mouseY);
+        ClientUtils.drawButton(graphics, font, x + X_TYPE, y, WIDTH_TYPE, HEIGHT, cfg.getType().getTranslatedName(), true, true, true, false, 0, mouseX, mouseY);
 
         switch (cfg)
         {
@@ -109,7 +110,7 @@ public final class RedstoneConfig
             }
             case SinglePortConfig single ->
             {
-                ClientUtils.drawButton(graphics, font, x + X_DIR, y, WIDTH_DIR, HEIGHT, single.input() ? TEXT_INPUT : TEXT_OUTPUT, true, false, true, 0, mouseX, mouseY);
+                ClientUtils.drawButton(graphics, font, x + X_DIR, y, WIDTH_DIR, HEIGHT, single.input() ? TEXT_INPUT : TEXT_OUTPUT, true, false, true, false, 0, mouseX, mouseY);
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_LEFT, y, WIDTH_PIN_BTN, HEIGHT, "<", single.pin() > 0, true, false, -1, mouseX, mouseY);
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_RIGHT, y, WIDTH_PIN_BTN, HEIGHT, ">", single.pin() < 7, true, false, 0, mouseX, mouseY);
 
@@ -118,11 +119,12 @@ public final class RedstoneConfig
             }
             case BundledPortConfig bundle ->
             {
+                boolean hoverOverride = isHoveringBundledButtons(x, y, mouseX, mouseY);
                 for (int i = 0; i < 8; i++)
                 {
                     int px = x + X_DIR + i * WIDTH_BUNDLE_BIT;
                     boolean in = (bundle.inputMask() & (1 << i)) != 0;
-                    ClientUtils.drawButton(graphics, font, px, y, WIDTH_BUNDLE_BIT, HEIGHT, in ? TEXT_INPUT_BIT : TEXT_OUTPUT_BIT, true, false, true, 0, mouseX, mouseY);
+                    ClientUtils.drawButton(graphics, font, px, y, WIDTH_BUNDLE_BIT, HEIGHT, in ? TEXT_INPUT_BIT : TEXT_OUTPUT_BIT, true, false, true, hoverOverride, 0, mouseX, mouseY);
                 }
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_LEFT, y, WIDTH_PIN, HEIGHT, bundle.upper() ? "9-16" : "1-8", true, true, true, 0, mouseX, mouseY);
             }
@@ -215,6 +217,12 @@ public final class RedstoneConfig
                 }
                 case BundledPortConfig bundle ->
                 {
+                    if (isHoveringBundledButtons(x, y, (int) mouseX, (int) mouseY))
+                    {
+                        byte mask = (byte) (~bundle.inputMask() & 0xFF);
+                        screen.setPortConfig(port, new BundledPortConfig(bundle.upper(), mask));
+                        return true;
+                    }
                     for (int i = 0; i < 8; i++)
                     {
                         int px = x + X_DIR + i * WIDTH_BUNDLE_BIT;
@@ -233,6 +241,16 @@ public final class RedstoneConfig
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    private static boolean isHoveringBundledButtons(int x, int y, int mouseX, int mouseY)
+    {
+        if (Screen.hasShiftDown())
+        {
+            int minX = x + X_DIR;
+            return mouseX >= minX && mouseX < minX + WIDTH_DIR && mouseY >= y && mouseY < y + HEIGHT;
         }
         return false;
     }
