@@ -3,7 +3,6 @@
     {
       "faces": {
         "up": {
-          "rotation": 180,
           "texture": "#0"
         }
       },

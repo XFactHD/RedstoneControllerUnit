@@ -25,10 +25,10 @@ public final class GeneratorHandler
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
         PackOutput output = generator.getPackOutput();
 
+        generator.addProvider(event.includeClient(), new RCUSpriteSourceProvider(output, lookupProvider, fileHelper));
         generator.addProvider(event.includeClient(), new RCUBlockStateProvider(output, fileHelper));
         generator.addProvider(event.includeClient(), new RCUItemModelProvider(output, fileHelper));
         generator.addProvider(event.includeClient(), new RCULanguageProvider(output));
-        generator.addProvider(event.includeClient(), new RCUSpriteSourceProvider(output, lookupProvider, fileHelper));
 
         generator.addProvider(event.includeServer(), new RCUBlockTagsProvider(output, lookupProvider, fileHelper));
         generator.addProvider(event.includeServer(), new RCURecipeProvider(output, lookupProvider));

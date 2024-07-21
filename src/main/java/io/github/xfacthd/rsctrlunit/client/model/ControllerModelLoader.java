@@ -13,7 +13,7 @@ import java.io.*;
 
 public final class ControllerModelLoader implements IGeometryLoader<ControllerGeometry>
 {
-    private static final String[] EDGE_SUFFIXES = new String[] { "s", "w", "n", "e" };
+    private static final String[] EDGE_SUFFIXES = new String[] { "n", "e", "s", "w" };
     public static final ResourceLocation[] LOCATIONS_SINGLE = Utils.makeArray(new ResourceLocation[4], edge ->
             Utils.rl("block/type_single_" + EDGE_SUFFIXES[edge])
     );

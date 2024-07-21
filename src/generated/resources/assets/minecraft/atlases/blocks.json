@@ -8,6 +8,26 @@
       "width": 12,
       "x": 2,
       "y": 2
+    },
+    {
+      "type": "rsctrlunit:mask",
+      "fallback": "rsctrlunit:block/type_single",
+      "height": 2,
+      "sprite": "rsctrlunit:block/overlay_single",
+      "src": "morered:block/redwire_post_plate_overlay",
+      "width": 16,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "rsctrlunit:mask",
+      "fallback": "rsctrlunit:block/type_bundled",
+      "height": 2,
+      "sprite": "rsctrlunit:block/overlay_bundled",
+      "src": "morered:block/bundled_cable_plate_overlay",
+      "width": 16,
+      "x": 0,
+      "y": 0
     }
   ]
 }

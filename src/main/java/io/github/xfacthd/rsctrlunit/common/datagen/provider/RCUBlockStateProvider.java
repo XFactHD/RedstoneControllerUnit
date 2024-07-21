@@ -45,17 +45,17 @@ public final class RCUBlockStateProvider extends BlockStateProvider
 
         for (int edge = 0; edge < 4; edge++)
         {
-            plateOverlay(ControllerModelLoader.LOCATIONS_SINGLE[edge], modLoc("block/type_single"), edge, true);
-            plateOverlay(ControllerModelLoader.LOCATIONS_BUNDLED[edge], modLoc("block/type_bundled"), edge, true);
+            plateOverlay(ControllerModelLoader.LOCATIONS_SINGLE[edge], modLoc("block/overlay_single"), edge, true, true);
+            plateOverlay(ControllerModelLoader.LOCATIONS_BUNDLED[edge], modLoc("block/overlay_bundled"), edge, true, true);
 
             for (int port = 0; port < 4; port++)
             {
-                plateOverlay(ControllerModelLoader.LOCATIONS_PORT[edge][port], modLoc("block/port_" + port), edge, false);
+                plateOverlay(ControllerModelLoader.LOCATIONS_PORT[edge][port], modLoc("block/port_" + port), edge, false, false);
             }
         }
     }
 
-    private void plateOverlay(ResourceLocation name, ResourceLocation texture, int edge, boolean withSide)
+    private void plateOverlay(ResourceLocation name, ResourceLocation texture, int edge, boolean withSide, boolean mirrorTopX)
     {
         ModelBuilder<BlockModelBuilder>.ElementBuilder element = models().getBuilder(name.toString())
                 .texture("0", texture)
@@ -65,7 +65,7 @@ public final class RCUBlockStateProvider extends BlockStateProvider
                 .to(16, 2, 16);
 
         element.face(Direction.UP)
-                .uvs(0, 0, 16, 16)
+                .uvs(0, mirrorTopX ? 16 : 0, 16, mirrorTopX ? 0 : 16)
                 .rotation(ModelBuilder.FaceRotation.values()[edge])
                 .texture("#0");
 
@@ -74,7 +74,7 @@ public final class RCUBlockStateProvider extends BlockStateProvider
             Direction edgeDir = Direction.from2DDataValue(edge);
             element.face(edgeDir)
                     .cullface(edgeDir)
-                    .uvs(0, 14, 16, 16)
+                    .uvs(0, 0, 16, 2)
                     .texture("#0");
         }
     }

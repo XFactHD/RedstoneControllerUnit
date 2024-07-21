@@ -2,12 +2,25 @@
   "elements": [
     {
       "faces": {
-        "south": {
-          "cullface": "south",
-          "texture": "#0"
+        "north": {
+          "cullface": "north",
+          "texture": "#0",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            2.0
+          ]
         },
         "up": {
-          "texture": "#0"
+          "rotation": 180,
+          "texture": "#0",
+          "uv": [
+            0.0,
+            16.0,
+            16.0,
+            0.0
+          ]
         }
       },
       "from": [
@@ -23,7 +36,7 @@
     }
   ],
   "textures": {
-    "0": "rsctrlunit:block/type_bundled",
-    "particle": "rsctrlunit:block/type_bundled"
+    "0": "rsctrlunit:block/overlay_bundled",
+    "particle": "rsctrlunit:block/overlay_bundled"
   }
 }
