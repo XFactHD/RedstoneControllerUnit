@@ -13,7 +13,7 @@ public final class OpcodeHelpers
      */
     public static int calculateAjmpAddress(byte opcodeByte, byte operandByte)
     {
-        return (opcodeByte & 0b1110000) << 3 | (operandByte & 0xFF);
+        return (opcodeByte & 0b11100000) << 3 | (operandByte & 0xFF);
     }
 
     /**
@@ -21,7 +21,7 @@ public final class OpcodeHelpers
      */
     public static int calculateAjmpTarget(int programCounter, int address)
     {
-        return (programCounter & 0b11100000_00000000) | (address & 0b00011111_11111111);
+        return (programCounter & 0b11111000_00000000) | (address & 0b00000111_11111111);
     }
 
     /**
