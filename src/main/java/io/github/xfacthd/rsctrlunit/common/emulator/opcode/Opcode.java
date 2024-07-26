@@ -16,7 +16,7 @@ public enum Opcode
     //Regular 0x04-0x0F
     INC_ACC         ("INC",     1, 0, ParseHelpers.makeOneConstArgParser("A")),
     INC_MEM         ("INC",     1, 1, ParseHelpers.makeOneAddressArgParser()),
-    INC_IRO         ("INC",     1, 0, ParseHelpers.makeOneConstArgParser("@R0")),
+    INC_IR0         ("INC",     1, 0, ParseHelpers.makeOneConstArgParser("@R0")),
     INC_IR1         ("INC",     1, 0, ParseHelpers.makeOneConstArgParser("@R1")),
     INC_DR0         ("INC",     1, 0, ParseHelpers.makeOneConstArgParser("R0")),
     INC_DR1         ("INC",     1, 0, ParseHelpers.makeOneConstArgParser("R1")),
@@ -34,7 +34,7 @@ public enum Opcode
     //Regular 0x14-0x1F
     DEC_ACC         ("DEC",     1, 0, ParseHelpers.makeOneConstArgParser("A")),
     DEC_MEM         ("DEC",     1, 1, ParseHelpers.makeOneAddressArgParser()),
-    DEC_IRO         ("DEC",     1, 0, ParseHelpers.makeOneConstArgParser("@R0")),
+    DEC_IR0         ("DEC",     1, 0, ParseHelpers.makeOneConstArgParser("@R0")),
     DEC_IR1         ("DEC",     1, 0, ParseHelpers.makeOneConstArgParser("@R1")),
     DEC_DR0         ("DEC",     1, 0, ParseHelpers.makeOneConstArgParser("R0")),
     DEC_DR1         ("DEC",     1, 0, ParseHelpers.makeOneConstArgParser("R1")),

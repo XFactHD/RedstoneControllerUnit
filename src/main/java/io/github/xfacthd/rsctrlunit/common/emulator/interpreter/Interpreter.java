@@ -268,7 +268,7 @@ public final class Interpreter
                     OpcodeHelpers.readModifyWriteAccumulator(ram, (modRam, value) -> value + 1);
             case INC_MEM ->
                     OpcodeHelpers.readModifyWriteMemory(ram, readRomAndIncrementPC(), (modRam, value) -> value + 1);
-            case INC_IRO, INC_IR1 ->
+            case INC_IR0, INC_IR1 ->
                     OpcodeHelpers.readModifyWriteRegisterIndirect(ram, romByte & 0x1, (modRam, value) -> value + 1);
             case INC_DR0, INC_DR1, INC_DR2, INC_DR3, INC_DR4, INC_DR5, INC_DR6, INC_DR7 ->
                     OpcodeHelpers.readModifyWriteRegister(ram, romByte & 0b00000111, (modRam, value) -> value + 1);
@@ -282,7 +282,7 @@ public final class Interpreter
                     OpcodeHelpers.readModifyWriteAccumulator(ram, (modRam, value) -> value - 1);
             case DEC_MEM ->
                     OpcodeHelpers.readModifyWriteMemory(ram, readRomAndIncrementPC(), (modRam, value) -> value - 1);
-            case DEC_IRO, DEC_IR1 ->
+            case DEC_IR0, DEC_IR1 ->
                     OpcodeHelpers.readModifyWriteRegisterIndirect(ram, romByte & 0x1, (modRam, value) -> value - 1);
             case DEC_DR0, DEC_DR1, DEC_DR2, DEC_DR3, DEC_DR4, DEC_DR5, DEC_DR6, DEC_DR7 ->
                     OpcodeHelpers.readModifyWriteRegister(ram, romByte & 0b00000111, (modRam, value) -> value - 1);

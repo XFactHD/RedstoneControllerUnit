@@ -90,7 +90,7 @@ public final class Disassembler
                                 .append(printJumpLabel(labels, counter, rom[counter.getAndIncrement()], false));
                 case PUSH, POP, INC_MEM, DEC_MEM -> line.append(printAddress(rom[counter.getAndIncrement()]));
                 case RR, RRC, RL, RLC, INC_ACC, DEC_ACC -> line.append("A");
-                case INC_IRO, INC_IR1, DEC_IRO, DEC_IR1 -> line.append(printRegisterIndirect(opcode));
+                case INC_IR0, INC_IR1, DEC_IR0, DEC_IR1 -> line.append(printRegisterIndirect(opcode));
                 case INC_DR0, INC_DR1, INC_DR2, INC_DR3, INC_DR4, INC_DR5, INC_DR6, INC_DR7,
                      DEC_DR0, DEC_DR1, DEC_DR2, DEC_DR3, DEC_DR4, DEC_DR5, DEC_DR6, DEC_DR7 ->
                         line.append(printRegisterDirect(opcode));
