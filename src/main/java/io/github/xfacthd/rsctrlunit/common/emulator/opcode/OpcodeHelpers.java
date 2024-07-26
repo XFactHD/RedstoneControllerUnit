@@ -117,7 +117,7 @@ public final class OpcodeHelpers
     {
         int value = readRegisterDirect(ram, register) & 0xFF;
         value = operation.compute(ram, value);
-        ram.write(Constants.ADDRESS_ACCUMULATOR, value);
+        writeRegisterDirect(ram, register, (byte) (value & 0xFF));
     }
 
     public static void readModifyWriteRegisterIndirect(RAM ram, int register, ReadModifyWriteOperation operation)
