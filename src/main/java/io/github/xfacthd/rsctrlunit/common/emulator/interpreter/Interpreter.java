@@ -541,27 +541,27 @@ public final class Interpreter
             {
                 int addr = OpcodeHelpers.readDataPointer(ram);
                 addr %= Constants.EXT_RAM_SIZE;
-                extRam[addr] = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
+                ram.writeByte(Constants.ADDRESS_ACCUMULATOR, extRam[addr]);
             }
             case MOVX_ACC_IR0, MOVX_ACC_IR1 ->
             {
                 int addr = OpcodeHelpers.readRegisterDirect(ram, romByte & 0b00000001);
                 addr |= ram.read(Constants.ADDRESS_IO_PORT2) << 8;
                 addr %= Constants.EXT_RAM_SIZE;
-                extRam[addr] = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
+                ram.writeByte(Constants.ADDRESS_ACCUMULATOR, extRam[addr]);
             }
             case MOVX_IDPTR_ACC ->
             {
                 int addr = OpcodeHelpers.readDataPointer(ram);
                 addr %= Constants.EXT_RAM_SIZE;
-                ram.writeByte(Constants.ADDRESS_ACCUMULATOR, extRam[addr]);
+                extRam[addr] = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
             }
             case MOVX_IR0_ACC, MOVX_IR1_ACC ->
             {
                 int addr = OpcodeHelpers.readRegisterDirect(ram, romByte & 0b00000001);
                 addr |= ram.read(Constants.ADDRESS_IO_PORT2) << 8;
                 addr %= Constants.EXT_RAM_SIZE;
-                ram.writeByte(Constants.ADDRESS_ACCUMULATOR, extRam[addr]);
+                extRam[addr] = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
             }
             default -> throw new IllegalStateException("Unrecognized opcode: " + opcode);
         }
