@@ -233,7 +233,7 @@ public final class ControllerMenu extends CardInventoryContainerMenu
     {
         if (interpreter != null)
         {
-            interpreter.reset(false);
+            interpreter.writeLockGuarded(null, (interp, $) -> interp.reset(false));
         }
     }
 
