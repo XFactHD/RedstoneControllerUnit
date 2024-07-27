@@ -103,7 +103,7 @@ public final class Interpreter
             {
                 byte bitAddress = readRomAndIncrementPC();
                 int offset = readRomAndIncrementPC();
-                if (ram.readBit(bitAddress))
+                if (ram.readBit(bitAddress, true))
                 {
                     ram.writeBit(bitAddress, BitWriteMode.CLEAR);
                     programCounter += offset;
@@ -630,7 +630,12 @@ public final class Interpreter
 
     public byte[] getRam()
     {
-        return ram.getBackingArray();
+        return ram.getRamArray();
+    }
+
+    public byte[] getSfr()
+    {
+        return ram.getSfrArray();
     }
 
     public IOPorts getIoPorts()
@@ -715,7 +720,8 @@ public final class Interpreter
     {
         code = Utils.fromNbt(Code.CODEC, tag.getCompound("code"), Code.EMPTY);
         Utils.copyByteArray(code.rom(), rom);
-        Utils.copyByteArray(tag.getByteArray("ram"), ram.getBackingArray());
+        Utils.copyByteArray(tag.getByteArray("ram"), ram.getRamArray());
+        Utils.copyByteArray(tag.getByteArray("sfr"), ram.getSfrArray());
         ioPorts.load(tag.getCompound("io"));
         timers.load(tag.getCompound("timers"));
         interrupts.load(tag.getCompound("interrupts"));
@@ -728,8 +734,8 @@ public final class Interpreter
     {
         CompoundTag tag = new CompoundTag();
         tag.put("code", Utils.toNbt(Code.CODEC, code));
-        tag.putByteArray("rom", Arrays.copyOf(rom, rom.length));
-        tag.putByteArray("ram", Arrays.copyOf(ram.getBackingArray(), ram.getBackingArray().length));
+        tag.putByteArray("ram", Arrays.copyOf(ram.getRamArray(), ram.getRamArray().length));
+        tag.putByteArray("sfr", Arrays.copyOf(ram.getSfrArray(), ram.getSfrArray().length));
         tag.put("io", ioPorts.save());
         tag.put("timers", timers.save());
         tag.put("interrupts", interrupts.save());

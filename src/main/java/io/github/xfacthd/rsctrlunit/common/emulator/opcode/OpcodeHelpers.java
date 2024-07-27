@@ -71,7 +71,7 @@ public final class OpcodeHelpers
     public static byte readRegisterIndirect(RAM ram, int register)
     {
         byte regValue = readRegisterDirect(ram, register);
-        return ram.readByte(regValue & 0xFF);
+        return ram.readByte(regValue & 0xFF, false, false);
     }
 
     public static void writeRegisterDirect(RAM ram, int register, byte data)
@@ -83,7 +83,7 @@ public final class OpcodeHelpers
     public static void writeRegisterIndirect(RAM ram, int register, byte data)
     {
         int address = readRegisterDirect(ram, register) & 0xFF;
-        ram.writeByte(address, data);
+        ram.writeByte(address, data, false);
     }
 
     public static int readDataPointer(RAM ram)
@@ -193,7 +193,7 @@ public final class OpcodeHelpers
 
     public static void orMem(RAM ram, int address, byte value)
     {
-        int mem = ram.read(address, true);
+        int mem = ram.read(address, true, true);
         ram.write(address, mem | (value & 0xFF));
     }
 
@@ -205,7 +205,7 @@ public final class OpcodeHelpers
 
     public static void andMem(RAM ram, int address, byte value)
     {
-        int mem = ram.read(address, true);
+        int mem = ram.read(address, true, true);
         ram.write(address, mem & (value & 0xFF));
     }
 
@@ -217,7 +217,7 @@ public final class OpcodeHelpers
 
     public static void xorMem(RAM ram, int address, byte value)
     {
-        int mem = ram.read(address, true);
+        int mem = ram.read(address, true, true);
         ram.write(address, mem ^ (value & 0xFF));
     }
 

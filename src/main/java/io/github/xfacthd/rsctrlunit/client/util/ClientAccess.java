@@ -10,12 +10,12 @@ import net.minecraft.core.Direction;
 
 public final class ClientAccess
 {
-    public static void handleStatusViewUpdate(int windowId, byte[] ram, byte[] output, byte[] input, int programCounter)
+    public static void handleStatusViewUpdate(int windowId, byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter)
     {
         Screen screen = Minecraft.getInstance().screen;
         if (screen instanceof ControllerScreen ctrlScreen && ctrlScreen.getMenu().containerId == windowId)
         {
-            ctrlScreen.updateStatus(ram, output, input, programCounter);
+            ctrlScreen.updateStatus(ram, sfr, output, input, programCounter);
         }
     }
 

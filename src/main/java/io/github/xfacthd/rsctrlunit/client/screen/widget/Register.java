@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
 import java.util.function.IntSupplier;
-import java.util.function.ToIntFunction;
+import java.util.function.ToIntBiFunction;
 
 public sealed class Register
 {
@@ -21,10 +21,10 @@ public sealed class Register
     protected final String name;
     protected final String valFormat;
     protected final Rect2i tooltipRect;
-    protected final ToIntFunction<byte[]> address;
-    protected final ToIntFunction<byte[]> reader;
+    protected final ToIntBiFunction<byte[], byte[]> address;
+    protected final ToIntBiFunction<byte[], byte[]> reader;
 
-    protected Register(int x, int y, String name, int digits, ToIntFunction<byte[]> address, ToIntFunction<byte[]> reader)
+    protected Register(int x, int y, String name, int digits, ToIntBiFunction<byte[], byte[]> address, ToIntBiFunction<byte[], byte[]> reader)
     {
         this.x = x;
         this.y = y;
@@ -35,34 +35,34 @@ public sealed class Register
         this.reader = reader;
     }
 
-    public Register(int x, int y, String name, int digits, ToIntFunction<byte[]> address)
+    public Register(int x, int y, String name, int digits, ToIntBiFunction<byte[], byte[]> address)
     {
-        this(x, y, name, digits, address, ram -> ram[address.applyAsInt(ram)] & 0xFF);
+        this(x, y, name, digits, address, (ram, sfr) -> ram[address.applyAsInt(ram, sfr)] & 0xFF);
     }
 
     public Register(int x, int y, String name, int digits, int address)
     {
-        this(x, y, name, digits, ram -> address, ram -> ram[address] & 0xFF);
+        this(x, y, name, digits, (ram, sfr) -> address, (ram, sfr) -> sfr[address - Constants.SFR_START] & 0xFF);
     }
 
     public Register(int x, int y, int regIdx)
     {
-        this(x, y, "R" + regIdx, 2, ram -> OpcodeHelpers.getRegisterAddress(ram[Constants.ADDRESS_STATUS_WORD], regIdx));
+        this(x, y, "R" + regIdx, 2, (ram, sfr) -> OpcodeHelpers.getRegisterAddress(sfr[Constants.ADDRESS_STATUS_WORD - Constants.SFR_START], regIdx));
     }
 
-    public void draw(GuiGraphics graphics, Font font, byte[] ram)
+    public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
     {
         ClientUtils.drawStringInBatch(graphics, font, name, tooltipRect.getX(), y + 2, 0xFF404040);
 
-        int value = reader.applyAsInt(ram);
+        int value = reader.applyAsInt(ram, sfr);
         ClientUtils.drawStringInBatch(graphics, font, String.format(Locale.ROOT, valFormat, value), x + 2, y + 2, 0xFF000000);
     }
 
-    public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, int mouseX, int mouseY)
+    public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY)
     {
         if (tooltipRect.contains(mouseX, mouseY))
         {
-            int addr = address.applyAsInt(ram);
+            int addr = address.applyAsInt(ram, sfr);
             Component text = Component.literal(String.format(Locale.ROOT, "%s: 0x%02X", name, addr));
             graphics.renderTooltip(font, text, mouseX, mouseY);
         }
@@ -86,15 +86,15 @@ public sealed class Register
 
         public Port(int x, int y, int port, byte[] outputs, byte[] inputs)
         {
-            super(x, y, "P" + port, 2, ram -> Constants.IO_PORTS[port], ram -> outputs[port] & 0xFF);
+            super(x, y, "P" + port, 2, (ram, sfr) -> Constants.IO_PORTS[port], (ram, sfr) -> outputs[port] & 0xFF);
             this.port = port;
             this.inputs = inputs;
         }
 
         @Override
-        public void draw(GuiGraphics graphics, Font font, byte[] ram)
+        public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
         {
-            super.draw(graphics, font, ram);
+            super.draw(graphics, font, ram, sfr);
 
             int value = inputs[port] & 0xFF;
             ClientUtils.drawStringInBatch(graphics, font, String.format(Locale.ROOT, valFormat, value), x + 29, y + 2, 0xFF000000);
@@ -115,11 +115,11 @@ public sealed class Register
     {
         public ProgramCounter(int x, int y, IntSupplier reader)
         {
-            super(x, y, "PC", 4, ram -> -1, ram -> reader.getAsInt());
+            super(x, y, "PC", 4, (ram, sfr) -> -1, (ram, sfr) -> reader.getAsInt());
         }
 
         @Override // Unaddressable -> no tooltip
-        public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, int mouseX, int mouseY) { }
+        public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY) { }
     }
 
     public static final class StatusWord extends Register
@@ -130,11 +130,11 @@ public sealed class Register
         }
 
         @Override
-        public void draw(GuiGraphics graphics, Font font, byte[] ram)
+        public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
         {
             ClientUtils.drawStringInBatch(graphics, font, name, tooltipRect.getX(), y + 2, 0xFF404040);
 
-            int psw = ram[Constants.ADDRESS_STATUS_WORD] & 0xFF;
+            int psw = sfr[Constants.ADDRESS_STATUS_WORD - Constants.SFR_START] & 0xFF;
             for (int i = 0; i < 8; i++)
             {
                 String bit = (psw & (1 << (7 - i))) != 0 ? "1" : "0";
@@ -143,7 +143,7 @@ public sealed class Register
         }
 
         @Override
-        public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, int mouseX, int mouseY)
+        public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY)
         {
             if (tooltipRect.contains(mouseX, mouseY))
             {
@@ -166,7 +166,7 @@ public sealed class Register
                     graphics.renderTooltip(font, Component.literal(label), mouseX, mouseY);
                     return;
                 }
-                super.drawTooltip(graphics, font, ram, mouseX, mouseY);
+                super.drawTooltip(graphics, font, ram, sfr, mouseX, mouseY);
             }
         }
 

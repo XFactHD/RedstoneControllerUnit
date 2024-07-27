@@ -28,9 +28,10 @@ public record ClientboundUpdateStatusPayload(int windowId, InterpreterState stat
         return new ClientboundUpdateStatusPayload(windowId, interpreter.readLockGuarded(interp ->
         {
             byte[] ram = interp.getRam().clone();
+            byte[] sfr = interp.getSfr().clone();
             IOPorts ports = interp.getIoPorts();
             int programCounter = interp.getProgramCounter();
-            return new InterpreterState(ram, ports.getPortStatesOut(), ports.getPortStatesIn(), programCounter);
+            return new InterpreterState(ram, sfr, ports.getPortStatesOut(), ports.getPortStatesIn(), programCounter);
         }));
     }
 
@@ -38,7 +39,7 @@ public record ClientboundUpdateStatusPayload(int windowId, InterpreterState stat
     {
         if (FMLEnvironment.dist.isClient())
         {
-            ClientAccess.handleStatusViewUpdate(windowId, state.ram, state.output, state.input, state.programCounter);
+            ClientAccess.handleStatusViewUpdate(windowId, state.ram, state.sfr, state.output, state.input, state.programCounter);
         }
     }
 
@@ -50,11 +51,13 @@ public record ClientboundUpdateStatusPayload(int windowId, InterpreterState stat
 
 
 
-    public record InterpreterState(byte[] ram, byte[] output, byte[] input, int programCounter)
+    public record InterpreterState(byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter)
     {
         private static final StreamCodec<ByteBuf, InterpreterState> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.byteArray(Constants.RAM_SIZE),
                 InterpreterState::ram,
+                ByteBufCodecs.byteArray(Constants.SFR_SIZE),
+                InterpreterState::sfr,
                 ByteBufCodecs.byteArray(4),
                 InterpreterState::output,
                 ByteBufCodecs.byteArray(4),

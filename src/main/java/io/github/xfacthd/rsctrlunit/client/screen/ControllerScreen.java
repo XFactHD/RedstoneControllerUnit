@@ -125,6 +125,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private final List<Register> registers = new ArrayList<>();
     private final List<RedstoneConfig> redstoneConfigs = new ArrayList<>();
     private final byte[] ramView = new byte[Constants.RAM_SIZE];
+    private final byte[] sfrView = new byte[Constants.SFR_SIZE];
     private final byte[] outputs = new byte[4];
     private final byte[] inputs = new byte[4];
     private Button buttonLoad;
@@ -299,7 +300,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
             {
                 for (Register reg : registers)
                 {
-                    reg.drawTooltip(graphics, font, ramView, mouseX, mouseY);
+                    reg.drawTooltip(graphics, font, ramView, sfrView, mouseX, mouseY);
                 }
                 if (mouseX >= leftPos + INDICATOR_X && mouseX < leftPos + INDICATOR_X + INDICATOR_SIZE && mouseY >= topPos + INDICATOR_Y && mouseY < topPos + INDICATOR_Y + INDICATOR_SIZE)
                 {
@@ -484,7 +485,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         graphics.blit(REGISTERS, leftPos + REGISTER_X, topPos + REGISTER_Y, 0, 0, REGISTER_WIDTH, REGISTER_HEIGHT);
         for (Register reg : registers)
         {
-            reg.draw(graphics, font, ramView);
+            reg.draw(graphics, font, ramView, sfrView);
         }
 
         int x = leftPos + REGISTER_LEFT_X + REGISTER_ENTRY_WIDTH / 2 + 1;
@@ -569,9 +570,10 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         Minecraft.getInstance().pushGuiLayer(new EditPortMappingScreen(this));
     }
 
-    public void updateStatus(byte[] ram, byte[] output, byte[] input, int programCounter)
+    public void updateStatus(byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter)
     {
         Utils.copyByteArray(ram, this.ramView);
+        Utils.copyByteArray(sfr, this.sfrView);
         Utils.copyByteArray(output, this.outputs);
         Utils.copyByteArray(input, this.inputs);
         this.programCounter = programCounter;

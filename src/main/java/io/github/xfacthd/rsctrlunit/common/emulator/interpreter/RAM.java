@@ -9,6 +9,7 @@ import java.util.Arrays;
 public final class RAM
 {
     private final byte[] ram = new byte[Constants.RAM_SIZE];
+    private final byte[] sfr = new byte[Constants.SFR_SIZE];
     private final IOPorts ioPorts;
     private boolean updatingParity = false;
 
@@ -19,34 +20,43 @@ public final class RAM
 
     public byte readByte(int address)
     {
-        return readByte(address, false);
+        return readByte(address, true, false);
     }
 
-    public byte readByte(int address, boolean readOutIfIO)
+    public byte readByte(int address, boolean direct, boolean readOutIfIO)
     {
+        if (address < Constants.SFR_START || !direct)
+        {
+            return ram[address];
+        }
         return switch (address)
         {
             case Constants.ADDRESS_IO_PORT0 -> readOutIfIO ? ioPorts.readOutputPort(0) : ioPorts.readInputPort(0);
             case Constants.ADDRESS_IO_PORT1 -> readOutIfIO ? ioPorts.readOutputPort(1) : ioPorts.readInputPort(1);
             case Constants.ADDRESS_IO_PORT2 -> readOutIfIO ? ioPorts.readOutputPort(2) : ioPorts.readInputPort(2);
             case Constants.ADDRESS_IO_PORT3 -> readOutIfIO ? ioPorts.readOutputPort(3) : ioPorts.readInputPort(3);
-            default -> ram[address];
+            default -> sfr[address - Constants.SFR_START];
         };
     }
 
     public int read(int address)
     {
-        return read(address, false);
+        return read(address, true, false);
     }
 
-    public int read(int address, boolean readOutIfIO)
+    public int read(int address, boolean direct, boolean readOutIfIO)
     {
-        return readByte(address, readOutIfIO) & 0xFF;
+        return readByte(address, direct, readOutIfIO) & 0xFF;
     }
 
     public boolean readBit(int bitAddress)
     {
-        byte data = readByte(OpcodeHelpers.calculateByteAddressFromBitAddress(bitAddress));
+        return readBit(bitAddress, false);
+    }
+
+    public boolean readBit(int bitAddress, boolean readOutIfIO)
+    {
+        byte data = readByte(OpcodeHelpers.calculateByteAddressFromBitAddress(bitAddress), true, readOutIfIO);
         return (data & (1 << OpcodeHelpers.calculateBitIndexFromBitAddress(bitAddress))) != 0;
     }
 
@@ -55,8 +65,18 @@ public final class RAM
         writeByte(address, value, true);
     }
 
-    private void writeByte(int address, byte value, boolean updateParityFromPSW)
+    public void writeByte(int address, byte value, boolean direct)
     {
+        writeByte(address, value, direct, true);
+    }
+
+    private void writeByte(int address, byte value, boolean direct, boolean updateParityFromPSW)
+    {
+        if (address < Constants.SFR_START || !direct)
+        {
+            ram[address] = value;
+            return;
+        }
         switch (address)
         {
             case Constants.ADDRESS_IO_PORT0 -> ioPorts.writeOutputPort(0, value);
@@ -65,7 +85,7 @@ public final class RAM
             case Constants.ADDRESS_IO_PORT3 -> ioPorts.writeOutputPort(3, value);
             default ->
             {
-                ram[address] = value;
+                sfr[address - Constants.SFR_START] = value;
                 if (address == Constants.ADDRESS_ACCUMULATOR || (address == Constants.ADDRESS_STATUS_WORD && updateParityFromPSW))
                 {
                     updateParity(value);
@@ -84,14 +104,14 @@ public final class RAM
         int address = OpcodeHelpers.calculateByteAddressFromBitAddress(bitAddress);
         int index = OpcodeHelpers.calculateBitIndexFromBitAddress(bitAddress);
 
-        byte data = readByte(address, true);
+        byte data = readByte(address, true, true);
         data = switch (mode)
         {
             case SET ->         (byte) ((data |  (1 << index)) & 0xFF);
             case CLEAR ->       (byte) ((data & ~(1 << index)) & 0xFF);
             case COMPLEMENT ->  (byte) ((data ^  (1 << index)) & 0xFF);
         };
-        writeByte(address, data, false);
+        writeByte(address, data, true, false);
     }
 
     private void updateParity(byte acc)
@@ -111,19 +131,25 @@ public final class RAM
     void reset()
     {
         Arrays.fill(ram, (byte) 0);
-        ram[Constants.ADDRESS_IO_PORT0] = 0; // Would be 0xFF on real hardware
-        ram[Constants.ADDRESS_STACK_POINTER] = Constants.INITIAL_STACK_POINTER;
-        ram[Constants.ADDRESS_PCON] &= 0b01110000;
-        ram[Constants.ADDRESS_IO_PORT1] = 0; // Would be 0xFF on real hardware
-        ram[Constants.ADDRESS_SBUF] = 0; // Would be indeterminate on real hardware
-        ram[Constants.ADDRESS_IO_PORT2] = 0; // Would be 0xFF on real hardware
-        ram[Constants.ADDRESS_IE] &= 0b01100000;
-        ram[Constants.ADDRESS_IO_PORT3] = 0; // Would be 0xFF on real hardware
-        ram[Constants.ADDRESS_IP] &= (byte) 0b11100000;
+        Arrays.fill(sfr, (byte) 0);
+        sfr[Constants.ADDRESS_IO_PORT0 - Constants.SFR_START] = 0; // Would be 0xFF on real hardware
+        sfr[Constants.ADDRESS_STACK_POINTER - Constants.SFR_START] = Constants.INITIAL_STACK_POINTER;
+        sfr[Constants.ADDRESS_PCON - Constants.SFR_START] &= 0b01110000;
+        sfr[Constants.ADDRESS_IO_PORT1 - Constants.SFR_START] = 0; // Would be 0xFF on real hardware
+        sfr[Constants.ADDRESS_SBUF - Constants.SFR_START] = 0; // Would be indeterminate on real hardware
+        sfr[Constants.ADDRESS_IO_PORT2 - Constants.SFR_START] = 0; // Would be 0xFF on real hardware
+        sfr[Constants.ADDRESS_IE - Constants.SFR_START] &= 0b01100000;
+        sfr[Constants.ADDRESS_IO_PORT3 - Constants.SFR_START] = 0; // Would be 0xFF on real hardware
+        sfr[Constants.ADDRESS_IP - Constants.SFR_START] &= (byte) 0b11100000;
     }
 
-    byte[] getBackingArray()
+    byte[] getRamArray()
     {
         return ram;
+    }
+
+    byte[] getSfrArray()
+    {
+        return sfr;
     }
 }
