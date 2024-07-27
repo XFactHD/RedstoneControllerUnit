@@ -388,9 +388,8 @@ public final class Interpreter
                 int b = ram.read(Constants.ADDRESS_REGISTER_B);
                 if (b > 0)
                 {
-                    int result = acc / b;
-                    ram.write(Constants.ADDRESS_ACCUMULATOR, result);
-                    ram.write(Constants.ADDRESS_REGISTER_B, result >> 8);
+                    ram.write(Constants.ADDRESS_ACCUMULATOR, acc / b);
+                    ram.write(Constants.ADDRESS_REGISTER_B, acc % b);
                     ram.writeBit(Constants.BIT_ADDRESS_OVERFLOW, BitWriteMode.CLEAR);
                 }
                 else
