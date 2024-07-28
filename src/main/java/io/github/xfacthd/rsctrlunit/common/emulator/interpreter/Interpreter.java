@@ -528,13 +528,15 @@ public final class Interpreter
             case MOVC_ACC_IAPC ->
             {
                 int acc = ram.read(Constants.ADDRESS_ACCUMULATOR);
-                int address = (acc + programCounter) % Constants.ROM_SIZE;
+                int address = acc + programCounter;
+                address %= Constants.ROM_SIZE;
                 ram.writeByte(Constants.ADDRESS_ACCUMULATOR, rom[address]);
             }
             case MOVC_ACC_IADPTR ->
             {
                 int acc = ram.read(Constants.ADDRESS_ACCUMULATOR);
-                int address = (acc + OpcodeHelpers.readDataPointer(ram)) % Constants.ROM_SIZE;
+                int address = acc + OpcodeHelpers.readDataPointer(ram);
+                address %= Constants.ROM_SIZE;
                 ram.writeByte(Constants.ADDRESS_ACCUMULATOR, rom[address]);
             }
             case MOVX_ACC_IDPTR ->

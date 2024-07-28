@@ -4,7 +4,8 @@ import io.github.xfacthd.rsctrlunit.common.emulator.disassembler.Disassembler;
 import io.github.xfacthd.rsctrlunit.common.emulator.disassembler.Disassembly;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
