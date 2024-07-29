@@ -119,7 +119,7 @@ public final class RAM
         if (updatingParity) return;
 
         updatingParity = true;
-        int parity = readBit(Constants.BIT_ADDRESS_PARITY) ? 1 : 0;
+        int parity = 0;
         for (int i = 0; i < 8; i++)
         {
             parity ^= ((acc >> i) & 0x1);
