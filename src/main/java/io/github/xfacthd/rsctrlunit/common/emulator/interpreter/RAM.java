@@ -67,11 +67,6 @@ public final class RAM
 
     public void writeByte(int address, byte value, boolean direct)
     {
-        writeByte(address, value, direct, true);
-    }
-
-    private void writeByte(int address, byte value, boolean direct, boolean updateParityFromPSW)
-    {
         if (address < Constants.SFR_START || !direct)
         {
             ram[address] = value;
@@ -86,7 +81,7 @@ public final class RAM
             default ->
             {
                 sfr[address - Constants.SFR_START] = value;
-                if (address == Constants.ADDRESS_ACCUMULATOR || (address == Constants.ADDRESS_STATUS_WORD && updateParityFromPSW))
+                if (address == Constants.ADDRESS_ACCUMULATOR)
                 {
                     updateParity(value);
                 }
@@ -111,7 +106,7 @@ public final class RAM
             case CLEAR ->       (byte) ((data & ~(1 << index)) & 0xFF);
             case COMPLEMENT ->  (byte) ((data ^  (1 << index)) & 0xFF);
         };
-        writeByte(address, data, true, false);
+        writeByte(address, data, true);
     }
 
     private void updateParity(byte acc)
