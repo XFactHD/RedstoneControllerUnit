@@ -5,6 +5,7 @@ import io.github.xfacthd.rsctrlunit.common.emulator.opcode.OpcodeHelpers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.*;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
@@ -599,7 +600,8 @@ public final class Interpreter
         return data;
     }
 
-    private void setProgramCounter(int pc)
+    @VisibleForTesting
+    public void setProgramCounter(int pc)
     {
         programCounter = Math.floorMod(pc, Constants.ROM_SIZE);
     }
@@ -640,6 +642,12 @@ public final class Interpreter
     public byte[] getSfr()
     {
         return ram.getSfrArray();
+    }
+
+    @VisibleForTesting
+    public byte[] getExtRam()
+    {
+        return extRam;
     }
 
     public IOPorts getIoPorts()
