@@ -163,70 +163,38 @@ public final class Interpreter
             }
             case CJNE_ACC_IMM ->
             {
-                byte immediate = readRomAndIncrementPC();
-                int offset = readRomAndIncrementPC();
-                byte acc = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
-                if (immediate != acc)
-                {
-                    setProgramCounter(programCounter + offset);
-                }
-                ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(acc < immediate));
+                byte left = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
+                OpcodeHelpers.compareJumpNotEqual(this, ram, left, readRomAndIncrementPC(), readRomAndIncrementPC());
             }
             case CJNE_ACC_MEM ->
             {
                 int address = readRomAndIncrementPC() & 0xFF;
                 int offset = readRomAndIncrementPC();
-                byte value = ram.readByte(address);
-                byte acc = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
-                if (value != acc)
-                {
-                    setProgramCounter(programCounter + offset);
-                }
-                ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(acc < value));
+                byte left = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
+                OpcodeHelpers.compareJumpNotEqual(this, ram, left, ram.readByte(address), offset);
             }
             case CJNE_IR0_IMM, CJNE_IR1_IMM ->
             {
-                byte immediate = readRomAndIncrementPC();
-                int offset = readRomAndIncrementPC();
-                byte value = OpcodeHelpers.readRegisterIndirect(ram, romByte & 0x1);
-                if (value != immediate)
-                {
-                    setProgramCounter(programCounter + offset);
-                }
-                ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(value < immediate));
+                byte left = OpcodeHelpers.readRegisterIndirect(ram, romByte & 0x1);
+                OpcodeHelpers.compareJumpNotEqual(this, ram, left, readRomAndIncrementPC(), readRomAndIncrementPC());
             }
             case CJNE_DR0_IMM, CJNE_DR1_IMM, CJNE_DR2_IMM, CJNE_DR3_IMM, CJNE_DR4_IMM, CJNE_DR5_IMM, CJNE_DR6_IMM, CJNE_DR7_IMM ->
             {
-                byte immediate = readRomAndIncrementPC();
-                int offset = readRomAndIncrementPC();
-                byte value = OpcodeHelpers.readRegisterDirect(ram, romByte & 0b00000111);
-                if (value != immediate)
-                {
-                    setProgramCounter(programCounter + offset);
-                }
-                ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(value < immediate));
+                byte left = OpcodeHelpers.readRegisterDirect(ram, romByte & 0b00000111);
+                OpcodeHelpers.compareJumpNotEqual(this, ram, left, readRomAndIncrementPC(), readRomAndIncrementPC());
             }
             case DJNZ_MEM ->
             {
                 int address = readRomAndIncrementPC() & 0xFF;
-                int offset = readRomAndIncrementPC();
-                byte value = (byte) (ram.readByte(address) - (byte) 1);
-                ram.writeByte(address, value);
-                if ((value & 0xFF) != 0)
-                {
-                    setProgramCounter(programCounter + offset);
-                }
+                byte result = OpcodeHelpers.decrementJumpNotZero(this, ram.readByte(address), readRomAndIncrementPC());
+                ram.writeByte(address, result);
             }
             case DJNZ_DR0, DJNZ_DR1, DJNZ_DR2, DJNZ_DR3, DJNZ_DR4, DJNZ_DR5, DJNZ_DR6, DJNZ_DR7 ->
             {
-                int offset = readRomAndIncrementPC();
                 int register = romByte & 0b00000111;
-                byte value = (byte) ((OpcodeHelpers.readRegisterDirect(ram, register) & 0xFF) - 1);
-                OpcodeHelpers.writeRegisterDirect(ram, register, value);
-                if ((value & 0xFF) != 0)
-                {
-                    setProgramCounter(programCounter + offset);
-                }
+                byte value = OpcodeHelpers.readRegisterDirect(ram, register);
+                byte result = OpcodeHelpers.decrementJumpNotZero(this, value, readRomAndIncrementPC());
+                OpcodeHelpers.writeRegisterDirect(ram, register, result);
             }
             case PUSH ->
             {
@@ -434,25 +402,25 @@ public final class Interpreter
                     OpcodeHelpers.readModifyWriteAccumulatorWithArg(ram, (byte) (romByte & 0x1), (modRam, value, arg) ->
                     {
                         int register = arg & 0xFF;
-                        byte regValue = OpcodeHelpers.readRegisterIndirect(ram, register);
-                        OpcodeHelpers.writeRegisterIndirect(ram, register, (byte) (value & 0xFF));
+                        byte regValue = OpcodeHelpers.readRegisterIndirect(modRam, register);
+                        OpcodeHelpers.writeRegisterIndirect(modRam, register, (byte) (value & 0xFF));
                         return regValue;
                     });
             case XCH_DR0, XCH_DR1, XCH_DR2, XCH_DR3, XCH_DR4, XCH_DR5, XCH_DR6, XCH_DR7 ->
                     OpcodeHelpers.readModifyWriteAccumulatorWithArg(ram, (byte) (romByte & 0b00000111), (modRam, value, arg) ->
                     {
                         int register = arg & 0xFF;
-                        byte regValue = OpcodeHelpers.readRegisterDirect(ram, register);
-                        OpcodeHelpers.writeRegisterDirect(ram, register, (byte) (value & 0xFF));
+                        byte regValue = OpcodeHelpers.readRegisterDirect(modRam, register);
+                        OpcodeHelpers.writeRegisterDirect(modRam, register, (byte) (value & 0xFF));
                         return regValue;
                     });
             case XCHD_IR0, XCHD_IR1 ->
                     OpcodeHelpers.readModifyWriteAccumulatorWithArg(ram, (byte) (romByte & 0x1), (modRam, value, arg) ->
                     {
                         int register = arg & 0xFF;
-                        byte regValue = OpcodeHelpers.readRegisterIndirect(ram, register);
+                        byte regValue = OpcodeHelpers.readRegisterIndirect(modRam, register);
                         byte newRegValue = (byte) ((regValue & 0xF0) | (value & 0x0F));
-                        OpcodeHelpers.writeRegisterIndirect(ram, register, newRegValue);
+                        OpcodeHelpers.writeRegisterIndirect(modRam, register, newRegValue);
                         return (value & 0xF0) | (regValue & 0x0F);
                     });
             case DA ->
@@ -464,16 +432,16 @@ public final class Interpreter
                             if (value > 255)
                             {
                                 value -= 256;
-                                ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.SET);
+                                modRam.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.SET);
                             }
                         }
-                        if (((value >> 4) & 0x0F) > 9 || ram.readBit(Constants.BIT_ADDRESS_CARRY))
+                        if (((value >> 4) & 0x0F) > 9 || modRam.readBit(Constants.BIT_ADDRESS_CARRY))
                         {
                             value += 0x60;
                             if (value > 255)
                             {
                                 value -= 256;
-                                ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.SET);
+                                modRam.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.SET);
                             }
                         }
                         return value;
