@@ -1,12 +1,12 @@
 modLoader="javafml"
 loaderVersion="[2,)"
 license="LGPL v3"
-issueTrackerURL="https://github.com/XFactHD/RedstoneControlUnit"
+issueTrackerURL="https://github.com/XFactHD/RedstoneControllerUnit"
 
 [[mods]]
     modId="rsctrlunit"
     version="${mod_version}"
-    displayName="RedstoneControlUnit"
+    displayName="RedstoneControllerUnit"
     #displayURL="https://www.curseforge.com/minecraft/mc-mods/rsctrlunit"
     logoFile="logo.png"
     authors="XFactHD"
