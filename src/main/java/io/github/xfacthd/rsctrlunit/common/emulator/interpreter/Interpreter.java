@@ -46,7 +46,7 @@ public final class Interpreter
         if (isrAddress != -1)
         {
             pushStateBeforeCall();
-            programCounter = isrAddress;
+            setProgramCounter(isrAddress);
         }
 
         byte romByte = readRomAndIncrementPC();
@@ -57,42 +57,43 @@ public final class Interpreter
             case SJMP ->
             {
                 int offset = readRomAndIncrementPC();
-                programCounter += offset;
+                setProgramCounter(programCounter + offset);
             }
             case JMP ->
             {
                 int dptr = OpcodeHelpers.readDataPointer(ram);
-                programCounter = ram.read(Constants.ADDRESS_ACCUMULATOR) + dptr;
+                int acc = ram.read(Constants.ADDRESS_ACCUMULATOR);
+                setProgramCounter(dptr + acc);
             }
             case AJMP_000, AJMP_001, AJMP_010, AJMP_011, AJMP_100, AJMP_101, AJMP_110, AJMP_111 ->
             {
                 int address = OpcodeHelpers.calculateAjmpAddress(romByte, readRomAndIncrementPC());
-                programCounter = OpcodeHelpers.calculateAjmpTarget(programCounter, address);
+                setProgramCounter(OpcodeHelpers.calculateAjmpTarget(programCounter, address));
             }
             case ACALL_000, ACALL_001, ACALL_010, ACALL_011, ACALL_100, ACALL_101, ACALL_110, ACALL_111 ->
             {
                 int address = OpcodeHelpers.calculateAjmpAddress(romByte, readRomAndIncrementPC());
                 pushStateBeforeCall();
-                programCounter = OpcodeHelpers.calculateAjmpTarget(programCounter, address);
+                setProgramCounter(OpcodeHelpers.calculateAjmpTarget(programCounter, address));
             }
             case LJMP ->
             {
                 int upper = readRomAndIncrementPC() & 0xFF;
                 int lower = readRomAndIncrementPC() & 0xFF;
-                programCounter = (upper << 8) | lower;
+                setProgramCounter((upper << 8) | lower);
             }
             case LCALL ->
             {
                 int upper = readRomAndIncrementPC() & 0xFF;
                 int lower = readRomAndIncrementPC() & 0xFF;
                 pushStateBeforeCall();
-                programCounter = (upper << 8) | lower;
+                setProgramCounter((upper << 8) | lower);
             }
             case RET, RETI ->
             {
                 int upper = popStack() & 0xFF;
                 int lower = popStack() & 0xFF;
-                programCounter = (upper << 8) | lower;
+                setProgramCounter((upper << 8) | lower);
 
                 if (opcode == Opcode.RETI)
                 {
@@ -106,7 +107,7 @@ public final class Interpreter
                 if (ram.readBit(bitAddress, true))
                 {
                     ram.writeBit(bitAddress, BitWriteMode.CLEAR);
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case JB ->
@@ -115,7 +116,7 @@ public final class Interpreter
                 int offset = readRomAndIncrementPC();
                 if (ram.readBit(bitAddress))
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case JNB ->
@@ -124,7 +125,7 @@ public final class Interpreter
                 int offset = readRomAndIncrementPC();
                 if (!ram.readBit(bitAddress))
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case JC ->
@@ -132,7 +133,7 @@ public final class Interpreter
                 int offset = readRomAndIncrementPC();
                 if (ram.readBit(Constants.BIT_ADDRESS_CARRY))
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case JNC ->
@@ -140,7 +141,7 @@ public final class Interpreter
                 int offset = readRomAndIncrementPC();
                 if (!ram.readBit(Constants.BIT_ADDRESS_CARRY))
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case JZ ->
@@ -148,7 +149,7 @@ public final class Interpreter
                 int offset = readRomAndIncrementPC();
                 if (ram.read(Constants.ADDRESS_ACCUMULATOR) == 0)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case JNZ ->
@@ -156,7 +157,7 @@ public final class Interpreter
                 int offset = readRomAndIncrementPC();
                 if (ram.read(Constants.ADDRESS_ACCUMULATOR) != 0)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case CJNE_ACC_IMM ->
@@ -166,7 +167,7 @@ public final class Interpreter
                 byte acc = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
                 if (immediate != acc)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
                 ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(acc < immediate));
             }
@@ -178,7 +179,7 @@ public final class Interpreter
                 byte acc = ram.readByte(Constants.ADDRESS_ACCUMULATOR);
                 if (value != acc)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
                 ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(acc < value));
             }
@@ -189,7 +190,7 @@ public final class Interpreter
                 byte value = OpcodeHelpers.readRegisterIndirect(ram, romByte & 0x1);
                 if (value != immediate)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
                 ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(value < immediate));
             }
@@ -200,7 +201,7 @@ public final class Interpreter
                 byte value = OpcodeHelpers.readRegisterDirect(ram, romByte & 0b00000111);
                 if (value != immediate)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
                 ram.writeBit(Constants.BIT_ADDRESS_CARRY, BitWriteMode.of(value < immediate));
             }
@@ -212,7 +213,7 @@ public final class Interpreter
                 ram.writeByte(address, value);
                 if ((value & 0xFF) != 0)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case DJNZ_DR0, DJNZ_DR1, DJNZ_DR2, DJNZ_DR3, DJNZ_DR4, DJNZ_DR5, DJNZ_DR6, DJNZ_DR7 ->
@@ -223,7 +224,7 @@ public final class Interpreter
                 OpcodeHelpers.writeRegisterDirect(ram, register, value);
                 if ((value & 0xFF) != 0)
                 {
-                    programCounter += offset;
+                    setProgramCounter(programCounter + offset);
                 }
             }
             case PUSH ->
@@ -572,11 +573,7 @@ public final class Interpreter
     private byte readRomAndIncrementPC()
     {
         byte data = rom[programCounter];
-        programCounter++;
-        if (programCounter >= Constants.ROM_SIZE)
-        {
-            programCounter = 0;
-        }
+        setProgramCounter(programCounter + 1);
         return data;
     }
 
@@ -600,6 +597,11 @@ public final class Interpreter
         byte data = ram.readByte(pointer);
         ram.write(Constants.ADDRESS_STACK_POINTER, pointer - 1);
         return data;
+    }
+
+    private void setProgramCounter(int pc)
+    {
+        programCounter = Math.floorMod(pc, Constants.ROM_SIZE);
     }
 
     public int getProgramCounter()
