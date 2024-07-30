@@ -172,7 +172,7 @@ public final class OpcodeHelpers
         int iValue = (value & 0xFF) + carryIn;
 
         int result = acc - iValue;
-        int signedResult = toSigned(acc) + toSigned(iValue) + carryIn;
+        int signedResult = toSigned(acc) - toSigned(iValue) - carryIn;
 
         boolean carry = false;
         if (result < 0)
