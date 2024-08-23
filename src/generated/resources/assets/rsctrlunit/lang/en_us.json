@@ -1,5 +1,7 @@
 {
+  "block.rsctrlunit.adc": "Analog-to-Digital Converter",
   "block.rsctrlunit.controller": "Controller",
+  "block.rsctrlunit.dac": "Digital-to-Analog Converter",
   "button.rsctrlunit.controller.clear_rom": "Clear ROM",
   "button.rsctrlunit.controller.edit_port_map": "Edit port mapping",
   "button.rsctrlunit.controller.hide_port_map": "Hide port mapping",

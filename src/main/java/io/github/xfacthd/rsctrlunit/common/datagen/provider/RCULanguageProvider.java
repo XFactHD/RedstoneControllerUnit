@@ -40,6 +40,8 @@ public final class RCULanguageProvider extends LanguageProvider
     private void addBlockTranslations()
     {
         add(RCUContent.BLOCK_CONTROLLER.value(), "Controller");
+        add(RCUContent.BLOCK_ADC.value(), "Analog-to-Digital Converter");
+        add(RCUContent.BLOCK_DAC.value(), "Digital-to-Analog Converter");
     }
 
     private void addItemTranslations()

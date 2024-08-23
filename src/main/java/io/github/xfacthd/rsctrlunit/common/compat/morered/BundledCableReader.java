@@ -18,23 +18,23 @@ final class BundledCableReader
         return connector.canConnectToAdjacentWire(level, cablePos, cableState, ctrlPos, ctrlState, facing, side);
     }
 
-    public static byte getBundledPower(Level level, BlockState ctrlState, BlockPos ctrlPos, BlockPos cablePos, Direction facing, Direction side, boolean upper, byte inputMask)
+    public static int getBundledPower(Level level, BlockState ctrlState, BlockPos ctrlPos, BlockPos cablePos, Direction facing, Direction side, int offset, int count, int inputMask)
     {
         ChanneledPowerSupplier supplier = level.getCapability(MoreRedAPI.CHANNELED_POWER_CAPABILITY, cablePos, side);
         if (supplier != null)
         {
             int input = 0;
-            int offset = upper ? 8 : 0;
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < count; i++)
             {
                 if (((inputMask >> i) & 0x1) == 0) continue;
+
                 int power = supplier.getPowerOnChannel(level, ctrlPos, ctrlState, facing, i + offset);
                 if (power > 0)
                 {
                     input |= (1 << i);
                 }
             }
-            return (byte) (input & 0xFF);
+            return input & ~(-1 << count);
         }
         return 0;
     }

@@ -1,5 +1,7 @@
 {
   "values": [
-    "rsctrlunit:controller"
+    "rsctrlunit:controller",
+    "rsctrlunit:adc",
+    "rsctrlunit:dac"
   ]
 }

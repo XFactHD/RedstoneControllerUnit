@@ -2,6 +2,7 @@ package io.github.xfacthd.rsctrlunit.client;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.client.model.ControllerModelLoader;
+import io.github.xfacthd.rsctrlunit.client.model.ConverterModelLoader;
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.ProgrammerScreen;
 import io.github.xfacthd.rsctrlunit.client.texture.AreaMaskSource;
@@ -38,6 +39,7 @@ public final class RCUClient
     private static void onRegisterGeometryLoaders(final ModelEvent.RegisterGeometryLoaders event)
     {
         event.register(Utils.rl("controller"), new ControllerModelLoader());
+        event.register(Utils.rl("converter"), new ConverterModelLoader());
     }
 
     private static void onRegisterSpriteSourceTypes(final RegisterSpriteSourceTypesEvent event)

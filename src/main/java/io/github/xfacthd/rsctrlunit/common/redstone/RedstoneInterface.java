@@ -80,7 +80,8 @@ public final class RedstoneInterface
         {
             portStatesOut[port] = portState;
             int extPort = portMapping[port];
-            updateNeighborOnSide(PortMapping.getPortSide(facing, extPort));
+            RedstoneType type = portConfigs[port].getType();
+            updateNeighborOnSide(PortMapping.getPortSide(facing, extPort), type == RedstoneType.BUNDLED);
         }
     }
 
@@ -123,7 +124,7 @@ public final class RedstoneInterface
         }
         else
         {
-            updateNeighborOnSide(PortMapping.getPortSide(facing, extPort));
+            updateNeighborOnSide(PortMapping.getPortSide(facing, extPort), config.getType() == RedstoneType.BUNDLED);
         }
         Direction side = PortMapping.getPortSide(facing, extPort);
         updateInputOnSide(be.getBlockState(), be.getBlockPos().relative(side), side, true);
@@ -165,11 +166,17 @@ public final class RedstoneInterface
         return portMapping;
     }
 
-    private void updateNeighborOnSide(Direction side)
+    private void updateNeighborOnSide(Direction side, boolean bundled)
     {
         BlockPos adjPos = be.getBlockPos().relative(side);
-        be.level().neighborChanged(be.getBlockPos().relative(side), be.getBlockState().getBlock(), be.getBlockPos());
-        be.level().getBlockState(adjPos).onNeighborChange(be.level(), adjPos, be.getBlockPos());
+        if (bundled)
+        {
+            be.level().getBlockState(adjPos).onNeighborChange(be.level(), adjPos, be.getBlockPos());
+        }
+        else
+        {
+            be.level().neighborChanged(adjPos, be.getBlockState().getBlock(), be.getBlockPos());
+        }
     }
 
     public BlockState updateStateFromConfigs(BlockState state)

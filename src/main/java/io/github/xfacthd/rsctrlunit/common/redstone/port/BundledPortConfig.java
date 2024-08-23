@@ -3,10 +3,8 @@ package io.github.xfacthd.rsctrlunit.common.redstone.port;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.xfacthd.rsctrlunit.common.RCUContent;
-import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
-import io.github.xfacthd.rsctrlunit.common.compat.morered.MoreRedCompat;
-import io.github.xfacthd.rsctrlunit.common.util.property.*;
+import io.github.xfacthd.rsctrlunit.common.redstone.BundledConnectionHelper;
+import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +12,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public record BundledPortConfig(boolean upper, byte inputMask) implements PortConfig
 {
@@ -54,31 +51,7 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
     @Override
     public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side)
     {
-        BlockState adjState = level.getBlockState(adjPos);
-        if (adjState.is(RCUContent.BLOCK_CONTROLLER) && level.getBlockEntity(adjPos) instanceof ControllerBlockEntity be)
-        {
-            Direction adjSide = side.getOpposite();
-            int adjPort = PortMapping.getPortIndex(facing, adjSide);
-            RedstoneTypeProperty adjProp = PropertyHolder.RS_CON_PROPS[adjPort];
-            if (adjState.getValue(BlockStateProperties.FACING) == facing && adjState.getValue(adjProp) == RedstoneType.BUNDLED)
-            {
-                int newPortState = 0;
-                int offset = upper ? 8 : 0;
-                for (int i = 0; i < 8; i++)
-                {
-                    if ((inputMask & (1 << i)) != 0 && be.getBundledOutput(adjSide, i + offset) > 0)
-                    {
-                        newPortState |= 1 << i;
-                    }
-                }
-                return (byte) newPortState;
-            }
-        }
-        else if (MoreRedCompat.isBundledCable(level, state, pos, adjState, adjPos, facing, side.getOpposite()))
-        {
-            return MoreRedCompat.getBundledPower(level, state, pos, adjPos, facing, side.getOpposite(), upper, inputMask);
-        }
-        return 0;
+        return (byte) BundledConnectionHelper.readBundledInput(level, state, pos, facing, adjPos, side, upper ? 8 : 0, 8, inputMask);
     }
 
     @Override

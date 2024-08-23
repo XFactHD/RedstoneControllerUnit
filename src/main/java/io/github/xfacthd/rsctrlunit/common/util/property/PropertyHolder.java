@@ -1,6 +1,7 @@
 package io.github.xfacthd.rsctrlunit.common.util.property;
 
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public final class PropertyHolder
 {
@@ -13,6 +14,8 @@ public final class PropertyHolder
     };
 
     public static final BooleanProperty SHOW_PORT_MAPPING = BooleanProperty.create("show_port_mapping");
+
+    public static final EnumProperty<CompoundDirection> FACING_DIR = EnumProperty.create("facing_dir", CompoundDirection.class);
 
     private PropertyHolder() { }
 }

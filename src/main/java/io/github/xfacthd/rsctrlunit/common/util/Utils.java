@@ -6,14 +6,15 @@ import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.*;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.phys.Vec3;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -64,6 +65,42 @@ public final class Utils
     public static Direction dirByNormal(int x, int y, int z)
     {
         return DIRECTION_BY_NORMAL.get(BlockPos.asLong(x, y, z));
+    }
+
+    public static boolean isX(Direction dir)
+    {
+        return dir.getAxis() == Direction.Axis.X;
+    }
+
+    public static boolean isY(Direction dir)
+    {
+        return dir.getAxis() == Direction.Axis.Y;
+    }
+
+    public static boolean isZ(Direction dir)
+    {
+        return dir.getAxis() == Direction.Axis.Z;
+    }
+
+    public static Direction getDirFromCross(Vec3 hitVec, Direction hitFace)
+    {
+        hitVec = fraction(hitVec).subtract(.5, .5, .5);
+
+        return switch (hitFace.getAxis())
+        {
+            case X -> Direction.getNearest(0, hitVec.y, hitVec.z);
+            case Y -> Direction.getNearest(hitVec.x, 0, hitVec.z);
+            case Z -> Direction.getNearest(hitVec.x, hitVec.y, 0);
+        };
+    }
+
+    public static Vec3 fraction(Vec3 vec)
+    {
+        return new Vec3(
+                vec.x() - Math.floor(vec.x()),
+                vec.y() - Math.floor(vec.y()),
+                vec.z() - Math.floor(vec.z())
+        );
     }
 
     public static void copyByteArray(byte[] src, byte[] dest)
@@ -146,6 +183,13 @@ public final class Utils
     public static <T> Tag toNbt(Codec<T> codec, T value)
     {
         return codec.encodeStart(NbtOps.INSTANCE, value).result().orElseGet(CompoundTag::new);
+    }
+
+    public static <T> ResourceKey<T> getKeyOrThrow(Holder<T> holder)
+    {
+        return holder.unwrapKey().orElseThrow(
+                () -> new IllegalArgumentException("Direct holders and unbound reference holders are not supported")
+        );
     }
 
 

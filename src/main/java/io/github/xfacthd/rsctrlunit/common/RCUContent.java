@@ -1,8 +1,9 @@
 package io.github.xfacthd.rsctrlunit.common;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
+import io.github.xfacthd.rsctrlunit.common.block.SignalConverterBlock;
 import io.github.xfacthd.rsctrlunit.common.block.ControllerBlock;
-import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
+import io.github.xfacthd.rsctrlunit.common.blockentity.*;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.item.MemoryCardItem;
 import io.github.xfacthd.rsctrlunit.common.item.ProgrammerItem;
@@ -35,6 +36,8 @@ public final class RCUContent
 
     // region Blocks
     public static final Holder<Block> BLOCK_CONTROLLER = registerBlock("controller", ControllerBlock::new);
+    public static final Holder<Block> BLOCK_ADC = registerBlock("adc", SignalConverterBlock::analogToDigital);
+    public static final Holder<Block> BLOCK_DAC = registerBlock("dac", SignalConverterBlock::digitalToAnalog);
     // endregion
 
     // region DataComponents
@@ -50,7 +53,13 @@ public final class RCUContent
 
     // region BlockEntities
     public static final DeferredBlockEntity<ControllerBlockEntity> BE_TYPE_CONTROLLER = BLOCK_ENTITIES.registerBlockEntity(
-            "controller", ControllerBlockEntity::new, () -> new Block[] { BLOCK_CONTROLLER.value() }
+            "controller", ControllerBlockEntity::new, BLOCK_CONTROLLER
+    );
+    public static final DeferredBlockEntity<AnalogToDigitalConverterBlockEntity> BE_TYPE_ADC = BLOCK_ENTITIES.registerBlockEntity(
+            "adc", AnalogToDigitalConverterBlockEntity::new, BLOCK_ADC
+    );
+    public static final DeferredBlockEntity<DigitalToAnalogConverterBlockEntity> BE_TYPE_DAC = BLOCK_ENTITIES.registerBlockEntity(
+            "dac", DigitalToAnalogConverterBlockEntity::new, BLOCK_DAC
     );
     // endregion
 
@@ -71,6 +80,8 @@ public final class RCUContent
                     .displayItems((params, output) ->
                     {
                         output.accept(BLOCK_CONTROLLER.value());
+                        output.accept(BLOCK_ADC.value());
+                        output.accept(BLOCK_DAC.value());
                         output.accept(ITEM_MEMORY_CARD.value());
                         output.accept(ITEM_PROGRAMMER.value());
                     })

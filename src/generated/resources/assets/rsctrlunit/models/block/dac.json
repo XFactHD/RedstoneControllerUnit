@@ -1,0 +1,6 @@
+{
+  "parent": "rsctrlunit:block/converter",
+  "textures": {
+    "dir_overlay": "rsctrlunit:block/dir_overlay_dac"
+  }
+}

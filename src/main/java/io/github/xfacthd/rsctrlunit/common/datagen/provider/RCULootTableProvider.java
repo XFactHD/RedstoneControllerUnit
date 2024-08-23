@@ -37,13 +37,19 @@ public final class RCULootTableProvider extends LootTableProvider
         @Override
         protected Iterable<Block> getKnownBlocks()
         {
-            return List.of(RCUContent.BLOCK_CONTROLLER.value());
+            return List.of(
+                    RCUContent.BLOCK_CONTROLLER.value(),
+                    RCUContent.BLOCK_ADC.value(),
+                    RCUContent.BLOCK_DAC.value()
+            );
         }
 
         @Override
         protected void generate()
         {
             dropSelf(RCUContent.BLOCK_CONTROLLER.value());
+            dropSelf(RCUContent.BLOCK_ADC.value());
+            dropSelf(RCUContent.BLOCK_DAC.value());
         }
     }
 }

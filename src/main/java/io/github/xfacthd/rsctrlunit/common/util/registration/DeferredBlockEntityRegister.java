@@ -1,5 +1,6 @@
 package io.github.xfacthd.rsctrlunit.common.util.registration;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -34,6 +35,13 @@ public final class DeferredBlockEntityRegister extends DeferredRegister<BlockEnt
     {
         //noinspection ConstantConditions
         return (DeferredBlockEntity<T>) register(name, () -> BlockEntityType.Builder.of(factory, blocks.get()).build(null));
+    }
+
+    public <T extends BlockEntity> DeferredBlockEntity<T> registerBlockEntity(
+            String name, BlockEntityType.BlockEntitySupplier<T> factory, Holder<Block> block
+    )
+    {
+        return registerBlockEntity(name, factory, () -> new Block[] { block.value() });
     }
 
 

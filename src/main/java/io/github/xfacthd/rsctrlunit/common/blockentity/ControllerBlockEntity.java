@@ -11,19 +11,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public final class ControllerBlockEntity extends BlockEntity
+public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
 {
     public static final Component TITLE = Component.translatable("menu.rsctrlunit.controller");
     public static final ModelProperty<int[]> PORT_MAPPING_PROPERTY = new ModelProperty<>();
@@ -31,9 +28,6 @@ public final class ControllerBlockEntity extends BlockEntity
     private final Interpreter interpreter = new Interpreter();
     private final Timers timers = interpreter.getTimers();
     private final RedstoneInterface redstone = new RedstoneInterface(this);
-    // Keep around the chunk holding this BE to avoid having to look it up every tick to mark it as unsaved
-    @Nullable
-    private LevelChunk owningChunk = null;
 
     public ControllerBlockEntity(BlockPos pos, BlockState state)
     {
@@ -65,32 +59,22 @@ public final class ControllerBlockEntity extends BlockEntity
         return redstone;
     }
 
+    @Override
     public int getRedstoneOutput(Direction side)
     {
         return redstone.getRedstoneOutput(side);
     }
 
+    @Override
     public int getBundledOutput(Direction side, int channel)
     {
         return redstone.getBundledOutput(side, channel);
     }
 
+    @Override
     public void handleNeighborUpdate(BlockPos adjPos, Direction side)
     {
         redstone.handleNeighborUpdate(getBlockState(), adjPos, side);
-    }
-
-    public Level level()
-    {
-        return Objects.requireNonNull(level);
-    }
-
-    public void setChangedWithoutSignalUpdate()
-    {
-        if (owningChunk != null)
-        {
-            owningChunk.setUnsaved(true);
-        }
     }
 
     public void markForSyncAndSave()
@@ -141,7 +125,6 @@ public final class ControllerBlockEntity extends BlockEntity
     public void clearRemoved()
     {
         super.clearRemoved();
-        owningChunk = level().getChunkAt(worldPosition);
         if (!level().isClientSide())
         {
             interpreter.startup();
@@ -153,7 +136,6 @@ public final class ControllerBlockEntity extends BlockEntity
     public void setRemoved()
     {
         super.setRemoved();
-        owningChunk = null;
         if (!level().isClientSide())
         {
             interpreter.shutdown();
