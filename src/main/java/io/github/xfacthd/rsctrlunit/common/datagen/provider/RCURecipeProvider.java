@@ -48,5 +48,27 @@ public final class RCURecipeProvider extends RecipeProvider
                 .define('C', RCUContent.ITEM_MEMORY_CARD.value())
                 .unlockedBy("has_memory_card", has(RCUContent.ITEM_MEMORY_CARD.value()))
                 .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, RCUContent.BLOCK_ADC.value())
+                .pattern("RID")
+                .pattern("SCS")
+                .define('D', Tags.Items.DUSTS_REDSTONE)
+                .define('I', Tags.Items.INGOTS_GOLD)
+                .define('R', Items.REPEATER)
+                .define('C', Items.COMPARATOR)
+                .define('S', Items.STONE_SLAB)
+                .unlockedBy("has_comparator", has(Items.COMPARATOR))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, RCUContent.BLOCK_DAC.value())
+                .pattern("RID")
+                .pattern("SCS")
+                .define('D', Tags.Items.DUSTS_REDSTONE)
+                .define('I', Tags.Items.INGOTS_COPPER)
+                .define('R', Items.REPEATER)
+                .define('C', Items.COMPARATOR)
+                .define('S', Items.STONE_SLAB)
+                .unlockedBy("has_comparator", has(Items.COMPARATOR))
+                .save(output);
     }
 }
