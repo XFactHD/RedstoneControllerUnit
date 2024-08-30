@@ -209,7 +209,7 @@ public final class ParseHelpers
         {
             return parseByte(operand);
         }
-        return switch (operand)
+        return switch (operand.toLowerCase(Locale.ROOT))
         {
             case "p0" ->   (byte) Constants.ADDRESS_IO_PORT0;
             case "sp" ->   (byte) Constants.ADDRESS_STACK_POINTER;
