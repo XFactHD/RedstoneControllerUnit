@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -89,9 +90,10 @@ public abstract class PlateBlock extends Block implements EntityBlock
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block adjBlock, BlockPos adjPos, boolean moved)
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block adjBlock, @Nullable Orientation orientation, boolean moved)
     {
-        onNeighborChange(state, level, pos, adjPos);
+        // FIXME: the whole Orientation thing makes zero sense...
+        //onNeighborChange(state, level, pos, adjPos);
     }
 
     @Override

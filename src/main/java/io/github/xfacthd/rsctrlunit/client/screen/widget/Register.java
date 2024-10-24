@@ -1,6 +1,5 @@
 package io.github.xfacthd.rsctrlunit.client.screen.widget;
 
-import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
 import io.github.xfacthd.rsctrlunit.common.emulator.opcode.OpcodeHelpers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import net.minecraft.client.gui.Font;
@@ -52,10 +51,10 @@ public sealed class Register
 
     public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
     {
-        ClientUtils.drawStringInBatch(graphics, font, name, tooltipRect.getX(), y + 2, 0xFF404040);
+        graphics.drawString(font, name, tooltipRect.getX(), y + 2, 0xFF404040, false);
 
         int value = reader.applyAsInt(ram, sfr);
-        ClientUtils.drawStringInBatch(graphics, font, String.format(Locale.ROOT, valFormat, value), x + 2, y + 2, 0xFF000000);
+        graphics.drawString(font, String.format(Locale.ROOT, valFormat, value), x + 2, y + 2, 0xFF000000, false);
     }
 
     public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY)
@@ -97,7 +96,7 @@ public sealed class Register
             super.draw(graphics, font, ram, sfr);
 
             int value = inputs[port] & 0xFF;
-            ClientUtils.drawStringInBatch(graphics, font, String.format(Locale.ROOT, valFormat, value), x + 29, y + 2, 0xFF000000);
+            graphics.drawString(font, String.format(Locale.ROOT, valFormat, value), x + 29, y + 2, 0xFF000000, false);
         }
 
         @Override
@@ -132,13 +131,13 @@ public sealed class Register
         @Override
         public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
         {
-            ClientUtils.drawStringInBatch(graphics, font, name, tooltipRect.getX(), y + 2, 0xFF404040);
+            graphics.drawString(font, name, tooltipRect.getX(), y + 2, 0xFF404040, false);
 
             int psw = sfr[Constants.ADDRESS_STATUS_WORD - Constants.SFR_START] & 0xFF;
             for (int i = 0; i < 8; i++)
             {
                 String bit = (psw & (1 << (7 - i))) != 0 ? "1" : "0";
-                ClientUtils.drawStringInBatch(graphics, font, bit, x + 2 + i * 9, y + 2, 0xFF000000);
+                graphics.drawString(font, bit, x + 2 + i * 9, y + 2, 0xFF000000, false);
             }
         }
 

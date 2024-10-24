@@ -45,7 +45,8 @@ public final class DigitalToAnalogConverterBlockEntity extends RedstoneHandlerBl
             );
             setChangedWithoutSignalUpdate();
             BlockPos updPos = worldPosition.relative(orientation);
-            level().neighborChanged(updPos, getBlockState().getBlock(), worldPosition);
+            // FIXME: the whole Orientation thing makes zero sense...
+            level().neighborChanged(updPos, getBlockState().getBlock(), null);
         }
     }
 

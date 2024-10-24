@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '0.1.119'
+    id 'net.neoforged.moddev' version '2.0.42-beta'
 }
 
 version = mod_version
@@ -92,7 +92,7 @@ repositories {
         }
     }
     maven {
-        url = "https://cubicinterpolation.net/maven/"
+        url = "https://commoble.net/maven/"
         content {
             includeGroup('net.commoble.morered')
         }
@@ -100,8 +100,8 @@ repositories {
 }
 
 dependencies {
-    implementation("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
-    implementation("net.commoble.morered:morered-${morered_mc_version}:${morered_version}")
+    compileOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
+    compileOnly("net.commoble.morered:morered-${morered_mc_version}:${morered_version}")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

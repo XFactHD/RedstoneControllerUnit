@@ -2,7 +2,6 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/thin_block",
 	"render_type": "minecraft:cutout",
-	"loader": "rsctrlunit:converter",
 	"textures": {
 		"0": "block/smooth_stone",
 		"1": "block/polished_blackstone",

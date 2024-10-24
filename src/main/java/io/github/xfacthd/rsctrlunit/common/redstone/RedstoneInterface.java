@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import java.util.Arrays;
 import java.util.List;
@@ -119,7 +120,7 @@ public final class RedstoneInterface
         int extPort = portMapping[port];
         if (oldConfig.getType() != config.getType())
         {
-            RedstoneTypeProperty prop = PropertyHolder.RS_CON_PROPS[extPort];
+            EnumProperty<RedstoneType> prop = PropertyHolder.RS_CON_PROPS[extPort];
             be.level().setBlockAndUpdate(be.getBlockPos(), be.getBlockState().setValue(prop, config.getType()));
         }
         else
@@ -175,7 +176,8 @@ public final class RedstoneInterface
         }
         else
         {
-            be.level().neighborChanged(adjPos, be.getBlockState().getBlock(), be.getBlockPos());
+            // FIXME: the whole Orientation thing makes zero sense...
+            be.level().neighborChanged(adjPos, be.getBlockState().getBlock(), null);
         }
     }
 

@@ -1,18 +1,23 @@
 package io.github.xfacthd.rsctrlunit.client.screen.popup;
 
 import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
+import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.*;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public sealed class MessageScreen extends Screen permits ConfirmationScreen
 {
-    private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/demo_background.png");
+    private static final ResourceLocation BACKGROUND = Utils.rl("background");
     public static final Component INFO_TITLE = Component.translatable("title.rsctrlunit.message.info");
     public static final Component ERROR_TITLE = Component.translatable("title.rsctrlunit.message.error");
     public static final Component CONFIRM_TITLE = Component.translatable("title.rsctrlunit.message.confirm");
@@ -87,7 +92,7 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     {
         super.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
-        graphics.blitWithBorder(BACKGROUND, leftPos, topPos, 0, 0, WIDTH, imageHeight, 248, 166, 4, 4, 4, 4);
+        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, leftPos, topPos, WIDTH, imageHeight);
         graphics.drawString(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
 
         int y = topPos + TITLE_Y + font.lineHeight * 2;

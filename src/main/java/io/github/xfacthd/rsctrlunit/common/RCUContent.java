@@ -3,7 +3,9 @@ package io.github.xfacthd.rsctrlunit.common;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.common.block.SignalConverterBlock;
 import io.github.xfacthd.rsctrlunit.common.block.ControllerBlock;
-import io.github.xfacthd.rsctrlunit.common.blockentity.*;
+import io.github.xfacthd.rsctrlunit.common.blockentity.AnalogToDigitalConverterBlockEntity;
+import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
+import io.github.xfacthd.rsctrlunit.common.blockentity.DigitalToAnalogConverterBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.item.MemoryCardItem;
 import io.github.xfacthd.rsctrlunit.common.item.ProgrammerItem;
@@ -16,19 +18,21 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public final class RCUContent
 {
     private static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(RedstoneControllerUnit.MOD_ID);
-    private static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(RedstoneControllerUnit.MOD_ID);
+    private static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, RedstoneControllerUnit.MOD_ID);
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(RedstoneControllerUnit.MOD_ID);
     private static final DeferredBlockEntityRegister BLOCK_ENTITIES = DeferredBlockEntityRegister.create(RedstoneControllerUnit.MOD_ID);
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, RedstoneControllerUnit.MOD_ID);
@@ -89,10 +93,10 @@ public final class RCUContent
     );
     // endregion
 
-    private static Holder<Block> registerBlock(String name, Supplier<Block> blockFactory)
+    private static Holder<Block> registerBlock(String name, Function<BlockBehaviour.Properties, Block> blockFactory)
     {
-        Holder<Block> block = BLOCKS.register(name, blockFactory);
-        ITEMS.register(name, () -> new BlockItem(block.value(), new Item.Properties()));
+        Holder<Block> block = BLOCKS.registerBlock(name, blockFactory, BlockBehaviour.Properties.of());
+        ITEMS.registerSimpleBlockItem(block);
         return block;
     }
 

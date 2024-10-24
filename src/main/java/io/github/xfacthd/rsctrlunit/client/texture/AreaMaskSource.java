@@ -19,8 +19,6 @@ import java.util.*;
 
 public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fallback, ResourceLocation sprite, int x, int y, int w, int h) implements SpriteSource
 {
-    private static SpriteSourceType TYPE = null;
-    private static final ResourceLocation ID = Utils.rl("mask");
     private static final MapCodec<AreaMaskSource> CODEC = RecordCodecBuilder.<AreaMaskSource>mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("src").forGetter(AreaMaskSource::src),
             ResourceLocation.CODEC.optionalFieldOf("fallback").forGetter(AreaMaskSource::fallback),
@@ -35,6 +33,8 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
         if (res.y + res.h > 16) return DataResult.error(() -> "y + height must be <= 16!");
         return DataResult.success(res);
     });
+    public static final ResourceLocation ID = Utils.rl("mask");
+    public static final SpriteSourceType TYPE = new SpriteSourceType(CODEC);
 
     @Override
     public void run(ResourceManager manager, Output out)
@@ -145,9 +145,9 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
                         int color = 0;
                         if (rect.contains(x, y))
                         {
-                            color = source.getPixelRGBA(absX, absY);
+                            color = source.getPixel(absX, absY);
                         }
-                        imageOut.setPixelRGBA(absX, absY, color);
+                        imageOut.setPixel(absX, absY, color);
                     }
                 }
             });
@@ -161,9 +161,4 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
     }
 
     private record FrameInfo(int idx, int x, int y) { }
-
-    public static void register(SpriteSourceTypeRegistrar registrar)
-    {
-        TYPE = registrar.register(ID, CODEC);
-    }
 }

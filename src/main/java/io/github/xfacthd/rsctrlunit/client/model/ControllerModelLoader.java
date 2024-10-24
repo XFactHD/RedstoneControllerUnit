@@ -1,18 +1,23 @@
 package io.github.xfacthd.rsctrlunit.client.model;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public final class ControllerModelLoader implements IGeometryLoader<ControllerGeometry>
 {
+    private static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models");
     private static final String[] EDGE_SUFFIXES = new String[] { "n", "e", "s", "w" };
     public static final ResourceLocation[] LOCATIONS_SINGLE = Utils.makeArray(new ResourceLocation[4], edge ->
             Utils.rl("block/type_single_" + EDGE_SUFFIXES[edge])
@@ -48,7 +53,7 @@ public final class ControllerModelLoader implements IGeometryLoader<ControllerGe
     private static BlockModel loadModel(ResourceLocation location)
     {
         ResourceManager manager = Minecraft.getInstance().getResourceManager();
-        ResourceLocation file = ModelBakery.MODEL_LISTER.idToFile(location);
+        ResourceLocation file = MODEL_LISTER.idToFile(location);
         try (InputStream stream = manager.getResourceOrThrow(file).open())
         {
             return BlockModel.fromStream(new InputStreamReader(stream));

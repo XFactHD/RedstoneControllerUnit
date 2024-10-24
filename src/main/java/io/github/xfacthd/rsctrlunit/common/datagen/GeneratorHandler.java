@@ -31,7 +31,7 @@ public final class GeneratorHandler
         generator.addProvider(event.includeClient(), new RCULanguageProvider(output));
 
         generator.addProvider(event.includeServer(), new RCUBlockTagsProvider(output, lookupProvider, fileHelper));
-        generator.addProvider(event.includeServer(), new RCURecipeProvider(output, lookupProvider));
+        generator.addProvider(event.includeServer(), new RCURecipeProvider.Runner(output, lookupProvider));
         generator.addProvider(event.includeServer(), new RCULootTableProvider(output, lookupProvider));
     }
 }

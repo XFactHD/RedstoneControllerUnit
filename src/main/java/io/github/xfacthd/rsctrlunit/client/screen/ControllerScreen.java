@@ -16,6 +16,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public final class ControllerScreen extends CardInventoryContainerScreen<ControllerMenu>
 {
-    private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/demo_background.png");
+    private static final ResourceLocation BACKGROUND = Utils.rl("background");
     private static final ResourceLocation INVENTORY = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final ResourceLocation REGISTERS = Utils.rl("textures/gui/controller_registers.png");
     private static final ResourceLocation CODE_BACKGROUND = Utils.rl("code_background");
@@ -272,7 +273,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
     {
-        graphics.blitWithBorder(BACKGROUND, leftPos, topPos + BACKGROUND_Y, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y, 248, 166, 4, 4, 4, 4);
+        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
         switch (tab)
         {
             case TAB_STATUS -> renderStatusTab(graphics, mouseX, mouseY);
@@ -448,18 +449,18 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         int height = horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT;
         if (vertScrollBar)
         {
-            graphics.blitSprite(CODE_BACKGROUND, x + width, y, SCROLL_BAR_WIDTH + 2, height);
+            graphics.blitSprite(RenderType::guiTextured, CODE_BACKGROUND, x + width, y, SCROLL_BAR_WIDTH + 2, height);
             int off = (int)((float)codeVertOffset / (codeHeight - height + 4) * (height - 2 - SCROLL_BAR_HEIGHT));
-            graphics.blitSprite(CODE_SCROLLER_VERT, x + width + 1, y + 1 + off, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
+            graphics.blitSprite(RenderType::guiTextured, CODE_SCROLLER_VERT, x + width + 1, y + 1 + off, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
         }
         if (horScrollBar)
         {
-            graphics.blitSprite(CODE_BACKGROUND, x, y + height, width, SCROLL_BAR_WIDTH + 2);
+            graphics.blitSprite(RenderType::guiTextured, CODE_BACKGROUND, x, y + height, width, SCROLL_BAR_WIDTH + 2);
             int off = (int)((float)codeHorOffset / (codeWidth - width + 4) * (width - 2 - SCROLL_BAR_HEIGHT));
             //noinspection SuspiciousNameCombination
-            graphics.blitSprite(CODE_SCROLLER_HOR, x + 1 + off, y + height + 1, SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH);
+            graphics.blitSprite(RenderType::guiTextured, CODE_SCROLLER_HOR, x + 1 + off, y + height + 1, SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH);
         }
-        graphics.blitSprite(CODE_BACKGROUND, x, y, width, height);
+        graphics.blitSprite(RenderType::guiTextured, CODE_BACKGROUND, x, y, width, height);
 
         graphics.enableScissor(x + 2, y + 2, x + width - 2, y + height - 2);
         x += 2;
@@ -482,7 +483,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private void renderStatusTab(GuiGraphics graphics, int mouseX, int mouseY)
     {
         graphics.drawString(font, TITLE_REGISTERS, leftPos + REGISTER_X, topPos + TITLE_Y, 0xFF404040, false);
-        graphics.blit(REGISTERS, leftPos + REGISTER_X, topPos + REGISTER_Y, 0, 0, REGISTER_WIDTH, REGISTER_HEIGHT);
+        graphics.blit(RenderType::guiTextured, REGISTERS, leftPos + REGISTER_X, topPos + REGISTER_Y, 0, 0, REGISTER_WIDTH, REGISTER_HEIGHT, 256, 256);
         for (Register reg : registers)
         {
             reg.draw(graphics, font, ramView, sfrView);
@@ -496,7 +497,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
         boolean running = menu.isRunning();
         ResourceLocation indicator = running ? INDICATOR_RUNNING : INDICATOR_STOPPED;
-        graphics.blitSprite(indicator, leftPos + INDICATOR_X, topPos + INDICATOR_Y, 0, INDICATOR_SIZE, INDICATOR_SIZE);
+        graphics.blitSprite(RenderType::guiTextured, indicator, leftPos + INDICATOR_X, topPos + INDICATOR_Y, 0, INDICATOR_SIZE, INDICATOR_SIZE);
 
         renderDisassembly(graphics, true);
     }
@@ -506,7 +507,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         Component program = Component.translatable(LABEL_PROGRAM_KEY, menu.getCode().displayName());
         graphics.drawString(font, program, leftPos + INVENTORY_X, topPos + LABEL_PROGRAM_Y, 0xFF404040, false);
 
-        graphics.blitSprite(SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
+        graphics.blitSprite(RenderType::guiTextured, SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
         Slot slot = menu.slots.getFirst();
         if (slot.hasItem())
         {
@@ -521,7 +522,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         }
         drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
 
-        graphics.blit(INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT);
+        graphics.blit(RenderType::guiTextured, INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT, 256, 256);
 
         renderDisassembly(graphics, false);
     }
@@ -532,7 +533,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         int y = topPos + REDSTONE_HEADER_Y;
         int xBg = x - RedstoneConfig.FRAME_PADDING;
         int yBg = y - RedstoneConfig.FRAME_PADDING;
-        graphics.blitSprite(RedstoneConfig.BACKGROUND, xBg, yBg, 0, RedstoneConfig.WIDTH_PADDED, RedstoneConfig.HEIGHT_PADDED);
+        graphics.blitSprite(RenderType::guiTextured, RedstoneConfig.BACKGROUND, xBg, yBg, RedstoneConfig.WIDTH_PADDED, RedstoneConfig.HEIGHT_PADDED);
 
         graphics.drawString(font, TABLE_HEADER_PORT, x + 4, y + 4, 0xFF000000, false);
         graphics.drawString(font, TABLE_HEADER_SIDE, x + RedstoneConfig.X_SIDE + 4, y + 4, 0xFF000000, false);

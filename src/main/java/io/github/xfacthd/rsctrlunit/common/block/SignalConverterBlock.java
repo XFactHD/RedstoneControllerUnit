@@ -16,9 +16,9 @@ public final class SignalConverterBlock extends PlateBlock
 {
     private final DeferredBlockEntity<? extends BlockEntity> blockEntityType;
 
-    private SignalConverterBlock(DeferredBlockEntity<? extends BlockEntity> blockEntityType)
+    private SignalConverterBlock(DeferredBlockEntity<? extends BlockEntity> blockEntityType, Properties props)
     {
-        super(Properties.of().strength(1.5F, 6.0F));
+        super(props.strength(1.5F, 6.0F));
         this.blockEntityType = blockEntityType;
     }
 
@@ -79,13 +79,13 @@ public final class SignalConverterBlock extends PlateBlock
 
 
 
-    public static SignalConverterBlock analogToDigital()
+    public static SignalConverterBlock analogToDigital(Properties props)
     {
-        return new SignalConverterBlock(RCUContent.BE_TYPE_ADC);
+        return new SignalConverterBlock(RCUContent.BE_TYPE_ADC, props);
     }
 
-    public static SignalConverterBlock digitalToAnalog()
+    public static SignalConverterBlock digitalToAnalog(Properties props)
     {
-        return new SignalConverterBlock(RCUContent.BE_TYPE_DAC);
+        return new SignalConverterBlock(RCUContent.BE_TYPE_DAC, props);
     }
 }

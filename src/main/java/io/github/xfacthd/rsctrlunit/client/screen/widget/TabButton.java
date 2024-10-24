@@ -1,13 +1,14 @@
 package io.github.xfacthd.rsctrlunit.client.screen.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
 public final class TabButton extends Button
@@ -23,13 +24,7 @@ public final class TabButton extends Button
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
     {
-        graphics.setColor(1F, 1F, 1F, alpha);
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
-
-        graphics.blitSprite(pos.getSprite(selected), getX(), getY(), getWidth(), getHeight());
-
-        graphics.setColor(1F, 1F, 1F, 1F);
+        graphics.blitSprite(RenderType::guiTextured, pos.getSprite(selected), getX(), getY(), getWidth(), getHeight(), ARGB.white(alpha));
         renderString(graphics, Minecraft.getInstance().font, getFGColor() | Mth.ceil(alpha * 255F) << 24);
     }
 

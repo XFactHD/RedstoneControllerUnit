@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -91,7 +92,7 @@ public final class RedstoneConfig
     {
         PortConfig cfg = configs[port];
 
-        graphics.blitSprite(BACKGROUND, x - FRAME_PADDING, y - FRAME_PADDING, 0, WIDTH_PADDED, HEIGHT_PADDED);
+        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, x - FRAME_PADDING, y - FRAME_PADDING, WIDTH_PADDED, HEIGHT_PADDED);
 
         graphics.drawString(font, TEXT_PORT_IDX[port], x + 4, y + 4, 0xFF000000, false);
 
@@ -114,7 +115,7 @@ public final class RedstoneConfig
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_LEFT, y, WIDTH_PIN_BTN, HEIGHT, "<", single.pin() > 0, true, false, -1, mouseX, mouseY);
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_RIGHT, y, WIDTH_PIN_BTN, HEIGHT, ">", single.pin() < 7, true, false, 0, mouseX, mouseY);
 
-                graphics.blitSprite(TEXT_FIELD, x + X_PIN_FIELD, y, WIDTH_PIN_FIELD, HEIGHT);
+                graphics.blitSprite(RenderType::guiTextured, TEXT_FIELD, x + X_PIN_FIELD, y, WIDTH_PIN_FIELD, HEIGHT);
                 graphics.drawCenteredString(font, Integer.toString(single.pin()), x + X_PIN_FIELD + WIDTH_PIN_FIELD / 2, y + 4, 0xFFFFFFFF);
             }
             case BundledPortConfig bundle ->

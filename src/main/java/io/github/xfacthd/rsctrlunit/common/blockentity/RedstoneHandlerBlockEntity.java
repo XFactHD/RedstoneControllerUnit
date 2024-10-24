@@ -25,7 +25,7 @@ abstract class RedstoneHandlerBlockEntity extends BlockEntity implements Redston
     {
         if (owningChunk != null)
         {
-            owningChunk.setUnsaved(true);
+            owningChunk.markUnsaved();
         }
     }
 

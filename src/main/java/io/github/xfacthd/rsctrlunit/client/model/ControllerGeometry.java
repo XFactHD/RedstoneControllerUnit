@@ -1,12 +1,17 @@
 package io.github.xfacthd.rsctrlunit.client.model;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.geometry.*;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
+import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 
+import java.util.List;
 import java.util.function.Function;
 
 public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeometry>
@@ -30,7 +35,7 @@ public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeom
             ModelBaker baker,
             Function<Material, TextureAtlasSprite> spriteGetter,
             ModelState modelState,
-            ItemOverrides overrides
+            List<ItemOverride> overrides
     )
     {
         BakedModel[] singleModelsBaked = new BakedModel[4];
@@ -39,33 +44,33 @@ public final class ControllerGeometry implements IUnbakedGeometry<ControllerGeom
 
         for (int edge = 0; edge < 4; edge++)
         {
-            singleModelsBaked[edge] = bakePart(singleModels[edge], baker, spriteGetter, modelState);
-            bundledModelsBaked[edge] = bakePart(bundledModels[edge], baker, spriteGetter, modelState);
+            singleModelsBaked[edge] = bakePart(singleModels[edge], spriteGetter, modelState);
+            bundledModelsBaked[edge] = bakePart(bundledModels[edge], spriteGetter, modelState);
             for (int port = 0; port < 4; port++)
             {
-                portIndexModelsBaked[edge][port] = bakePart(portIndexModels[edge][port], baker, spriteGetter, modelState);
+                portIndexModelsBaked[edge][port] = bakePart(portIndexModels[edge][port], spriteGetter, modelState);
             }
         }
 
-        return new ControllerModel(bakePart(baseModel, baker, spriteGetter, modelState), singleModelsBaked, bundledModelsBaked, portIndexModelsBaked);
+        return new ControllerModel(bakePart(baseModel, spriteGetter, modelState), singleModelsBaked, bundledModelsBaked, portIndexModelsBaked);
     }
 
-    private static BakedModel bakePart(BlockModel model, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState)
+    private static BakedModel bakePart(BlockModel model, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState)
     {
-        return model.bake(baker, model, spriteGetter, modelState, true);
+        return model.bake(spriteGetter, modelState, true);
     }
 
     @Override
-    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context)
+    public void resolveDependencies(UnbakedModel.Resolver modelGetter, IGeometryBakingContext context)
     {
-        baseModel.resolveParents(modelGetter);
+        baseModel.resolveDependencies(modelGetter);
         for (int edge = 0; edge < 4; edge++)
         {
-            singleModels[edge].resolveParents(modelGetter);
-            bundledModels[edge].resolveParents(modelGetter);
+            singleModels[edge].resolveDependencies(modelGetter);
+            bundledModels[edge].resolveDependencies(modelGetter);
             for (int port = 0; port < 4; port++)
             {
-                portIndexModels[edge][port].resolveParents(modelGetter);
+                portIndexModels[edge][port].resolveDependencies(modelGetter);
             }
         }
     }

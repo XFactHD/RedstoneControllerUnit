@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -35,7 +36,7 @@ import java.util.regex.Pattern;
 
 public final class ProgrammerScreen extends CardInventoryContainerScreen<ProgrammerMenu>
 {
-    private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/demo_background.png");
+    private static final ResourceLocation BACKGROUND = Utils.rl("background");
     private static final ResourceLocation INVENTORY = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final ResourceLocation LOCK_ICON = ResourceLocation.withDefaultNamespace("container/cartography_table/locked");
     private static final ResourceLocation SLOT_BACKGROUND = ResourceLocation.withDefaultNamespace("container/slot");
@@ -184,11 +185,11 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
     {
-        graphics.blitWithBorder(BACKGROUND, leftPos, topPos + BACKGROUND_Y, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y, 248, 166, 4, 4, 4, 4);
-        graphics.blit(INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT);
+        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
+        graphics.blit(RenderType::guiTextured, INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT, 256, 256);
         if (!forBlock)
         {
-            graphics.blitSprite(SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
+            graphics.blitSprite(RenderType::guiTextured, SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
             drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
         }
 
@@ -311,7 +312,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         {
             graphics.pose().pushPose();
             graphics.pose().translate(0, 0, 200);
-            graphics.blitSprite(LOCK_ICON, slot.x + SLOT_SIZE_INNER - 5, slot.y + SLOT_SIZE_INNER - 7, 5, 7);
+            graphics.blitSprite(RenderType::guiTextured, LOCK_ICON, slot.x + SLOT_SIZE_INNER - 5, slot.y + SLOT_SIZE_INNER - 7, 5, 7);
             graphics.pose().popPose();
         }
     }

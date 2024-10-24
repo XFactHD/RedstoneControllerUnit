@@ -2,7 +2,6 @@ package io.github.xfacthd.rsctrlunit.client;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.client.model.ControllerModelLoader;
-import io.github.xfacthd.rsctrlunit.client.model.ConverterModelLoader;
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.ProgrammerScreen;
 import io.github.xfacthd.rsctrlunit.client.texture.AreaMaskSource;
@@ -12,7 +11,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 
 @Mod(value = RedstoneControllerUnit.MOD_ID, dist = Dist.CLIENT)
 public final class RCUClient
@@ -39,11 +40,10 @@ public final class RCUClient
     private static void onRegisterGeometryLoaders(final ModelEvent.RegisterGeometryLoaders event)
     {
         event.register(Utils.rl("controller"), new ControllerModelLoader());
-        event.register(Utils.rl("converter"), new ConverterModelLoader());
     }
 
     private static void onRegisterSpriteSourceTypes(final RegisterSpriteSourceTypesEvent event)
     {
-        AreaMaskSource.register(event::register);
+        event.register(AreaMaskSource.ID, AreaMaskSource.TYPE);
     }
 }

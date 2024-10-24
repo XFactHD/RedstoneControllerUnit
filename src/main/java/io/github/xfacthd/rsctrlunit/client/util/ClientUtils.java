@@ -3,13 +3,11 @@ package io.github.xfacthd.rsctrlunit.client.util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.WidgetSprites;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
-import org.joml.Matrix4f;
 
 public final class ClientUtils
 {
@@ -18,13 +16,6 @@ public final class ClientUtils
             ResourceLocation.withDefaultNamespace("widget/button_disabled"),
             ResourceLocation.withDefaultNamespace("widget/button_highlighted")
     );
-
-    public static void drawStringInBatch(GuiGraphics graphics, Font font, String text, int x, int y, int color)
-    {
-        MultiBufferSource buffer = graphics.bufferSource();
-        Matrix4f pose = graphics.pose().last().pose();
-        font.drawInBatch(text, x, y, color, false, pose, buffer, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT, font.isBidirectional());
-    }
 
     public static void drawButton(
             GuiGraphics graphics,
@@ -64,7 +55,7 @@ public final class ClientUtils
     {
         boolean hovered = enabled && (hoverOverride || (mouseY >= y && mouseY < y + height && mouseX >= x && mouseX < x + width));
         ResourceLocation sprite = BTN_SPRITES.get(enabled, hovered);
-        graphics.blitSprite(sprite, x, y, width, height);
+        graphics.blitSprite(RenderType::guiTextured, sprite, x, y, width, height);
 
         int color = enabled ? 0xFFFFFFFF : 0xFFA0A0A0;
         if (centered)

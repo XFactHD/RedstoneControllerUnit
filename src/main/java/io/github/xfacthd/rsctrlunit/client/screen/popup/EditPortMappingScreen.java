@@ -9,6 +9,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public final class EditPortMappingScreen extends Screen
 {
     public static final Component TITLE = Component.translatable("screen.rsctrlunit.edit_port_mapping");
-    private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/demo_background.png");
+    private static final ResourceLocation BACKGROUND = Utils.rl("background");
     private static final int EDGE_PADDING_X = 8;
     private static final int EDGE_PADDING_Y = 6;
     private static final int PADDING = 5;
@@ -91,15 +92,15 @@ public final class EditPortMappingScreen extends Screen
     {
         renderTransparentBackground(graphics);
 
-        graphics.blitWithBorder(BACKGROUND, leftPos, topPos, 0, 0, WIDTH, HEIGHT, 248, 166, 4, 4, 4, 4);
+        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, leftPos, topPos, WIDTH, HEIGHT);
         graphics.drawString(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
 
         int x = leftPos + ENTRY_X;
         for (int i = 0; i < 4; i++)
         {
             int y = topPos + ENTRY_TOP_Y + RedstoneConfig.HEIGHT_PADDED * i;
-            graphics.blitSprite(RedstoneConfig.BACKGROUND, x, y, 0, ENTRY_WIDTH, RedstoneConfig.HEIGHT_PADDED);
-            graphics.blitSprite(RedstoneConfig.TEXT_FIELD, leftPos + DIR_FIELD_X, y + SMALL_PADDING, 0, DIR_FIELD_WIDTH, RedstoneConfig.HEIGHT);
+            graphics.blitSprite(RenderType::guiTextured, RedstoneConfig.BACKGROUND, x, y, ENTRY_WIDTH, RedstoneConfig.HEIGHT_PADDED);
+            graphics.blitSprite(RenderType::guiTextured, RedstoneConfig.TEXT_FIELD, leftPos + DIR_FIELD_X, y + SMALL_PADDING, DIR_FIELD_WIDTH, RedstoneConfig.HEIGHT);
 
             graphics.drawString(font, RedstoneConfig.TEXT_PORT_IDX[i], x + ENTRY_TEXT_PADDING, y + ENTRY_TEXT_PADDING, 0xFF000000, false);
             Direction dir = PortMapping.getPortSide(screen.getMenu().getFacing(), mapping[i]);

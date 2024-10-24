@@ -11,15 +11,15 @@ import java.util.concurrent.CompletableFuture;
 
 public final class RCURecipeProvider extends RecipeProvider
 {
-    public RCURecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
+    private RCURecipeProvider(HolderLookup.Provider registries, RecipeOutput output)
     {
-        super(output, registries);
+        super(registries, output);
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput output)
+    protected void buildRecipes()
     {
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, RCUContent.BLOCK_CONTROLLER.value())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.REDSTONE, RCUContent.BLOCK_CONTROLLER.value())
                 .pattern("DRD")
                 .pattern("RCR")
                 .pattern("SRS")
@@ -30,7 +30,7 @@ public final class RCURecipeProvider extends RecipeProvider
                 .unlockedBy("has_comparator", has(Items.COMPARATOR))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, RCUContent.ITEM_MEMORY_CARD.value())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.REDSTONE, RCUContent.ITEM_MEMORY_CARD.value())
                 .pattern(" TD")
                 .pattern("TGT")
                 .pattern("DTD")
@@ -40,7 +40,7 @@ public final class RCURecipeProvider extends RecipeProvider
                 .unlockedBy("has_redstone", has(Tags.Items.DUSTS_REDSTONE))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, RCUContent.ITEM_PROGRAMMER.value())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.REDSTONE, RCUContent.ITEM_PROGRAMMER.value())
                 .pattern("III")
                 .pattern("ICI")
                 .pattern("III")
@@ -49,7 +49,7 @@ public final class RCURecipeProvider extends RecipeProvider
                 .unlockedBy("has_memory_card", has(RCUContent.ITEM_MEMORY_CARD.value()))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, RCUContent.BLOCK_ADC.value())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.REDSTONE, RCUContent.BLOCK_ADC.value())
                 .pattern("RID")
                 .pattern("SCS")
                 .define('D', Tags.Items.DUSTS_REDSTONE)
@@ -60,7 +60,7 @@ public final class RCURecipeProvider extends RecipeProvider
                 .unlockedBy("has_comparator", has(Items.COMPARATOR))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, RCUContent.BLOCK_DAC.value())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.REDSTONE, RCUContent.BLOCK_DAC.value())
                 .pattern("RID")
                 .pattern("SCS")
                 .define('D', Tags.Items.DUSTS_REDSTONE)
@@ -70,5 +70,25 @@ public final class RCURecipeProvider extends RecipeProvider
                 .define('S', Items.STONE_SLAB)
                 .unlockedBy("has_comparator", has(Items.COMPARATOR))
                 .save(output);
+    }
+
+    public static final class Runner extends RecipeProvider.Runner
+    {
+        public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
+        {
+            super(output, registries);
+        }
+
+        @Override
+        protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output)
+        {
+            return new RCURecipeProvider(registries, output);
+        }
+
+        @Override
+        public String getName()
+        {
+            return "RCU Recipes";
+        }
     }
 }

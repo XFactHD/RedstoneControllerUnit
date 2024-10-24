@@ -32,9 +32,9 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ControllerBlock extends PlateBlock
 {
-    public ControllerBlock()
+    public ControllerBlock(Properties props)
     {
-        super(Properties.of().strength(1.5F, 6.0F));
+        super(props.strength(1.5F, 6.0F));
         registerDefaultState(defaultBlockState().setValue(PropertyHolder.SHOW_PORT_MAPPING, false));
     }
 
@@ -60,7 +60,7 @@ public final class ControllerBlock extends PlateBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
     {
         if (stack.is(RCUContent.ITEM_PROGRAMMER) && level.getBlockEntity(pos) instanceof ControllerBlockEntity controller)
         {
@@ -68,9 +68,9 @@ public final class ControllerBlock extends PlateBlock
             {
                 ProgrammerItem.openMenu(player, stack, controller);
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
@@ -101,7 +101,7 @@ public final class ControllerBlock extends PlateBlock
                 RedstoneInterface.PORT_MAPPING_STREAM_CODEC.encode(buf, be.getRedstoneInterface().getPortMapping());
             });
         }
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override
