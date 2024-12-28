@@ -118,13 +118,6 @@ public final class Utils
         System.arraycopy(src, 0, dest, 0, Math.min(src.length, dest.length));
     }
 
-    public static <T, A extends T, B extends T> T[] appendArray(A[] arr, B toAdd, Class<T[]> type)
-    {
-        T[] newArr = Arrays.copyOf(arr, arr.length + 1, type);
-        newArr[newArr.length - 1] = toAdd;
-        return newArr;
-    }
-
     public static <T> T[] makeArray(T[] arr, IntFunction<T> initializer)
     {
         for (int i = 0; i < arr.length; i++)

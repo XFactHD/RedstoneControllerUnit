@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "D": {
-      "tag": "c:dusts/redstone"
-    },
-    "G": {
-      "tag": "c:ingots/gold"
-    },
-    "T": {
-      "item": "minecraft:redstone_torch"
-    }
+    "D": "#c:dusts/redstone",
+    "G": "#c:ingots/gold",
+    "T": "minecraft:redstone_torch"
   },
   "pattern": [
     " TD",

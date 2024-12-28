@@ -497,7 +497,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
         boolean running = menu.isRunning();
         ResourceLocation indicator = running ? INDICATOR_RUNNING : INDICATOR_STOPPED;
-        graphics.blitSprite(RenderType::guiTextured, indicator, leftPos + INDICATOR_X, topPos + INDICATOR_Y, 0, INDICATOR_SIZE, INDICATOR_SIZE);
+        graphics.blitSprite(RenderType::guiTextured, indicator, leftPos + INDICATOR_X, topPos + INDICATOR_Y, INDICATOR_SIZE, INDICATOR_SIZE);
 
         renderDisassembly(graphics, true);
     }

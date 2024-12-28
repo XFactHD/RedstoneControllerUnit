@@ -1,7 +1,9 @@
 {
   "variants": {
     "facing=down": {
-      "model": "rsctrlunit:block/controller"
+      "model": "rsctrlunit:block/controller",
+      "x": 0,
+      "y": 0
     },
     "facing=east": {
       "model": "rsctrlunit:block/controller",
@@ -15,11 +17,13 @@
     },
     "facing=south": {
       "model": "rsctrlunit:block/controller",
-      "x": 90
+      "x": 90,
+      "y": 0
     },
     "facing=up": {
       "model": "rsctrlunit:block/controller",
-      "x": 180
+      "x": 180,
+      "y": 0
     },
     "facing=west": {
       "model": "rsctrlunit:block/controller",

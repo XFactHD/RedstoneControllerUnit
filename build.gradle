@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.42-beta'
+    id 'net.neoforged.moddev' version '2.0.52-beta'
 }
 
 version = mod_version
@@ -49,7 +49,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
 
             programArguments.addAll('--mod', 'rsctrlunit', '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath())
         }
@@ -100,7 +100,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
+    implementation("curse.maven:atlasviewer-633577:${atlasviewer_coord}")
     compileOnly("net.commoble.morered:morered-${morered_mc_version}:${morered_version}")
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'

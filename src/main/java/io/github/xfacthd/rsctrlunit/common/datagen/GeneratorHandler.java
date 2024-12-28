@@ -7,7 +7,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,20 +17,19 @@ public final class GeneratorHandler
     private GeneratorHandler() { }
 
     @SubscribeEvent
-    static void onGatherData(final GatherDataEvent event)
+    static void onGatherData(final GatherDataEvent.Client event)
     {
         DataGenerator generator = event.getGenerator();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-        ExistingFileHelper fileHelper = event.getExistingFileHelper();
         PackOutput output = generator.getPackOutput();
 
-        generator.addProvider(event.includeClient(), new RCUSpriteSourceProvider(output, lookupProvider, fileHelper));
-        generator.addProvider(event.includeClient(), new RCUBlockStateProvider(output, fileHelper));
-        generator.addProvider(event.includeClient(), new RCUItemModelProvider(output, fileHelper));
-        generator.addProvider(event.includeClient(), new RCULanguageProvider(output));
+        generator.addProvider(true, new RCUSpriteSourceProvider(output, lookupProvider));
+        generator.addProvider(true, new RCUBlockStateProvider(output));
+        generator.addProvider(true, new RCUItemModelProvider(output));
+        generator.addProvider(true, new RCULanguageProvider(output));
 
-        generator.addProvider(event.includeServer(), new RCUBlockTagsProvider(output, lookupProvider, fileHelper));
-        generator.addProvider(event.includeServer(), new RCURecipeProvider.Runner(output, lookupProvider));
-        generator.addProvider(event.includeServer(), new RCULootTableProvider(output, lookupProvider));
+        generator.addProvider(true, new RCUBlockTagsProvider(output, lookupProvider));
+        generator.addProvider(true, new RCURecipeProvider.Runner(output, lookupProvider));
+        generator.addProvider(true, new RCULootTableProvider(output, lookupProvider));
     }
 }

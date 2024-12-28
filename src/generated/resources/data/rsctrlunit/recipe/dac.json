@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "C": {
-      "item": "minecraft:comparator"
-    },
-    "D": {
-      "tag": "c:dusts/redstone"
-    },
-    "I": {
-      "tag": "c:ingots/copper"
-    },
-    "R": {
-      "item": "minecraft:repeater"
-    },
-    "S": {
-      "item": "minecraft:stone_slab"
-    }
+    "C": "minecraft:comparator",
+    "D": "#c:dusts/redstone",
+    "I": "#c:ingots/copper",
+    "R": "minecraft:repeater",
+    "S": "minecraft:stone_slab"
   },
   "pattern": [
     "RID",

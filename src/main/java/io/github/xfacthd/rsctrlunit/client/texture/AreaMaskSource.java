@@ -1,21 +1,29 @@
 package io.github.xfacthd.rsctrlunit.client.texture;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.serialization.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.texture.SpriteContents;
-import net.minecraft.client.renderer.texture.atlas.*;
+import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
+import net.minecraft.client.renderer.texture.atlas.SpriteSource;
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fallback, ResourceLocation sprite, int x, int y, int w, int h) implements SpriteSource
 {
@@ -79,9 +87,9 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
                 NativeImage source = srcImg.get();
 
                 AnimationMetadataSection sourceAnim = srcRes.metadata()
-                        .getSection(AnimationMetadataSection.SERIALIZER)
-                        .orElse(AnimationMetadataSection.EMPTY);
-                FrameSize frameSize = sourceAnim.calculateFrameSize(source.getWidth(), source.getHeight());
+                        .getSection(AnimationMetadataSection.TYPE)
+                        .orElse(null);
+                FrameSize frameSize = calculateFrameSize(source, sourceAnim);
                 int factorX = frameSize.width() / 16;
                 int factorY = frameSize.height() / 16;
                 rect.setPosition(factorX * rect.getX(), factorY * rect.getY());
@@ -104,17 +112,30 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
             return null;
         }
 
-        private static List<FrameInfo> collectFrames(NativeImage image, FrameSize size, AnimationMetadataSection animation)
+        private static FrameSize calculateFrameSize(NativeImage source, @Nullable AnimationMetadataSection sourceAnim)
+        {
+            if (sourceAnim != null)
+            {
+                return sourceAnim.calculateFrameSize(source.getWidth(), source.getHeight());
+            }
+            return new FrameSize(source.getWidth(), source.getHeight());
+        }
+
+        private static List<FrameInfo> collectFrames(NativeImage image, FrameSize size, @Nullable AnimationMetadataSection animation)
         {
             List<FrameInfo> frames = new ArrayList<>();
             int rowCount = image.getWidth() / size.width();
             // Collect explicitly specified frames
-            animation.forEachFrame((idx, time) ->
+            if (animation != null && animation.frames().isPresent())
             {
-                int frameX = (idx % rowCount) * size.width();
-                int frameY = (idx / rowCount) * size.height();
-                frames.add(new FrameInfo(idx, frameX, frameY));
-            });
+                animation.frames().get().forEach(frame ->
+                {
+                    int idx = frame.index();
+                    int frameX = (idx % rowCount) * size.width();
+                    int frameY = (idx / rowCount) * size.height();
+                    frames.add(new FrameInfo(idx, frameX, frameY));
+                });
+            }
             // Collect implicit frames if no explicit ones are specified in the animation or no animation is present
             if (frames.isEmpty())
             {

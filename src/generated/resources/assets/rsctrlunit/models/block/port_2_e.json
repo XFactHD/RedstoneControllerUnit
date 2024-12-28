@@ -4,7 +4,7 @@
       "faces": {
         "up": {
           "rotation": 90,
-          "texture": "#0"
+          "texture": "#overlay"
         }
       },
       "from": [
@@ -20,7 +20,7 @@
     }
   ],
   "textures": {
-    "0": "rsctrlunit:block/port_2",
+    "overlay": "rsctrlunit:block/port_2",
     "particle": "rsctrlunit:block/port_2"
   }
 }

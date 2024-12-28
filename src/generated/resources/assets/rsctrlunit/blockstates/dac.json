@@ -1,16 +1,24 @@
 {
   "variants": {
     "facing_dir=down_east": {
-      "model": "rsctrlunit:block/dac_ccw90"
+      "model": "rsctrlunit:block/dac_ccw90",
+      "x": 0,
+      "y": 0
     },
     "facing_dir=down_north": {
-      "model": "rsctrlunit:block/dac"
+      "model": "rsctrlunit:block/dac",
+      "x": 0,
+      "y": 0
     },
     "facing_dir=down_south": {
-      "model": "rsctrlunit:block/dac_cw180"
+      "model": "rsctrlunit:block/dac_cw180",
+      "x": 0,
+      "y": 0
     },
     "facing_dir=down_west": {
-      "model": "rsctrlunit:block/dac_cw90"
+      "model": "rsctrlunit:block/dac_cw90",
+      "x": 0,
+      "y": 0
     },
     "facing_dir=east_down": {
       "model": "rsctrlunit:block/dac",
@@ -54,35 +62,43 @@
     },
     "facing_dir=south_down": {
       "model": "rsctrlunit:block/dac",
-      "x": 90
+      "x": 90,
+      "y": 0
     },
     "facing_dir=south_east": {
       "model": "rsctrlunit:block/dac_ccw90",
-      "x": 90
+      "x": 90,
+      "y": 0
     },
     "facing_dir=south_up": {
       "model": "rsctrlunit:block/dac_cw180",
-      "x": 90
+      "x": 90,
+      "y": 0
     },
     "facing_dir=south_west": {
       "model": "rsctrlunit:block/dac_cw90",
-      "x": 90
+      "x": 90,
+      "y": 0
     },
     "facing_dir=up_east": {
       "model": "rsctrlunit:block/dac_ccw90",
-      "x": 180
+      "x": 180,
+      "y": 0
     },
     "facing_dir=up_north": {
       "model": "rsctrlunit:block/dac_cw180",
-      "x": 180
+      "x": 180,
+      "y": 0
     },
     "facing_dir=up_south": {
       "model": "rsctrlunit:block/dac",
-      "x": 180
+      "x": 180,
+      "y": 0
     },
     "facing_dir=up_west": {
       "model": "rsctrlunit:block/dac_cw90",
-      "x": 180
+      "x": 180,
+      "y": 0
     },
     "facing_dir=west_down": {
       "model": "rsctrlunit:block/dac",

@@ -6,16 +6,18 @@ import com.google.gson.JsonParseException;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
+import net.neoforged.neoforge.client.model.UnbakedModelLoader;
+import net.neoforged.neoforge.client.model.UnbakedModelParser;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public final class ControllerModelLoader implements IGeometryLoader<ControllerGeometry>
+public final class ControllerModelLoader implements UnbakedModelLoader<ControllerGeometry>
 {
     private static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models");
     private static final String[] EDGE_SUFFIXES = new String[] { "n", "e", "s", "w" };
@@ -32,9 +34,9 @@ public final class ControllerModelLoader implements IGeometryLoader<ControllerGe
     @Override
     public ControllerGeometry read(JsonObject json, JsonDeserializationContext ctx) throws JsonParseException
     {
-        BlockModel[] singleModels = new BlockModel[4];
-        BlockModel[] bundledModels = new BlockModel[4];
-        BlockModel[][] portIndexModels = new BlockModel[4][4];
+        UnbakedModel[] singleModels = new UnbakedModel[4];
+        UnbakedModel[] bundledModels = new UnbakedModel[4];
+        UnbakedModel[][] portIndexModels = new UnbakedModel[4][4];
 
         for (int edge = 0; edge < 4; edge++)
         {
@@ -50,13 +52,13 @@ public final class ControllerModelLoader implements IGeometryLoader<ControllerGe
         return new ControllerGeometry(ctx.deserialize(json, BlockModel.class), singleModels, bundledModels, portIndexModels);
     }
 
-    private static BlockModel loadModel(ResourceLocation location)
+    private static UnbakedModel loadModel(ResourceLocation location)
     {
         ResourceManager manager = Minecraft.getInstance().getResourceManager();
         ResourceLocation file = MODEL_LISTER.idToFile(location);
         try (InputStream stream = manager.getResourceOrThrow(file).open())
         {
-            return BlockModel.fromStream(new InputStreamReader(stream));
+            return UnbakedModelParser.parse(new InputStreamReader(stream));
         }
         catch (IOException e)
         {

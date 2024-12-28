@@ -37,7 +37,7 @@ public final class RCUClient
         event.register(RCUContent.MENU_TYPE_PROGRAMMER.get(), ProgrammerScreen::new);
     }
 
-    private static void onRegisterGeometryLoaders(final ModelEvent.RegisterGeometryLoaders event)
+    private static void onRegisterGeometryLoaders(final ModelEvent.RegisterLoaders event)
     {
         event.register(Utils.rl("controller"), new ControllerModelLoader());
     }

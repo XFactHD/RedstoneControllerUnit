@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "C": {
-      "item": "minecraft:comparator"
-    },
-    "D": {
-      "tag": "c:dusts/redstone"
-    },
-    "R": {
-      "item": "minecraft:repeater"
-    },
-    "S": {
-      "item": "minecraft:stone_slab"
-    }
+    "C": "minecraft:comparator",
+    "D": "#c:dusts/redstone",
+    "R": "minecraft:repeater",
+    "S": "minecraft:stone_slab"
   },
   "pattern": [
     "DRD",

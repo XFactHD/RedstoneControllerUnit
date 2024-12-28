@@ -6,8 +6,6 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.ModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.SpriteSourceProvider;
 
 import java.util.Optional;
@@ -15,9 +13,9 @@ import java.util.concurrent.CompletableFuture;
 
 public final class RCUSpriteSourceProvider extends SpriteSourceProvider
 {
-    public RCUSpriteSourceProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper helper)
+    public RCUSpriteSourceProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider)
     {
-        super(output, lookupProvider, RedstoneControllerUnit.MOD_ID, helper);
+        super(output, lookupProvider, RedstoneControllerUnit.MOD_ID);
     }
 
     @Override
@@ -42,9 +40,5 @@ public final class RCUSpriteSourceProvider extends SpriteSourceProvider
                         Utils.rl("block/overlay_bundled"),
                         0, 0, 16, 2
                 ));
-
-        existingFileHelper.trackGenerated(Utils.rl("block/pcb"), ModelProvider.TEXTURE);
-        existingFileHelper.trackGenerated(Utils.rl("block/overlay_single"), ModelProvider.TEXTURE);
-        existingFileHelper.trackGenerated(Utils.rl("block/overlay_bundled"), ModelProvider.TEXTURE);
     }
 }

@@ -4,7 +4,7 @@
       "faces": {
         "north": {
           "cullface": "north",
-          "texture": "#0",
+          "texture": "#overlay",
           "uv": [
             0.0,
             0.0,
@@ -14,7 +14,7 @@
         },
         "up": {
           "rotation": 180,
-          "texture": "#0",
+          "texture": "#overlay",
           "uv": [
             0.0,
             16.0,
@@ -36,7 +36,7 @@
     }
   ],
   "textures": {
-    "0": "rsctrlunit:block/overlay_single",
+    "overlay": "rsctrlunit:block/overlay_single",
     "particle": "rsctrlunit:block/overlay_single"
   }
 }
