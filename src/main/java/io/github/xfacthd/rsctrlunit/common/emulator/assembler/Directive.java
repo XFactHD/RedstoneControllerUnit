@@ -2,7 +2,10 @@ package io.github.xfacthd.rsctrlunit.common.emulator.assembler;
 
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.ErrorNode;
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.Node;
-import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.*;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.DefineByteDirectiveNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.EndDirectiveNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.OriginDirectiveNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.UsingDirectiveNode;
 import io.github.xfacthd.rsctrlunit.common.emulator.opcode.ParseHelpers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
@@ -13,7 +16,11 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 public enum Directive
 {

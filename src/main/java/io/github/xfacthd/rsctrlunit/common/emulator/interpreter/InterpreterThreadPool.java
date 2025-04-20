@@ -5,15 +5,23 @@ import net.minecraft.server.MinecraftServer;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public final class InterpreterThreadPool
 {
     private static final int TASK_INTERVAL_MS = 1;
     private static final Map<Interpreter, Future<?>> ACTIVE_INTEPRETERS = new IdentityHashMap<>();
+    @Nullable
     private static MinecraftServer currentServer = null;
+    @Nullable
     private static ScheduledExecutorService executors = null;
 
     public static void init()
@@ -25,6 +33,7 @@ public final class InterpreterThreadPool
     public static void addInterpreter(Interpreter interpreter)
     {
         Objects.requireNonNull(currentServer, "No server present!");
+        Objects.requireNonNull(executors, "Executor service not started!");
         Future<?> future = executors.scheduleAtFixedRate(new InterpreterTask(interpreter), 0, TASK_INTERVAL_MS, TimeUnit.MILLISECONDS);
         ACTIVE_INTEPRETERS.put(interpreter, future);
     }
@@ -44,6 +53,7 @@ public final class InterpreterThreadPool
 
     private static void onServerStopped(ServerStoppedEvent event)
     {
+        Objects.requireNonNull(executors, "Executor service not started!");
         executors.shutdownNow();
         try
         {
@@ -64,7 +74,7 @@ public final class InterpreterThreadPool
         @Override
         public void run()
         {
-            if (!currentServer.isPaused())
+            if (!Objects.requireNonNull(currentServer).isPaused())
             {
                 if (!interpreter().isPaused() || interpreter.isStepRequested())
                 {
@@ -73,4 +83,6 @@ public final class InterpreterThreadPool
             }
         }
     }
+
+    private InterpreterThreadPool() { }
 }

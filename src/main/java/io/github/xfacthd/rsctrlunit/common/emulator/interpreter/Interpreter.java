@@ -2,14 +2,18 @@ package io.github.xfacthd.rsctrlunit.common.emulator.interpreter;
 
 import io.github.xfacthd.rsctrlunit.common.emulator.opcode.Opcode;
 import io.github.xfacthd.rsctrlunit.common.emulator.opcode.OpcodeHelpers;
-import io.github.xfacthd.rsctrlunit.common.emulator.util.*;
+import io.github.xfacthd.rsctrlunit.common.emulator.util.BitWriteMode;
+import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
+import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.UnknownNullability;
 import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public final class Interpreter
 {
@@ -670,7 +674,7 @@ public final class Interpreter
         running = false;
     }
 
-    public <T> void writeLockGuarded(T data, BiConsumer<Interpreter, T> operation)
+    public <T> void writeLockGuarded(@UnknownNullability T data, BiConsumer<Interpreter, T> operation)
     {
         lock.lock();
         try

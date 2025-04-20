@@ -2,12 +2,16 @@ package io.github.xfacthd.rsctrlunit.common.block;
 
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
-import io.github.xfacthd.rsctrlunit.common.util.property.*;
+import io.github.xfacthd.rsctrlunit.common.util.property.CompoundDirection;
+import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
+import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import io.github.xfacthd.rsctrlunit.common.util.registration.DeferredBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;

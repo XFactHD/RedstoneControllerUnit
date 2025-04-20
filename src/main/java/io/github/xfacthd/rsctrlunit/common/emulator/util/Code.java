@@ -5,7 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.rsctrlunit.common.util.RCUCodecs;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.netty.buffer.ByteBuf;
-import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.Component;
@@ -15,7 +17,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implements TooltipProvider

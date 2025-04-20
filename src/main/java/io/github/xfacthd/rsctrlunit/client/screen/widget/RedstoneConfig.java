@@ -2,7 +2,11 @@ package io.github.xfacthd.rsctrlunit.client.screen.widget;
 
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
 import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
-import io.github.xfacthd.rsctrlunit.common.redstone.port.*;
+import io.github.xfacthd.rsctrlunit.common.redstone.port.BundledPortConfig;
+import io.github.xfacthd.rsctrlunit.common.redstone.port.NonePortConfig;
+import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
+import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
+import io.github.xfacthd.rsctrlunit.common.redstone.port.SinglePortConfig;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;

@@ -1,12 +1,15 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.opcode;
 
-import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.*;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.JumpNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.NoArgOpNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.SimpleOpNode;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.NodeParser;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
-import java.util.function.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public final class ParseHelpers
@@ -203,6 +206,7 @@ public final class ParseHelpers
         };
     }
 
+    @Nullable
     public static Byte parseAddressOperand(String operand)
     {
         if (isNumber(operand))
@@ -236,6 +240,7 @@ public final class ParseHelpers
         };
     }
 
+    @Nullable
     public static Byte parseImmediateOperand(String operand)
     {
         if (!operand.startsWith("#")) return null;
@@ -248,6 +253,7 @@ public final class ParseHelpers
         return null;
     }
 
+    @Nullable
     public static Byte parseBitOperand(String operand, boolean bitComplement)
     {
         if (bitComplement != operand.startsWith("/")) return null;

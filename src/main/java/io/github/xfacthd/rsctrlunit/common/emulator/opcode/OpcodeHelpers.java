@@ -1,6 +1,9 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.opcode;
 
-import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.*;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Interpreter;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.RAM;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.ReadModifyWriteOperation;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.ReadModifyWriteWithArgOperation;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.BitWriteMode;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 

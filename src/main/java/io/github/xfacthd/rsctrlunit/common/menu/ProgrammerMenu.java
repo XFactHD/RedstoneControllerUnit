@@ -12,6 +12,8 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public final class ProgrammerMenu extends CardInventoryContainerMenu
 {
     public static final Component TITLE = Component.translatable("menu.rsctrlunit.programmer");
@@ -19,7 +21,9 @@ public final class ProgrammerMenu extends CardInventoryContainerMenu
     private final ItemStack progStack;
     private final int slot;
     private final boolean forBlock;
+    @Nullable
     private final DataSlot targetBlockValidSlot;
+    @Nullable
     private final DataSlot interpreterCodeLoadedSlot;
     @Nullable
     private ControllerBlockEntity targetController;
@@ -62,12 +66,12 @@ public final class ProgrammerMenu extends CardInventoryContainerMenu
             if (targetController.isRemoved())
             {
                 targetController = null;
-                targetBlockValidSlot.set(0);
+                Objects.requireNonNull(targetBlockValidSlot).set(0);
             }
             else
             {
                 boolean loaded = !targetController.getInterpreter().getCode().equals(Code.EMPTY);
-                interpreterCodeLoadedSlot.set(loaded ? 1 : 0);
+                Objects.requireNonNull(interpreterCodeLoadedSlot).set(loaded ? 1 : 0);
             }
         }
         super.broadcastChanges();
@@ -101,7 +105,7 @@ public final class ProgrammerMenu extends CardInventoryContainerMenu
     {
         if (forBlock)
         {
-            return targetBlockValidSlot.get() != 0;
+            return Objects.requireNonNull(targetBlockValidSlot).get() != 0;
         }
         return slots.getFirst().getItem().is(RCUContent.ITEM_MEMORY_CARD);
     }
@@ -109,7 +113,7 @@ public final class ProgrammerMenu extends CardInventoryContainerMenu
     public boolean isInterpreterEmpty()
     {
         Preconditions.checkState(forBlock, "Cannot check interpreter code state with non-block target");
-        return interpreterCodeLoadedSlot.get() == 0;
+        return Objects.requireNonNull(interpreterCodeLoadedSlot).get() == 0;
     }
 
     public Code getBlockTargetCode()

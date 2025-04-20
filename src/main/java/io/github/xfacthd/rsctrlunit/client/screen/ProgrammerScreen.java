@@ -1,7 +1,11 @@
 package io.github.xfacthd.rsctrlunit.client.screen;
 
 import io.github.xfacthd.rsctrlunit.client.screen.popup.MessageScreen;
-import io.github.xfacthd.rsctrlunit.client.util.*;
+import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
+import io.github.xfacthd.rsctrlunit.client.util.Explorer;
+import io.github.xfacthd.rsctrlunit.client.util.FileDialog;
+import io.github.xfacthd.rsctrlunit.client.util.FixedTooltipPositioner;
+import io.github.xfacthd.rsctrlunit.client.util.LastPathStorage;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.Assembler;
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.ErrorPrinter;
@@ -19,7 +23,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,10 +32,16 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.io.File;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -105,25 +116,36 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     private static final FileDialog.Filter BINARY_FILTER = new FileDialog.Filter(new String[] { "*.bin" }, "Binary Files");
 
     private final boolean forBlock;
+    @UnknownNullability
     private Button buttonRevealInExplorer;
+    @UnknownNullability
     private Button buttonAssemble;
+    @UnknownNullability
     private Button buttonSaveBinary;
+    @UnknownNullability
     private Button buttonReadBinary;
+    @UnknownNullability
     private Button buttonWriteBinary;
     private int buttonX;
     private int descX;
     private int descWidth;
     private int maxPathWidth;
+    @Nullable
     private Path filePath = null;
     private Component pathDisplay = DESC_PATH_NONE;
     private boolean pathCropped = false;
     private Component fileType = DESC_TYPE_NONE;
     private boolean binaryFromFile = false;
+    @Nullable
     private Code assembledCode = null;
     private Component codeInfo = DESC_CODE_INFO_NONE;
+    @Nullable
     private Component codeInfoFull = null;
+    @Nullable
     private List<FormattedCharSequence> lastErrorMsg = null;
+    @Nullable
     private Throwable lastError = null;
+    @Nullable
     private List<FormattedCharSequence> lastInfoMsg = null;
     private long lastInfoStamp = 0;
 
@@ -227,7 +249,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
     {
         super.renderTooltip(graphics, mouseX, mouseY);
-        if (pathCropped && mouseX >= descX && mouseX < descX + maxPathWidth && mouseY >= topPos + LINE_FILE_PATH && mouseY < topPos + LINE_FILE_PATH + LINE_HEIGHT)
+        if (filePath != null && pathCropped && mouseX >= descX && mouseX < descX + maxPathWidth && mouseY >= topPos + LINE_FILE_PATH && mouseY < topPos + LINE_FILE_PATH + LINE_HEIGHT)
         {
             renderFixedTooltip(graphics, Component.literal(filePath.toString()), LINE_FILE_PATH);
         }
@@ -275,7 +297,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
                 graphics.renderTooltip(font, forBlock ? TOOLTIP_BLOCK_REMOVED : TOOLTIP_NO_CARD_ITEM, mouseX, mouseY);
             }
         }
-        else if (lastError != null && mouseX >= descX && mouseX < descX + descWidth && mouseY >= topPos + LINE_MESSAGE && mouseY < topPos + LINE_MESSAGE + (lastErrorMsg.size() * LINE_HEIGHT))
+        else if (lastError != null && lastErrorMsg != null && mouseX >= descX && mouseX < descX + descWidth && mouseY >= topPos + LINE_MESSAGE && mouseY < topPos + LINE_MESSAGE + (lastErrorMsg.size() * LINE_HEIGHT))
         {
             graphics.renderTooltip(font, List.of(
                     Component.literal(lastError.getClass().getName()),
@@ -474,7 +496,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         FileDialog.openFileDialog(this, LAST_PATH_STORAGE, "Open binary file", BINARY_FILTER, false, this::loadBinaryFile);
     }
 
-    private void loadBinaryFile(Path path)
+    private void loadBinaryFile(@Nullable Path path)
     {
         if (path == null) return;
 
@@ -482,13 +504,14 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
 
         setAssembledCode(guardOperation(() ->
         {
-            byte[] bytes = Files.readAllBytes(filePath);
+            byte[] bytes = Files.readAllBytes(Objects.requireNonNull(filePath));
             String fileName = Utils.getFileNameNoExt(filePath);
             Labels labels = Labels.readFromFile(filePath, bytes);
             return new Code(fileName, bytes, labels.labels());
-        }, () -> Component.translatable(MSG_ERROR_READ_BINARY, filePath.getFileName().toString())));
+        }, () -> Component.translatable(MSG_ERROR_READ_BINARY, Objects.requireNonNull(filePath).getFileName().toString())));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void saveBinaryFile()
     {
         if (assembledCode == null) return;
@@ -499,7 +522,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
                     Labels.of(assembledCode).writeToFile(path);
                     return null;
                 },
-                () -> Component.translatable(MSG_ERROR_WRITE_BINARY, filePath.getFileName().toString())
+                () -> Component.translatable(MSG_ERROR_WRITE_BINARY, filePath != null ? filePath.getFileName().toString() : "")
         ));
     }
 
@@ -569,6 +592,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         setLastInfo(MSG_INFO_ROM_WRITTEN, true);
     }
 
+    @UnknownNullability
     private <R, T extends Throwable> R guardOperation(ThrowingSupplier<R, T> operation, Supplier<MutableComponent> errorSupplier)
     {
         clearLastError();

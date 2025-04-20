@@ -86,4 +86,6 @@ public final class MoreRedCompat
             event.registerBlockEntity(MoreRedAPI.CHANNELED_POWER_CAPABILITY, blockEntity.get(), RedstoneHandlerChanneledPowerSupplier::get);
         }
     }
+
+    private MoreRedCompat() { }
 }

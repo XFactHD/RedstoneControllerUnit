@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.UnknownNullability;
 
 public final class EditPortMappingScreen extends Screen
 {
@@ -48,6 +49,7 @@ public final class EditPortMappingScreen extends Screen
     private final int[] mapping;
     private int leftPos;
     private int topPos;
+    @UnknownNullability
     private Button buttonDone;
 
     public EditPortMappingScreen(ControllerScreen screen)

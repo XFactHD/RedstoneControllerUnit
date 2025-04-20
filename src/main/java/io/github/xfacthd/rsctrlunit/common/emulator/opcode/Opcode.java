@@ -1,10 +1,16 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.opcode;
 
-import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.*;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.ErrorNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.NoArgOpNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.Node;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.NodeParser;
 import net.minecraft.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public enum Opcode
 {

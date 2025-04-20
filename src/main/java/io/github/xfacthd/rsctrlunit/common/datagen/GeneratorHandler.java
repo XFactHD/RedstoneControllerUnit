@@ -1,7 +1,13 @@
 package io.github.xfacthd.rsctrlunit.common.datagen;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
-import io.github.xfacthd.rsctrlunit.common.datagen.provider.*;
+import io.github.xfacthd.rsctrlunit.common.datagen.provider.RCUBlockStateProvider;
+import io.github.xfacthd.rsctrlunit.common.datagen.provider.RCUBlockTagsProvider;
+import io.github.xfacthd.rsctrlunit.common.datagen.provider.RCUItemModelProvider;
+import io.github.xfacthd.rsctrlunit.common.datagen.provider.RCULanguageProvider;
+import io.github.xfacthd.rsctrlunit.common.datagen.provider.RCULootTableProvider;
+import io.github.xfacthd.rsctrlunit.common.datagen.provider.RCURecipeProvider;
+import io.github.xfacthd.rsctrlunit.common.datagen.provider.RCUSpriteSourceProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;

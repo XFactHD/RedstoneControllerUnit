@@ -4,12 +4,15 @@ import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import net.minecraft.Util;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.codec.digest.Sha2Crypt;
+import org.jetbrains.annotations.Nullable;
 import oshi.SystemInfo;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public final class LastPathStorage
@@ -28,6 +31,7 @@ public final class LastPathStorage
 
     private final Path saveFilePath;
     private final Path defaultDirectoryPath;
+    @Nullable
     private Path lastDirectoryPath = null;
 
     public LastPathStorage(String fileName, String defaultFolder)
@@ -83,7 +87,7 @@ public final class LastPathStorage
 
     public String getAsTinyFDString()
     {
-        return get().toString() + File.separator;
+        return get() + File.separator;
     }
 
     public void update(String fileOrDirPath)

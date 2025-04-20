@@ -1,7 +1,15 @@
 package io.github.xfacthd.rsctrlunit.common.net;
 
-import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.*;
-import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.*;
+import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.ClientboundReplyCodePayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.ClientboundUpdateCodePayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.ClientboundUpdatePortConfigsPayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.ClientboundUpdatePortMappingPayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.clientbound.ClientboundUpdateStatusPayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundControllerActionPayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundRequestCodePayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundSetPortConfigPayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundSetPortMappingPayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundWriteToTargetPayload;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 public final class NetworkSetup

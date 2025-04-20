@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -163,6 +164,7 @@ public final class Utils
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createBlockEntityTicker(
             BlockEntityType<A> type, BlockEntityType<E> actualType, BlockEntityTicker<? super E> ticker
     )
@@ -170,6 +172,7 @@ public final class Utils
         return actualType == type ? (BlockEntityTicker<A>)ticker : null;
     }
 
+    @Nullable
     public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createBlockEntityTicker(
             BlockEntityType<A> type, BlockEntityType<E> actualType, Consumer<E> ticker
     )

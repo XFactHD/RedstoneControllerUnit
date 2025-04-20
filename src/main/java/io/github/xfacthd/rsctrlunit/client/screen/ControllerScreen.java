@@ -1,7 +1,10 @@
 package io.github.xfacthd.rsctrlunit.client.screen;
 
 import io.github.xfacthd.rsctrlunit.client.screen.popup.EditPortMappingScreen;
-import io.github.xfacthd.rsctrlunit.client.screen.widget.*;
+import io.github.xfacthd.rsctrlunit.client.screen.widget.ActionButton;
+import io.github.xfacthd.rsctrlunit.client.screen.widget.RedstoneConfig;
+import io.github.xfacthd.rsctrlunit.client.screen.widget.Register;
+import io.github.xfacthd.rsctrlunit.client.screen.widget.TabGroup;
 import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.emulator.disassembler.Disassembler;
@@ -10,8 +13,9 @@ import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import io.github.xfacthd.rsctrlunit.common.menu.ControllerMenu;
 import io.github.xfacthd.rsctrlunit.common.menu.slot.Hideable;
-import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.*;
-import io.github.xfacthd.rsctrlunit.common.redstone.port.*;
+import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundControllerActionPayload;
+import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundSetPortConfigPayload;
+import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,6 +30,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,13 +134,21 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private final byte[] sfrView = new byte[Constants.SFR_SIZE];
     private final byte[] outputs = new byte[4];
     private final byte[] inputs = new byte[4];
+    @UnknownNullability
     private Button buttonLoad;
+    @UnknownNullability
     private Button buttonSave;
+    @UnknownNullability
     private Button buttonClear;
+    @UnknownNullability
     private Button buttonPauseResume;
+    @UnknownNullability
     private Button buttonStep;
+    @UnknownNullability
     private Button buttonReset;
+    @UnknownNullability
     private Button buttonEditPortMap;
+    @UnknownNullability
     private Button buttonTogglePortMap;
     private int lineHeight = 0;
     private int programCounter = 0;

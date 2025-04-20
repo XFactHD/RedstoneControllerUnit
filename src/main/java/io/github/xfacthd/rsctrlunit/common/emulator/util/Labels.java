@@ -8,7 +8,11 @@ import io.github.xfacthd.rsctrlunit.common.util.RCUCodecs;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,10 +131,11 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Nullable
     private Style findTextLine(int mouseX, int mouseY)
     {
         int localX = mouseX - leftPos - TITLE_X;
-        if (localX < 0) { return null; }
+        if (localX < 0) return null;
 
         int y = topPos + TITLE_Y + font.lineHeight * 2;
         for (List<FormattedCharSequence> block : textBlocks)
@@ -142,7 +144,7 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
             if (mouseY >= y && mouseY <= y + height)
             {
                 int idx = (mouseY - y) / font.lineHeight;
-                if (idx >= block.size()) { return null; }
+                if (idx >= block.size()) return null;
                 return font.getSplitter().componentStyleAtWidth(block.get(idx), localX);
             }
 

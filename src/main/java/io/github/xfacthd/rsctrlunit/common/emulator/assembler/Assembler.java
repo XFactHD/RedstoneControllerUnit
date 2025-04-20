@@ -1,18 +1,33 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.assembler;
 
 import com.google.common.collect.Sets;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.ErrorNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.JumpNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.LabelNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.Node;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.OpNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.DefineByteDirectiveNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.EndDirectiveNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.OriginDirectiveNode;
+import io.github.xfacthd.rsctrlunit.common.emulator.opcode.Opcode;
+import io.github.xfacthd.rsctrlunit.common.emulator.opcode.OpcodeHelpers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
-import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.*;
-import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.directive.*;
-import io.github.xfacthd.rsctrlunit.common.emulator.opcode.*;
-import io.github.xfacthd.rsctrlunit.common.emulator.util.*;
+import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public final class Assembler
 {

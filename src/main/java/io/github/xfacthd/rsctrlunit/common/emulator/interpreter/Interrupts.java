@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 final class Interrupts
 {
@@ -23,7 +24,9 @@ final class Interrupts
     private static final int MASK_ENABLE_ALL = 0b10000000;
 
     private final RAM ram;
+    @Nullable
     private ISR activeIsrHighPrio = null;
+    @Nullable
     private ISR activeIsrLowPrio = null;
 
     Interrupts(RAM ram)
@@ -68,6 +71,7 @@ final class Interrupts
         return NO_ISR;
     }
 
+    @Nullable
     private ISR findNextInterrupt(boolean serviceHighPrio, byte ie, byte ip, byte tcon)
     {
         // 8051 technically has 5 interrupts but the serial port is unsupported, so its interrupt is ignored

@@ -25,7 +25,7 @@ public final class IOPorts
         lastStateInt1 = checkExtInterrupt(ram, port, lastStateInt1, 1);
     }
 
-    private boolean checkExtInterrupt(RAM ram, byte port, boolean lastState, int idx)
+    private static boolean checkExtInterrupt(RAM ram, byte port, boolean lastState, int idx)
     {
         byte tcon = ram.readByte(Constants.ADDRESS_TCON);
         boolean state = (port & (MASK_INT_IN0 << idx)) != 0;

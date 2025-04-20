@@ -1,6 +1,8 @@
 package io.github.xfacthd.rsctrlunit.common.compat.morered;
 
-import commoble.morered.api.*;
+import commoble.morered.api.ChanneledPowerSupplier;
+import commoble.morered.api.MoreRedAPI;
+import commoble.morered.api.WireConnector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -38,4 +40,6 @@ final class BundledCableReader
         }
         return 0;
     }
+
+    private BundledCableReader() { }
 }

@@ -77,6 +77,7 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
     ) implements SpriteSupplier
     {
         @Override
+        @Nullable
         public SpriteContents apply(SpriteResourceLoader loader)
         {
             try
