@@ -35,6 +35,7 @@
       ]
     }
   ],
+  "render_type": "minecraft:cutout",
   "textures": {
     "overlay": "rsctrlunit:block/overlay_bundled",
     "particle": "rsctrlunit:block/overlay_bundled"

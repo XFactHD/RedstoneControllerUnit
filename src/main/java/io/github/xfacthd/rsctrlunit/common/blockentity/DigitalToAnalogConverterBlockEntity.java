@@ -61,6 +61,6 @@ public final class DigitalToAnalogConverterBlockEntity extends RedstoneHandlerBl
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
     {
         super.loadAdditional(tag, registries);
-        lastOutput = tag.getInt("last_output");
+        lastOutput = tag.getIntOr("last_output", 0);
     }
 }

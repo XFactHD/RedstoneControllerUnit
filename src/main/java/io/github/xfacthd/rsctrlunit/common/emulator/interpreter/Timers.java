@@ -176,8 +176,8 @@ public final class Timers
 
     public void load(CompoundTag tag)
     {
-        lastTrigger0 = tag.getBoolean("last_trigger_0");
-        lastTrigger1 = tag.getBoolean("last_trigger_1");
+        lastTrigger0 = tag.getBooleanOr("last_trigger_0", false);
+        lastTrigger1 = tag.getBooleanOr("last_trigger_1", false);
     }
 
     public CompoundTag save()

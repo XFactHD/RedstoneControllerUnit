@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.52-beta'
+    id 'net.neoforged.moddev' version '2.0.80'
 }
 
 version = mod_version
@@ -25,6 +25,7 @@ neoForge {
             gameDirectory = project.file('run')
             //systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
+            systemProperty 'terminal.ansi', 'true'
         }
 
         client {
@@ -143,4 +144,5 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.compilerArgs << "-Xmaxerrs" << "10000"
 }

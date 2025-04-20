@@ -21,7 +21,7 @@ public final class Interpreter
     private final Interrupts interrupts = new Interrupts(ram);
     private final byte[] extRam = new byte[Constants.EXT_RAM_SIZE];
     private Code code = Code.EMPTY;
-    private int programCounter = 0;
+    private int programCounter = Constants.INITIAL_PROGRAM_COUNTER;
     private volatile boolean running = false;
     private volatile boolean paused = false;
     private volatile boolean stepRequested = false;
@@ -698,22 +698,22 @@ public final class Interpreter
 
     public void load(CompoundTag tag)
     {
-        code = Utils.fromNbt(Code.CODEC, tag.getCompound("code"), Code.EMPTY);
+        code = tag.read("code", Code.CODEC).orElse(Code.EMPTY);
         Utils.copyByteArray(code.rom(), rom);
         Utils.copyByteArray(tag.getByteArray("ram"), ram.getRamArray());
         Utils.copyByteArray(tag.getByteArray("sfr"), ram.getSfrArray());
-        ioPorts.load(tag.getCompound("io"));
-        timers.load(tag.getCompound("timers"));
-        interrupts.load(tag.getCompound("interrupts"));
+        ioPorts.load(tag.getCompoundOrEmpty("io"));
+        timers.load(tag.getCompoundOrEmpty("timers"));
+        interrupts.load(tag.getCompoundOrEmpty("interrupts"));
         Utils.copyByteArray(tag.getByteArray("external_ram"), extRam);
-        programCounter = tag.getInt("program_counter");
-        paused = tag.getBoolean("paused");
+        programCounter = tag.getIntOr("program_counter", Constants.INITIAL_PROGRAM_COUNTER);
+        paused = tag.getBooleanOr("paused", false);
     }
 
     public CompoundTag save()
     {
         CompoundTag tag = new CompoundTag();
-        tag.put("code", Utils.toNbt(Code.CODEC, code));
+        tag.store("code", Code.CODEC, code);
         tag.putByteArray("ram", Arrays.copyOf(ram.getRamArray(), ram.getRamArray().length));
         tag.putByteArray("sfr", Arrays.copyOf(ram.getSfrArray(), ram.getSfrArray().length));
         tag.put("io", ioPorts.save());

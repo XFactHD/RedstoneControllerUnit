@@ -55,6 +55,6 @@ public final class AnalogToDigitalConverterBlockEntity extends RedstoneHandlerBl
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
     {
         super.loadAdditional(tag, registries);
-        lastInput = tag.getInt("last_input");
+        lastInput = tag.getIntOr("last_input", 0);
     }
 }

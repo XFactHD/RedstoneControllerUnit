@@ -1,20 +1,23 @@
 package io.github.xfacthd.rsctrlunit.common.datagen.provider;
 
+import com.mojang.math.Quadrant;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
-import io.github.xfacthd.rsctrlunit.client.model.ControllerModelLoader;
+import io.github.xfacthd.rsctrlunit.client.model.UnbakedControllerModel;
+import io.github.xfacthd.rsctrlunit.client.model.UnbakedControllerModelBuilder;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.blockstates.Variant;
-import net.minecraft.client.data.models.blockstates.VariantProperties;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
@@ -25,7 +28,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplate;
 import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplateBuilder;
-import net.neoforged.neoforge.client.model.generators.template.FaceRotation;
 import org.joml.Vector3f;
 
 import java.util.Optional;
@@ -47,24 +49,23 @@ public final class RCUBlockStateProvider extends ModelProvider
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels)
     {
-        MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(
+        MultiVariantGenerator generator = MultiVariantGenerator.dispatch(
                 RCUContent.BLOCK_CONTROLLER.value(),
-                Variant.variant().with(VariantProperties.MODEL, CONTROLLER)
-        );
-        generator.with(PropertyDispatch.property(BlockStateProperties.FACING).generate(dir ->
+                MultiVariant.of(new UnbakedControllerModelBuilder(CONTROLLER, Variant.SimpleModelState.DEFAULT))
+        ).with(PropertyDispatch.modify(BlockStateProperties.FACING).generate(dir ->
         {
-            VariantProperties.Rotation rotX = switch (dir)
+            Quadrant rotX = switch (dir)
             {
-                case UP -> VariantProperties.Rotation.R180;
-                case DOWN -> VariantProperties.Rotation.R0;
-                default -> VariantProperties.Rotation.R90;
+                case UP -> Quadrant.R180;
+                case DOWN -> Quadrant.R0;
+                default -> Quadrant.R90;
             };
-            VariantProperties.Rotation rotY = VariantProperties.Rotation.R0;
+            Quadrant rotY = Quadrant.R0;
             if (dir.getAxis() != Direction.Axis.Y)
             {
-                rotY = VariantProperties.Rotation.values()[(int) dir.toYRot() / 90];
+                rotY = Quadrant.values()[(int) dir.toYRot() / 90];
             }
-            return Variant.variant().with(VariantProperties.X_ROT, rotX).with(VariantProperties.Y_ROT, rotY);
+            return VariantMutator.X_ROT.withValue(rotX).then(VariantMutator.Y_ROT.withValue(rotY));
         }));
         blockModels.blockStateOutput.accept(generator);
 
@@ -75,12 +76,12 @@ public final class RCUBlockStateProvider extends ModelProvider
 
         for (int edge = 0; edge < 4; edge++)
         {
-            plateOverlay(blockModels, ControllerModelLoader.LOCATIONS_SINGLE[edge], Utils.rl("block/overlay_single"), edge, true, true);
-            plateOverlay(blockModels, ControllerModelLoader.LOCATIONS_BUNDLED[edge], Utils.rl("block/overlay_bundled"), edge, true, true);
+            plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_SINGLE[edge], Utils.rl("block/overlay_single"), edge, true, true);
+            plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_BUNDLED[edge], Utils.rl("block/overlay_bundled"), edge, true, true);
 
             for (int port = 0; port < 4; port++)
             {
-                plateOverlay(blockModels, ControllerModelLoader.LOCATIONS_PORT[edge][port], Utils.rl("block/port_" + port), edge, false, false);
+                plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_PORT[edge][port], Utils.rl("block/port_" + port), edge, false, false);
             }
         }
     }
@@ -100,26 +101,25 @@ public final class RCUBlockStateProvider extends ModelProvider
                 makeConverterRotation(blockModels, converter, baseLoc.withSuffix("_ccw90"), -90)
         };
 
-        MultiVariantGenerator generator = MultiVariantGenerator.multiVariant(block.value(), Variant.variant());
-        generator.with(PropertyDispatch.property(PropertyHolder.FACING_DIR).generate(cmpDir ->
-        {
-            Direction dir = cmpDir.direction();
-            VariantProperties.Rotation rotX = switch (dir)
-            {
-                case UP -> VariantProperties.Rotation.R180;
-                case DOWN -> VariantProperties.Rotation.R0;
-                default -> VariantProperties.Rotation.R90;
-            };
-            VariantProperties.Rotation rotY = VariantProperties.Rotation.R0;
-            if (dir.getAxis() != Direction.Axis.Y)
-            {
-                rotY = VariantProperties.Rotation.values()[(int) dir.toYRot() / 90];
-            }
-            return Variant.variant()
-                    .with(VariantProperties.MODEL, converters[cmpDir.rotation().ordinal()])
-                    .with(VariantProperties.X_ROT, rotX)
-                    .with(VariantProperties.Y_ROT, rotY);
-        }));
+        MultiVariantGenerator generator = MultiVariantGenerator.dispatch(block.value())
+                .with(PropertyDispatch.initial(PropertyHolder.FACING_DIR).generate(cmpDir ->
+                {
+                    Direction dir = cmpDir.direction();
+                    Quadrant rotX = switch (dir)
+                    {
+                        case UP -> Quadrant.R180;
+                        case DOWN -> Quadrant.R0;
+                        default -> Quadrant.R90;
+                    };
+                    Quadrant rotY = Quadrant.R0;
+                    if (dir.getAxis() != Direction.Axis.Y)
+                    {
+                        rotY = Quadrant.values()[(int) dir.toYRot() / 90];
+                    }
+                    return BlockModelGenerators.plainVariant(converters[cmpDir.rotation().ordinal()])
+                            .with(VariantMutator.X_ROT.withValue(rotX))
+                            .with(VariantMutator.Y_ROT.withValue(rotY));
+                }));
         blockModels.blockStateOutput.accept(generator);
 
         blockModels.registerSimpleItemModel(block.value(), converter);
@@ -143,13 +143,14 @@ public final class RCUBlockStateProvider extends ModelProvider
         ExtendedModelTemplate template = ExtendedModelTemplateBuilder.builder()
                 .requiredTextureSlot(OVERLAY)
                 .requiredTextureSlot(TextureSlot.PARTICLE)
+                .renderType("minecraft:cutout")
                 .element(element ->
                 {
                     element.from(0, 0, 0)
                             .to(16, 2, 16)
                             .face(Direction.UP, face ->
                                     face.uvs(0, mirrorTopX ? 16 : 0, 16, mirrorTopX ? 0 : 16)
-                                            .rotation(FaceRotation.values()[edge])
+                                            .rotation(Quadrant.values()[edge])
                                             .texture(OVERLAY)
                             );
 

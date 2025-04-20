@@ -34,7 +34,7 @@ public final class ProgrammerItem extends Item
 
     public static void openMenu(Player player, ItemStack stack, @Nullable ControllerBlockEntity controller)
     {
-        int slot = player.getInventory().selected;
+        int slot = player.getInventory().getSelectedSlot();
         boolean forBlock = controller != null;
         player.openMenu(new MenuProvider()
         {

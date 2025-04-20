@@ -1,32 +1,34 @@
 {
   "variants": {
     "facing=down": {
-      "model": "rsctrlunit:block/controller",
-      "x": 0,
-      "y": 0
+      "type": "rsctrlunit:controller",
+      "base": "rsctrlunit:block/controller"
     },
     "facing=east": {
-      "model": "rsctrlunit:block/controller",
+      "type": "rsctrlunit:controller",
+      "base": "rsctrlunit:block/controller",
       "x": 90,
       "y": 270
     },
     "facing=north": {
-      "model": "rsctrlunit:block/controller",
+      "type": "rsctrlunit:controller",
+      "base": "rsctrlunit:block/controller",
       "x": 90,
       "y": 180
     },
     "facing=south": {
-      "model": "rsctrlunit:block/controller",
-      "x": 90,
-      "y": 0
+      "type": "rsctrlunit:controller",
+      "base": "rsctrlunit:block/controller",
+      "x": 90
     },
     "facing=up": {
-      "model": "rsctrlunit:block/controller",
-      "x": 180,
-      "y": 0
+      "type": "rsctrlunit:controller",
+      "base": "rsctrlunit:block/controller",
+      "x": 180
     },
     "facing=west": {
-      "model": "rsctrlunit:block/controller",
+      "type": "rsctrlunit:controller",
+      "base": "rsctrlunit:block/controller",
       "x": 90,
       "y": 90
     }

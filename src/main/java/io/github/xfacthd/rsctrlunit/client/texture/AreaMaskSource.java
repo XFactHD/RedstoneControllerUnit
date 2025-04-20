@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
@@ -22,12 +21,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fallback, ResourceLocation sprite, int x, int y, int w, int h) implements SpriteSource
 {
-    private static final MapCodec<AreaMaskSource> CODEC = RecordCodecBuilder.<AreaMaskSource>mapCodec(inst -> inst.group(
+    public static final MapCodec<AreaMaskSource> CODEC = RecordCodecBuilder.<AreaMaskSource>mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("src").forGetter(AreaMaskSource::src),
             ResourceLocation.CODEC.optionalFieldOf("fallback").forGetter(AreaMaskSource::fallback),
             ResourceLocation.CODEC.fieldOf("sprite").forGetter(AreaMaskSource::sprite),
@@ -42,7 +40,6 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
         return DataResult.success(res);
     });
     public static final ResourceLocation ID = Utils.rl("mask");
-    public static final SpriteSourceType TYPE = new SpriteSourceType(CODEC);
 
     @Override
     public void run(ResourceManager manager, Output out)
@@ -66,9 +63,9 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
     }
 
     @Override
-    public SpriteSourceType type()
+    public MapCodec<AreaMaskSource> codec()
     {
-        return Objects.requireNonNull(TYPE);
+        return CODEC;
     }
 
     public record AreaMaskInstance(

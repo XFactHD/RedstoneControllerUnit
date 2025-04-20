@@ -3,9 +3,12 @@ package io.github.xfacthd.rsctrlunit.common.item;
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public final class MemoryCardItem extends Item
 {
@@ -15,8 +18,9 @@ public final class MemoryCardItem extends Item
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> lines, TooltipFlag flag)
+    @SuppressWarnings("deprecation")
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> tooltipAdder, TooltipFlag flag)
     {
-        stack.addToTooltip(RCUContent.COMPONENT_TYPE_CODE, ctx, lines::add, flag);
+        stack.addToTooltip(RCUContent.COMPONENT_TYPE_CODE, ctx, tooltipAdder, flag);
     }
 }

@@ -69,10 +69,10 @@ public final class IOPorts
 
     void load(CompoundTag tag)
     {
-        transferArray(tag.getByteArray("out"), portStatesOut, TransferHandler.LOAD);
-        transferArray(tag.getByteArray("in"), portStatesIn, TransferHandler.LOAD);
-        lastStateInt0 = tag.getBoolean("last_state_int0");
-        lastStateInt1 = tag.getBoolean("last_state_int1");
+        tag.getByteArray("out").ifPresent(arr -> transferArray(arr, portStatesOut, TransferHandler.LOAD));
+        tag.getByteArray("in").ifPresent(arr -> transferArray(arr, portStatesIn, TransferHandler.LOAD));
+        lastStateInt0 = tag.getBooleanOr("last_state_int0", false);
+        lastStateInt1 = tag.getBooleanOr("last_state_int1", false);
     }
 
     CompoundTag save()

@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public final class RedstoneInterface
 {
@@ -194,10 +195,10 @@ public final class RedstoneInterface
 
     public boolean readFromNetwork(CompoundTag tag)
     {
-        int[] mapping = tag.getIntArray("mapping");
-        if (!Arrays.equals(mapping, portMapping))
+        Optional<int[]> mapping = tag.getIntArray("mapping");
+        if (mapping.isPresent() && !Arrays.equals(mapping.get(), portMapping))
         {
-            Utils.copyIntArray(mapping, portMapping);
+            Utils.copyIntArray(mapping.get(), portMapping);
             setupInvPortMapping();
             return true;
         }
@@ -213,7 +214,7 @@ public final class RedstoneInterface
 
     public void load(CompoundTag tag)
     {
-        List<PortConfig> configs = Utils.fromNbt(RedstoneType.PORT_LIST_CODEC, tag.get("config"), List.of());
+        List<PortConfig> configs = tag.read("config", RedstoneType.PORT_LIST_CODEC).orElse(List.of());
         Utils.copyArray(configs.toArray(PortConfig[]::new), portConfigs);
         Utils.copyByteArray(tag.getByteArray("states_out"), portStatesOut);
         Utils.copyByteArray(tag.getByteArray("states_in"), portStatesIn);
@@ -224,8 +225,7 @@ public final class RedstoneInterface
     public CompoundTag save()
     {
         CompoundTag tag = new CompoundTag();
-        List<PortConfig> list = Arrays.asList(portConfigs);
-        tag.put("config", Utils.toNbt(RedstoneType.PORT_LIST_CODEC, list));
+        tag.store("config", RedstoneType.PORT_LIST_CODEC, Arrays.asList(portConfigs));
         tag.putByteArray("states_out", Arrays.copyOf(portStatesOut, portStatesOut.length));
         tag.putByteArray("states_in", Arrays.copyOf(portStatesIn, portStatesIn.length));
         tag.putIntArray("mapping", Arrays.copyOf(portMapping, portMapping.length));

@@ -3,26 +3,23 @@ package io.github.xfacthd.rsctrlunit.client.model;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.DelegateBakedModel;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.client.model.DelegateBlockStateModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public final class ControllerModel extends DelegateBakedModel
+public final class ControllerModel extends DelegateBlockStateModel
 {
-    private final BakedModel[] singleModels;
-    private final BakedModel[] bundledModels;
-    private final BakedModel[][] portIndexModels;
+    private final BlockStateModel[] singleModels;
+    private final BlockStateModel[] bundledModels;
+    private final BlockStateModel[][] portIndexModels;
 
-    ControllerModel(BakedModel baseModel, BakedModel[] singleModels, BakedModel[] bundledModels, BakedModel[][] portIndexModels)
+    ControllerModel(BlockStateModel baseModel, BlockStateModel[] singleModels, BlockStateModel[] bundledModels, BlockStateModel[][] portIndexModels)
     {
         super(baseModel);
         this.singleModels = singleModels;
@@ -31,49 +28,27 @@ public final class ControllerModel extends DelegateBakedModel
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType)
+    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts)
     {
-        List<BakedQuad> quads = super.getQuads(state, side, rand, extraData, renderType);
-        if (state != null)
+        super.collectParts(level, pos, state, random, parts);
+
+        for (int i = 0; i < 4; i++)
         {
-            boolean copied = false;
-            for (int i = 0; i < 4; i++)
+            RedstoneType type = state.getValue(PropertyHolder.RS_CON_PROPS[i]);
+            if (type == RedstoneType.NONE) continue;
+
+            BlockStateModel model = type == RedstoneType.SINGLE ? singleModels[i] : bundledModels[i];
+            model.collectParts(level, pos, state, random, parts);
+        }
+        int[] portMapping = level.getModelData(pos).get(ControllerBlockEntity.PORT_MAPPING_PROPERTY);
+        if (portMapping != null && state.getValue(PropertyHolder.SHOW_PORT_MAPPING))
+        {
+            for (int port = 0; port < 4; port++)
             {
-                RedstoneType type = state.getValue(PropertyHolder.RS_CON_PROPS[i]);
-                if (type == RedstoneType.NONE) continue;
-
-                if (!copied)
-                {
-                    quads = new ArrayList<>(quads);
-                    copied = true;
-                }
-
-                BakedModel model = type == RedstoneType.SINGLE ? singleModels[i] : bundledModels[i];
-                quads.addAll(model.getQuads(state, side, rand, extraData, renderType));
-            }
-            int[] portMapping = extraData.get(ControllerBlockEntity.PORT_MAPPING_PROPERTY);
-            if (portMapping != null && state.getValue(PropertyHolder.SHOW_PORT_MAPPING))
-            {
-                if (!copied)
-                {
-                    quads = new ArrayList<>(quads);
-                }
-
-                for (int port = 0; port < 4; port++)
-                {
-                    int extPort = portMapping[port];
-                    BakedModel model = portIndexModels[extPort][port];
-                    quads.addAll(model.getQuads(state, side, rand, extraData, renderType));
-                }
+                int extPort = portMapping[port];
+                BlockStateModel model = portIndexModels[extPort][port];
+                model.collectParts(level, pos, state, random, parts);
             }
         }
-        return quads;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand)
-    {
-        return getQuads(state, side, rand, ModelData.EMPTY, null);
     }
 }

@@ -1,25 +1,29 @@
 package io.github.xfacthd.rsctrlunit.common.util;
 
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.Util;
-import net.minecraft.core.*;
-import net.minecraft.nbt.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.Vec3;
 
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.function.*;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 public final class Utils
@@ -103,9 +107,25 @@ public final class Utils
         );
     }
 
+    public static void copyByteArray(Optional<byte[]> src, byte[] dest)
+    {
+        if (src.isPresent())
+        {
+            copyByteArray(src.get(), dest);
+        }
+    }
+
     public static void copyByteArray(byte[] src, byte[] dest)
     {
         System.arraycopy(src, 0, dest, 0, Math.min(src.length, dest.length));
+    }
+
+    public static void copyIntArray(Optional<int[]> src, int[] dest)
+    {
+        if (src.isPresent())
+        {
+            copyIntArray(src.get(), dest);
+        }
     }
 
     public static void copyIntArray(int[] src, int[] dest)
@@ -166,16 +186,6 @@ public final class Utils
             fileName = fileName.substring(0, period);
         }
         return fileName;
-    }
-
-    public static <T> T fromNbt(Codec<T> codec, Tag tag, T defaultValue)
-    {
-        return codec.decode(NbtOps.INSTANCE, tag).result().map(Pair::getFirst).orElse(defaultValue);
-    }
-
-    public static <T> Tag toNbt(Codec<T> codec, T value)
-    {
-        return codec.encodeStart(NbtOps.INSTANCE, value).result().orElseGet(CompoundTag::new);
     }
 
     public static <T> ResourceKey<T> getKeyOrThrow(Holder<T> holder)

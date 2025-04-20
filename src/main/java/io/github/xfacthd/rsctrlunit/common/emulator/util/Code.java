@@ -7,6 +7,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.*;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -63,7 +64,7 @@ public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implem
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext ctx, Consumer<Component> adder, TooltipFlag flag)
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> adder, TooltipFlag flag, DataComponentGetter componentGetter)
     {
         adder.accept(Component.translatable("rsctrlunit.code.name", displayName()));
     }

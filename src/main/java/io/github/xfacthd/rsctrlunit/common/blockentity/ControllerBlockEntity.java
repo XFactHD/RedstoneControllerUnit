@@ -1,10 +1,14 @@
 package io.github.xfacthd.rsctrlunit.common.blockentity;
 
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
-import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.*;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Interpreter;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.InterpreterThreadPool;
+import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Timers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -14,8 +18,8 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -94,7 +98,7 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries)
     {
-        redstone.readFromNetwork(tag.getCompound("redstone"));
+        redstone.readFromNetwork(tag.getCompoundOrEmpty("redstone"));
         requestModelDataUpdate();
     }
 
@@ -108,7 +112,7 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registries)
     {
         CompoundTag tag = pkt.getTag();
-        if (!tag.isEmpty() && redstone.readFromNetwork(tag.getCompound("redstone")))
+        if (!tag.isEmpty() && redstone.readFromNetwork(tag.getCompoundOrEmpty("redstone")))
         {
             requestModelDataUpdate();
             level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
@@ -118,7 +122,7 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     @Override
     public ModelData getModelData()
     {
-        return ModelData.builder().with(PORT_MAPPING_PROPERTY, redstone.getPortMapping().clone()).build();
+        return ModelData.of(PORT_MAPPING_PROPERTY, redstone.getPortMapping().clone());
     }
 
     @Override
@@ -156,8 +160,8 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup)
     {
         super.loadAdditional(tag, lookup);
-        interpreter.writeLockGuarded(tag.getCompound("interpreter"), Interpreter::load);
-        redstone.load(tag.getCompound("redstone"));
+        interpreter.writeLockGuarded(tag.getCompoundOrEmpty("interpreter"), Interpreter::load);
+        redstone.load(tag.getCompoundOrEmpty("redstone"));
     }
 
     @Override

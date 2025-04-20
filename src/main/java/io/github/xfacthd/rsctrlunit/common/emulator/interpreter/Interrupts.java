@@ -3,7 +3,6 @@ package io.github.xfacthd.rsctrlunit.common.emulator.interpreter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
-import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 
 final class Interrupts
@@ -113,27 +112,15 @@ final class Interrupts
 
     public void load(CompoundTag tag)
     {
-        if (tag.contains("isr_high_prio"))
-        {
-            activeIsrHighPrio = Utils.fromNbt(ISR.CODEC, tag.getCompound("isr_high_prio"), null);
-        }
-        if (tag.contains("isr_low_prio"))
-        {
-            activeIsrLowPrio = Utils.fromNbt(ISR.CODEC, tag.getCompound("isr_low_prio"), null);
-        }
+        activeIsrHighPrio = tag.read("isr_high_prio", ISR.CODEC).orElse(null);
+        activeIsrLowPrio = tag.read("isr_low_prio", ISR.CODEC).orElse(null);
     }
 
     public CompoundTag save()
     {
         CompoundTag tag = new CompoundTag();
-        if (activeIsrHighPrio != null)
-        {
-            tag.put("isr_high_prio", Utils.toNbt(ISR.CODEC, activeIsrHighPrio));
-        }
-        if (activeIsrLowPrio != null)
-        {
-            tag.put("isr_low_prio", Utils.toNbt(ISR.CODEC, activeIsrLowPrio));
-        }
+        tag.storeNullable("isr_high_prio", ISR.CODEC, activeIsrHighPrio);
+        tag.storeNullable("isr_low_prio", ISR.CODEC, activeIsrLowPrio);
         return tag;
     }
 

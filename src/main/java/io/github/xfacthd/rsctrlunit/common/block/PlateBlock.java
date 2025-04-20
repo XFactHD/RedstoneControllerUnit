@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class PlateBlock extends Block implements EntityBlock
 {
+    private static final Direction[] DIRECTIONS = Direction.values();
     private static final VoxelShape[] SHAPES = makeShapes(2D);
     // Make the collision shape slightly higher to avoid playing step sound and particles of the block below
     private static final VoxelShape[] COLLISION_SHAPES = makeShapes(3.3D);
@@ -92,8 +93,15 @@ public abstract class PlateBlock extends Block implements EntityBlock
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block adjBlock, @Nullable Orientation orientation, boolean moved)
     {
-        // FIXME: the whole Orientation thing makes zero sense...
-        //onNeighborChange(state, level, pos, adjPos);
+        // FIXME: the whole Orientation thing makes zero sense and iterating the four directions is stupid...
+        Direction.Axis axis = getFacing(state).getAxis();
+        for (Direction dir : DIRECTIONS)
+        {
+            if (dir.getAxis() != axis)
+            {
+                onNeighborChange(state, level, pos, pos.relative(dir));
+            }
+        }
     }
 
     @Override
