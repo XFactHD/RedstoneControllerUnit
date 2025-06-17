@@ -12,7 +12,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -96,7 +96,7 @@ public final class RedstoneConfig
     {
         PortConfig cfg = configs[port];
 
-        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, x - FRAME_PADDING, y - FRAME_PADDING, WIDTH_PADDED, HEIGHT_PADDED);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, x - FRAME_PADDING, y - FRAME_PADDING, WIDTH_PADDED, HEIGHT_PADDED);
 
         graphics.drawString(font, TEXT_PORT_IDX[port], x + 4, y + 4, 0xFF000000, false);
 
@@ -119,7 +119,7 @@ public final class RedstoneConfig
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_LEFT, y, WIDTH_PIN_BTN, HEIGHT, "<", single.pin() > 0, true, false, -1, mouseX, mouseY);
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_RIGHT, y, WIDTH_PIN_BTN, HEIGHT, ">", single.pin() < 7, true, false, 0, mouseX, mouseY);
 
-                graphics.blitSprite(RenderType::guiTextured, TEXT_FIELD, x + X_PIN_FIELD, y, WIDTH_PIN_FIELD, HEIGHT);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TEXT_FIELD, x + X_PIN_FIELD, y, WIDTH_PIN_FIELD, HEIGHT);
                 graphics.drawCenteredString(font, Integer.toString(single.pin()), x + X_PIN_FIELD + WIDTH_PIN_FIELD / 2, y + 4, 0xFFFFFFFF);
             }
             case BundledPortConfig bundle ->
@@ -146,25 +146,25 @@ public final class RedstoneConfig
                 {
                     if (mouseX < x + X_TYPE + WIDTH_TYPE)
                     {
-                        graphics.renderTooltip(font, TOOLTIP_TYPE_NONE, mouseX, mouseY);
+                        graphics.setTooltipForNextFrame(font, TOOLTIP_TYPE_NONE, mouseX, mouseY);
                     }
                 }
                 case SinglePortConfig single ->
                 {
                     if (mouseX < x + X_TYPE + WIDTH_TYPE)
                     {
-                        graphics.renderTooltip(font, TOOLTIP_TYPE_SINGLE, mouseX, mouseY);
+                        graphics.setTooltipForNextFrame(font, TOOLTIP_TYPE_SINGLE, mouseX, mouseY);
                     }
                     else if (mouseX >= x + X_PIN_BTN_LEFT && mouseX < x + X_PIN_BTN_LEFT + WIDTH_PIN)
                     {
-                        graphics.renderTooltip(font, TOOLTIP_PORT_BIT[single.pin()], mouseX, mouseY);
+                        graphics.setTooltipForNextFrame(font, TOOLTIP_PORT_BIT[single.pin()], mouseX, mouseY);
                     }
                 }
                 case BundledPortConfig bundle ->
                 {
                     if (mouseX < x + X_TYPE + WIDTH_TYPE)
                     {
-                        graphics.renderTooltip(font, TOOLTIP_TYPE_BUNDLED, mouseX, mouseY);
+                        graphics.setTooltipForNextFrame(font, TOOLTIP_TYPE_BUNDLED, mouseX, mouseY);
                         return;
                     }
                     for (int i = 0; i < 8; i++)
@@ -174,14 +174,14 @@ public final class RedstoneConfig
                         {
                             int colorIdx = i + (bundle.upper() ? 8 : 0);
                             var lines = List.of(TOOLTIP_PORT_BIT[i].getVisualOrderText(), TOOLTIP_WIRE_COLOR[colorIdx].getVisualOrderText());
-                            graphics.renderTooltip(font, lines, mouseX, mouseY);
+                            graphics.setTooltipForNextFrame(font, lines, mouseX, mouseY);
                             return;
                         }
                     }
                     if (mouseX >= x + X_PIN_BTN_LEFT && mouseX < x + X_PIN_BTN_LEFT + WIDTH_PIN)
                     {
                         Component line = bundle.upper() ? TOOLTIP_BUNDLED_MAPPING_UPPER : TOOLTIP_BUNDLED_MAPPING_LOWER;
-                        graphics.renderTooltip(font, line, mouseX, mouseY);
+                        graphics.setTooltipForNextFrame(font, line, mouseX, mouseY);
                     }
                 }
             }

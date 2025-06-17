@@ -3,7 +3,7 @@ package io.github.xfacthd.rsctrlunit.client.util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.WidgetSprites;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +55,7 @@ public final class ClientUtils
     {
         boolean hovered = enabled && (hoverOverride || (mouseY >= y && mouseY < y + height && mouseX >= x && mouseX < x + width));
         ResourceLocation sprite = BTN_SPRITES.get(enabled, hovered);
-        graphics.blitSprite(RenderType::guiTextured, sprite, x, y, width, height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, width, height);
 
         int color = enabled ? 0xFFFFFFFF : 0xFFA0A0A0;
         if (centered)

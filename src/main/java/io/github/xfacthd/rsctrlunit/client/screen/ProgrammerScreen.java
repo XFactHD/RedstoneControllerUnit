@@ -22,7 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -207,11 +207,11 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
     {
-        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
-        graphics.blit(RenderType::guiTextured, INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT, 256, 256);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT, 256, 256);
         if (!forBlock)
         {
-            graphics.blitSprite(RenderType::guiTextured, SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
             drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
         }
 
@@ -261,45 +261,45 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         {
             if (binaryFromFile || filePath == null)
             {
-                graphics.renderTooltip(font, TOOLTIP_NO_SOURCE, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, TOOLTIP_NO_SOURCE, mouseX, mouseY);
             }
         }
         else if (isInactiveHovered(buttonSaveBinary, mouseX, mouseY))
         {
             if (assembledCode == null)
             {
-                graphics.renderTooltip(font, TOOLTIP_NO_ASSEMBLY, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, TOOLTIP_NO_ASSEMBLY, mouseX, mouseY);
             }
         }
         else if (isInactiveHovered(buttonReadBinary, mouseX, mouseY))
         {
             if (!menu.isTargetValid())
             {
-                graphics.renderTooltip(font, forBlock ? TOOLTIP_BLOCK_REMOVED : TOOLTIP_NO_CARD_ITEM, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, forBlock ? TOOLTIP_BLOCK_REMOVED : TOOLTIP_NO_CARD_ITEM, mouseX, mouseY);
             }
             else if (forBlock && menu.isInterpreterEmpty())
             {
-                graphics.renderTooltip(font, TOOLTIP_NO_CODE_BLOCK, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, TOOLTIP_NO_CODE_BLOCK, mouseX, mouseY);
             }
             else if (!forBlock && isMemoryCardEmpty())
             {
-                graphics.renderTooltip(font, TOOLTIP_NO_CODE_CARD, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, TOOLTIP_NO_CODE_CARD, mouseX, mouseY);
             }
         }
         else if (isInactiveHovered(buttonWriteBinary, mouseX, mouseY))
         {
             if (assembledCode == null)
             {
-                graphics.renderTooltip(font, TOOLTIP_NO_ASSEMBLY, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, TOOLTIP_NO_ASSEMBLY, mouseX, mouseY);
             }
             else if (!menu.isTargetValid())
             {
-                graphics.renderTooltip(font, forBlock ? TOOLTIP_BLOCK_REMOVED : TOOLTIP_NO_CARD_ITEM, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, forBlock ? TOOLTIP_BLOCK_REMOVED : TOOLTIP_NO_CARD_ITEM, mouseX, mouseY);
             }
         }
         else if (lastError != null && lastErrorMsg != null && mouseX >= descX && mouseX < descX + descWidth && mouseY >= topPos + LINE_MESSAGE && mouseY < topPos + LINE_MESSAGE + (lastErrorMsg.size() * LINE_HEIGHT))
         {
-            graphics.renderTooltip(font, List.of(
+            graphics.setTooltipForNextFrame(font, List.of(
                     Component.literal(lastError.getClass().getName()),
                     Component.literal(lastError.getMessage())
             ), Optional.empty(), mouseX, mouseY);
@@ -323,7 +323,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         {
             x = width - lineWidth - 1 - TooltipRenderUtil.PADDING_RIGHT;
         }
-        graphics.renderTooltip(font, List.of(line.getVisualOrderText()), FixedTooltipPositioner.INSTANCE, x, topPos + y);
+        graphics.setTooltipForNextFrame(font, List.of(line.getVisualOrderText()), FixedTooltipPositioner.INSTANCE, x, topPos + y, false);
     }
 
     @Override
@@ -332,10 +332,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         super.renderSlotContents(graphics, stack, slot, countString);
         if (slot instanceof Lockable lockable && lockable.isLocked())
         {
-            graphics.pose().pushPose();
-            graphics.pose().translate(0, 0, 200);
-            graphics.blitSprite(RenderType::guiTextured, LOCK_ICON, slot.x + SLOT_SIZE_INNER - 5, slot.y + SLOT_SIZE_INNER - 7, 5, 7);
-            graphics.pose().popPose();
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LOCK_ICON, slot.x + SLOT_SIZE_INNER - 5, slot.y + SLOT_SIZE_INNER - 7, 5, 7);
         }
     }
 

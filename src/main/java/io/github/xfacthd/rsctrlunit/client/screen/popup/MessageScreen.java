@@ -5,7 +5,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -93,7 +93,7 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     {
         super.renderBackground(graphics, mouseX, mouseY, partialTicks);
 
-        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, leftPos, topPos, WIDTH, imageHeight);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos, WIDTH, imageHeight);
         graphics.drawString(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
 
         int y = topPos + TITLE_Y + font.lineHeight * 2;

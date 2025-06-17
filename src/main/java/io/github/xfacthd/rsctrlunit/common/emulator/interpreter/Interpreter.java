@@ -5,8 +5,10 @@ import io.github.xfacthd.rsctrlunit.common.emulator.opcode.OpcodeHelpers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.BitWriteMode;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Code;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
+import io.github.xfacthd.rsctrlunit.common.util.RCUCodecs;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jetbrains.annotations.VisibleForTesting;
 
@@ -700,32 +702,30 @@ public final class Interpreter
         }
     }
 
-    public void load(CompoundTag tag)
+    public void load(ValueInput valueInput)
     {
-        code = tag.read("code", Code.CODEC).orElse(Code.EMPTY);
+        code = valueInput.read("code", Code.CODEC).orElse(Code.EMPTY);
         Utils.copyByteArray(code.rom(), rom);
-        Utils.copyByteArray(tag.getByteArray("ram"), ram.getRamArray());
-        Utils.copyByteArray(tag.getByteArray("sfr"), ram.getSfrArray());
-        ioPorts.load(tag.getCompoundOrEmpty("io"));
-        timers.load(tag.getCompoundOrEmpty("timers"));
-        interrupts.load(tag.getCompoundOrEmpty("interrupts"));
-        Utils.copyByteArray(tag.getByteArray("external_ram"), extRam);
-        programCounter = tag.getIntOr("program_counter", Constants.INITIAL_PROGRAM_COUNTER);
-        paused = tag.getBooleanOr("paused", false);
+        Utils.copyByteArray(valueInput.read("ram", RCUCodecs.BYTE_ARRAY), ram.getRamArray());
+        Utils.copyByteArray(valueInput.read("sfr", RCUCodecs.BYTE_ARRAY), ram.getSfrArray());
+        ioPorts.load(valueInput.childOrEmpty("io"));
+        timers.load(valueInput.childOrEmpty("timers"));
+        interrupts.load(valueInput.childOrEmpty("interrupts"));
+        Utils.copyByteArray(valueInput.read("external_ram", RCUCodecs.BYTE_ARRAY), extRam);
+        programCounter = valueInput.getIntOr("program_counter", Constants.INITIAL_PROGRAM_COUNTER);
+        paused = valueInput.getBooleanOr("paused", false);
     }
 
-    public CompoundTag save()
+    public void save(ValueOutput valueOutput)
     {
-        CompoundTag tag = new CompoundTag();
-        tag.store("code", Code.CODEC, code);
-        tag.putByteArray("ram", Arrays.copyOf(ram.getRamArray(), ram.getRamArray().length));
-        tag.putByteArray("sfr", Arrays.copyOf(ram.getSfrArray(), ram.getSfrArray().length));
-        tag.put("io", ioPorts.save());
-        tag.put("timers", timers.save());
-        tag.put("interrupts", interrupts.save());
-        tag.putByteArray("external_ram", Arrays.copyOf(extRam, extRam.length));
-        tag.putInt("program_counter", programCounter);
-        tag.putBoolean("paused", paused);
-        return tag;
+        valueOutput.store("code", Code.CODEC, code);
+        valueOutput.store("ram", RCUCodecs.BYTE_ARRAY, Arrays.copyOf(ram.getRamArray(), ram.getRamArray().length));
+        valueOutput.store("sfr", RCUCodecs.BYTE_ARRAY, Arrays.copyOf(ram.getSfrArray(), ram.getSfrArray().length));
+        ioPorts.save(valueOutput.child("io"));
+        timers.save(valueOutput.child("timers"));
+        interrupts.save(valueOutput.child("interrupts"));
+        valueOutput.store("external_ram", RCUCodecs.BYTE_ARRAY, Arrays.copyOf(extRam, extRam.length));
+        valueOutput.putInt("program_counter", programCounter);
+        valueOutput.putBoolean("paused", paused);
     }
 }

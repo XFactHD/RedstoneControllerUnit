@@ -6,6 +6,7 @@ import io.github.xfacthd.rsctrlunit.common.net.RCUByteBufCodecs;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.NonePortConfig;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
+import io.github.xfacthd.rsctrlunit.common.util.RCUCodecs;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
@@ -16,6 +17,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.Arrays;
 import java.util.List;
@@ -196,9 +199,9 @@ public final class RedstoneInterface
         return state;
     }
 
-    public boolean readFromNetwork(CompoundTag tag)
+    public boolean readFromNetwork(ValueInput valueInput)
     {
-        Optional<int[]> mapping = tag.getIntArray("mapping");
+        Optional<int[]> mapping = valueInput.getIntArray("mapping");
         if (mapping.isPresent() && !Arrays.equals(mapping.get(), portMapping))
         {
             Utils.copyIntArray(mapping.get(), portMapping);
@@ -215,24 +218,22 @@ public final class RedstoneInterface
         return tag;
     }
 
-    public void load(CompoundTag tag)
+    public void load(ValueInput valueInput)
     {
-        List<PortConfig> configs = tag.read("config", RedstoneType.PORT_LIST_CODEC).orElse(List.of());
+        List<PortConfig> configs = valueInput.read("config", RedstoneType.PORT_LIST_CODEC).orElse(List.of());
         Utils.copyArray(configs.toArray(PortConfig[]::new), portConfigs);
-        Utils.copyByteArray(tag.getByteArray("states_out"), portStatesOut);
-        Utils.copyByteArray(tag.getByteArray("states_in"), portStatesIn);
-        Utils.copyIntArray(tag.getIntArray("mapping"), portMapping);
+        Utils.copyByteArray(valueInput.read("states_out", RCUCodecs.BYTE_ARRAY), portStatesOut);
+        Utils.copyByteArray(valueInput.read("states_in", RCUCodecs.BYTE_ARRAY), portStatesIn);
+        Utils.copyIntArray(valueInput.getIntArray("mapping"), portMapping);
         setupInvPortMapping();
     }
 
-    public CompoundTag save()
+    public void save(ValueOutput valueOutput)
     {
-        CompoundTag tag = new CompoundTag();
-        tag.store("config", RedstoneType.PORT_LIST_CODEC, Arrays.asList(portConfigs));
-        tag.putByteArray("states_out", Arrays.copyOf(portStatesOut, portStatesOut.length));
-        tag.putByteArray("states_in", Arrays.copyOf(portStatesIn, portStatesIn.length));
-        tag.putIntArray("mapping", Arrays.copyOf(portMapping, portMapping.length));
-        return tag;
+        valueOutput.store("config", RedstoneType.PORT_LIST_CODEC, Arrays.asList(portConfigs));
+        valueOutput.store("states_out", RCUCodecs.BYTE_ARRAY, Arrays.copyOf(portStatesOut, portStatesOut.length));
+        valueOutput.store("states_in", RCUCodecs.BYTE_ARRAY, Arrays.copyOf(portStatesIn, portStatesIn.length));
+        valueOutput.putIntArray("mapping", Arrays.copyOf(portMapping, portMapping.length));
     }
 
     private void setupInvPortMapping()

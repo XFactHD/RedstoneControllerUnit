@@ -2,7 +2,8 @@ package io.github.xfacthd.rsctrlunit.common.emulator.interpreter;
 
 import io.github.xfacthd.rsctrlunit.common.emulator.util.BitWriteMode;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  *      |           T1         |           T0         |
@@ -174,17 +175,15 @@ public final class Timers
         ram.writeBit(Constants.BIT_ADDRESS_TIMER0_OVERFLOW + (idx * 2), BitWriteMode.SET);
     }
 
-    public void load(CompoundTag tag)
+    public void load(ValueInput valueInput)
     {
-        lastTrigger0 = tag.getBooleanOr("last_trigger_0", false);
-        lastTrigger1 = tag.getBooleanOr("last_trigger_1", false);
+        lastTrigger0 = valueInput.getBooleanOr("last_trigger_0", false);
+        lastTrigger1 = valueInput.getBooleanOr("last_trigger_1", false);
     }
 
-    public CompoundTag save()
+    public void save(ValueOutput valueOutput)
     {
-        CompoundTag tag = new CompoundTag();
-        tag.putBoolean("last_trigger_0", lastTrigger0);
-        tag.putBoolean("last_trigger_1", lastTrigger1);
-        return tag;
+        valueOutput.putBoolean("last_trigger_0", lastTrigger0);
+        valueOutput.putBoolean("last_trigger_1", lastTrigger1);
     }
 }

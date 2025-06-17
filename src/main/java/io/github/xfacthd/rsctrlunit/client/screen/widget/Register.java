@@ -63,7 +63,7 @@ public sealed class Register
         {
             int addr = address.applyAsInt(ram, sfr);
             Component text = Component.literal(String.format(Locale.ROOT, "%s: 0x%02X", name, addr));
-            graphics.renderTooltip(font, text, mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, text, mouseX, mouseY);
         }
     }
 
@@ -162,7 +162,7 @@ public sealed class Register
                         case 7 -> "P";
                         default -> throw new IllegalStateException();
                     };
-                    graphics.renderTooltip(font, Component.literal(label), mouseX, mouseY);
+                    graphics.setTooltipForNextFrame(font, Component.literal(label), mouseX, mouseY);
                     return;
                 }
                 super.drawTooltip(graphics, font, ram, sfr, mouseX, mouseY);

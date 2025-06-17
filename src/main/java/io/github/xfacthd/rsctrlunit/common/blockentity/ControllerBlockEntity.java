@@ -18,6 +18,8 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
@@ -96,9 +98,9 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries)
+    public void handleUpdateTag(ValueInput valueInput)
     {
-        redstone.readFromNetwork(tag.getCompoundOrEmpty("redstone"));
+        redstone.readFromNetwork(valueInput.childOrEmpty("redstone"));
         requestModelDataUpdate();
     }
 
@@ -109,10 +111,9 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registries)
+    public void onDataPacket(Connection net, ValueInput valueInput)
     {
-        CompoundTag tag = pkt.getTag();
-        if (!tag.isEmpty() && redstone.readFromNetwork(tag.getCompoundOrEmpty("redstone")))
+        if (redstone.readFromNetwork(valueInput.childOrEmpty("redstone")))
         {
             requestModelDataUpdate();
             level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
@@ -157,18 +158,18 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup)
+    protected void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(tag, lookup);
-        interpreter.writeLockGuarded(tag.getCompoundOrEmpty("interpreter"), Interpreter::load);
-        redstone.load(tag.getCompoundOrEmpty("redstone"));
+        super.loadAdditional(valueInput);
+        interpreter.writeLockGuarded(valueInput.childOrEmpty("interpreter"), Interpreter::load);
+        redstone.load(valueInput.childOrEmpty("redstone"));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup)
+    protected void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(tag, lookup);
-        tag.put("interpreter", interpreter.readLockGuarded(Interpreter::save));
-        tag.put("redstone", redstone.save());
+        super.saveAdditional(valueOutput);
+        interpreter.writeLockGuarded(valueOutput.child("interpreter"), Interpreter::save);
+        redstone.save(valueOutput.child("redstone"));
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
@@ -24,7 +24,7 @@ public final class TabButton extends Button
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
     {
-        graphics.blitSprite(RenderType::guiTextured, pos.getSprite(selected), getX(), getY(), getWidth(), getHeight(), ARGB.white(alpha));
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, pos.getSprite(selected), getX(), getY(), getWidth(), getHeight(), ARGB.white(alpha));
         renderString(graphics, Minecraft.getInstance().font, getFGColor() | Mth.ceil(alpha * 255F) << 24);
     }
 

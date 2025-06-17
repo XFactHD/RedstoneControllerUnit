@@ -1,7 +1,9 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.interpreter;
 
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
-import net.minecraft.nbt.CompoundTag;
+import io.github.xfacthd.rsctrlunit.common.util.RCUCodecs;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
@@ -67,22 +69,20 @@ public final class IOPorts
         return transferArray(new byte[4], portStatesIn, TransferHandler.SAVE);
     }
 
-    void load(CompoundTag tag)
+    void load(ValueInput valueInput)
     {
-        tag.getByteArray("out").ifPresent(arr -> transferArray(arr, portStatesOut, TransferHandler.LOAD));
-        tag.getByteArray("in").ifPresent(arr -> transferArray(arr, portStatesIn, TransferHandler.LOAD));
-        lastStateInt0 = tag.getBooleanOr("last_state_int0", false);
-        lastStateInt1 = tag.getBooleanOr("last_state_int1", false);
+        valueInput.read("out", RCUCodecs.BYTE_ARRAY).ifPresent(arr -> transferArray(arr, portStatesOut, TransferHandler.LOAD));
+        valueInput.read("in", RCUCodecs.BYTE_ARRAY).ifPresent(arr -> transferArray(arr, portStatesIn, TransferHandler.LOAD));
+        lastStateInt0 = valueInput.getBooleanOr("last_state_int0", false);
+        lastStateInt1 = valueInput.getBooleanOr("last_state_int1", false);
     }
 
-    CompoundTag save()
+    void save(ValueOutput valueOutput)
     {
-        CompoundTag tag = new CompoundTag();
-        tag.putByteArray("out", transferArray(new byte[4], portStatesOut, TransferHandler.SAVE));
-        tag.putByteArray("in", transferArray(new byte[4], portStatesIn, TransferHandler.SAVE));
-        tag.putBoolean("last_state_int0", lastStateInt0);
-        tag.putBoolean("last_state_int1", lastStateInt1);
-        return tag;
+        valueOutput.store("out", RCUCodecs.BYTE_ARRAY, transferArray(new byte[4], portStatesOut, TransferHandler.SAVE));
+        valueOutput.store("in", RCUCodecs.BYTE_ARRAY, transferArray(new byte[4], portStatesIn, TransferHandler.SAVE));
+        valueOutput.putBoolean("last_state_int0", lastStateInt0);
+        valueOutput.putBoolean("last_state_int1", lastStateInt1);
     }
 
 

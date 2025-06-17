@@ -6,9 +6,9 @@ import io.github.xfacthd.rsctrlunit.common.util.property.CompoundDirection;
 import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public final class DigitalToAnalogConverterBlockEntity extends RedstoneHandlerBlockEntity
 {
@@ -53,16 +53,16 @@ public final class DigitalToAnalogConverterBlockEntity extends RedstoneHandlerBl
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void saveAdditional(ValueOutput valueOutput)
     {
-        super.saveAdditional(tag, registries);
-        tag.putInt("last_output", lastOutput);
+        super.saveAdditional(valueOutput);
+        valueOutput.putInt("last_output", lastOutput);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void loadAdditional(ValueInput valueInput)
     {
-        super.loadAdditional(tag, registries);
-        lastOutput = tag.getIntOr("last_output", 0);
+        super.loadAdditional(valueInput);
+        lastOutput = valueInput.getIntOr("last_output", 0);
     }
 }
