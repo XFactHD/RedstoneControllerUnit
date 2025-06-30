@@ -2,6 +2,7 @@ package io.github.xfacthd.rsctrlunit.client;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.client.model.UnbakedControllerModel;
+import io.github.xfacthd.rsctrlunit.client.net.ClientNetworkHandler;
 import io.github.xfacthd.rsctrlunit.client.screen.ControllerScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.ProgrammerScreen;
 import io.github.xfacthd.rsctrlunit.client.texture.AreaMaskSource;
@@ -22,6 +23,7 @@ public final class RCUClient
         modBus.addListener(RCUClient::onRegisterMenuScreens);
         modBus.addListener(RCUClient::onRegisterBlockStateModels);
         modBus.addListener(RCUClient::onRegisterSpriteSourceTypes);
+        modBus.addListener(ClientNetworkHandler::onRegisterPayloadHandlers);
     }
 
     private static void onRegisterMenuScreens(final RegisterMenuScreensEvent event)

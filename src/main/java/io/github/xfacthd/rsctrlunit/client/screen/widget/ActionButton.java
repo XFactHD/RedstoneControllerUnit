@@ -5,7 +5,7 @@ import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundCo
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
@@ -25,7 +25,7 @@ public final class ActionButton extends Button
     @Override
     public void onPress()
     {
-        PacketDistributor.sendToServer(new ServerboundControllerActionPayload(owner.getMenu().containerId, action));
+        ClientPacketDistributor.sendToServer(new ServerboundControllerActionPayload(owner.getMenu().containerId, action));
     }
 
 

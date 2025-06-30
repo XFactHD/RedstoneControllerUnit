@@ -17,7 +17,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = RedstoneControllerUnit.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = RedstoneControllerUnit.MOD_ID)
 public final class GeneratorHandler
 {
     private GeneratorHandler() { }

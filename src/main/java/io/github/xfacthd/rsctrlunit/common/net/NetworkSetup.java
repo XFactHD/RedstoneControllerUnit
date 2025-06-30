@@ -21,28 +21,23 @@ public final class NetworkSetup
         event.registrar(NET_VERSION)
                 .playToClient(
                         ClientboundUpdateStatusPayload.TYPE,
-                        ClientboundUpdateStatusPayload.CODEC,
-                        ClientboundUpdateStatusPayload::handle
+                        ClientboundUpdateStatusPayload.CODEC
                 )
                 .playToClient(
                         ClientboundUpdateCodePayload.TYPE,
-                        ClientboundUpdateCodePayload.STREAM_CODEC,
-                        ClientboundUpdateCodePayload::handle
+                        ClientboundUpdateCodePayload.STREAM_CODEC
                 )
                 .playToClient(
                         ClientboundUpdatePortConfigsPayload.TYPE,
-                        ClientboundUpdatePortConfigsPayload.STREAM_CODEC,
-                        ClientboundUpdatePortConfigsPayload::handle
+                        ClientboundUpdatePortConfigsPayload.STREAM_CODEC
                 )
                 .playToClient(
                         ClientboundReplyCodePayload.TYPE,
-                        ClientboundReplyCodePayload.STREAM_CODEC,
-                        ClientboundReplyCodePayload::handle
+                        ClientboundReplyCodePayload.STREAM_CODEC
                 )
                 .playToClient(
                         ClientboundUpdatePortMappingPayload.TYPE,
-                        ClientboundUpdatePortMappingPayload.STREAM_CODEC,
-                        ClientboundUpdatePortMappingPayload::handle
+                        ClientboundUpdatePortMappingPayload.STREAM_CODEC
                 )
                 .playToServer(
                         ServerboundSetPortConfigPayload.TYPE,

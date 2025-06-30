@@ -29,7 +29,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
@@ -625,6 +625,6 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
     public void setPortConfig(int port, PortConfig config)
     {
-        PacketDistributor.sendToServer(new ServerboundSetPortConfigPayload(menu.containerId, port, config));
+        ClientPacketDistributor.sendToServer(new ServerboundSetPortConfigPayload(menu.containerId, port, config));
     }
 }

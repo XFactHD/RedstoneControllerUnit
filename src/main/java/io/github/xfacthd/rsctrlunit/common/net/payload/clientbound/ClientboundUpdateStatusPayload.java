@@ -1,6 +1,5 @@
 package io.github.xfacthd.rsctrlunit.common.net.payload.clientbound;
 
-import io.github.xfacthd.rsctrlunit.client.util.ClientAccess;
 import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.IOPorts;
 import io.github.xfacthd.rsctrlunit.common.emulator.interpreter.Interpreter;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
@@ -9,8 +8,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ClientboundUpdateStatusPayload(int windowId, InterpreterState state) implements CustomPacketPayload
 {
@@ -33,14 +30,6 @@ public record ClientboundUpdateStatusPayload(int windowId, InterpreterState stat
             int programCounter = interp.getProgramCounter();
             return new InterpreterState(ram, sfr, ports.getPortStatesOut(), ports.getPortStatesIn(), programCounter);
         }));
-    }
-
-    public void handle(@SuppressWarnings("unused") IPayloadContext ctx)
-    {
-        if (FMLEnvironment.dist.isClient())
-        {
-            ClientAccess.handleStatusViewUpdate(windowId, state.ram, state.sfr, state.output, state.input, state.programCounter);
-        }
     }
 
     @Override

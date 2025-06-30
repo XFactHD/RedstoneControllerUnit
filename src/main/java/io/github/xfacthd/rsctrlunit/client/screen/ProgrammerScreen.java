@@ -30,7 +30,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -535,7 +535,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         if (forBlock)
         {
             setLastInfo(MSG_INFO_WAITING_FOR_RESPONSE, false);
-            PacketDistributor.sendToServer(new ServerboundRequestCodePayload(menu.containerId));
+            ClientPacketDistributor.sendToServer(new ServerboundRequestCodePayload(menu.containerId));
         }
         else
         {
@@ -585,7 +585,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
             }
         }
 
-        PacketDistributor.sendToServer(new ServerboundWriteToTargetPayload(menu.containerId, assembledCode));
+        ClientPacketDistributor.sendToServer(new ServerboundWriteToTargetPayload(menu.containerId, assembledCode));
         setLastInfo(MSG_INFO_ROM_WRITTEN, true);
     }
 
