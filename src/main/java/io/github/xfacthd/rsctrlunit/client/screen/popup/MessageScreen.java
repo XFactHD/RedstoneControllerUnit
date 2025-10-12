@@ -5,6 +5,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -121,14 +122,14 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
-        Style style = findTextLine((int) mouseX, (int) mouseY);
+        Style style = findTextLine((int) event.x(), (int) event.y());
         if (style != null && handleComponentClicked(style))
         {
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Nullable

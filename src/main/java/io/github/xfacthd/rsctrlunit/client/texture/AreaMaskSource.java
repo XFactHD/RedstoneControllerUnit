@@ -15,19 +15,21 @@ import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceMetadata;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fallback, ResourceLocation sprite, int x, int y, int w, int h) implements SpriteSource
+public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int x, int y, int w, int h) implements SpriteSource
 {
     public static final MapCodec<AreaMaskSource> CODEC = RecordCodecBuilder.<AreaMaskSource>mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("src").forGetter(AreaMaskSource::src),
-            ResourceLocation.CODEC.optionalFieldOf("fallback").forGetter(AreaMaskSource::fallback),
             ResourceLocation.CODEC.fieldOf("sprite").forGetter(AreaMaskSource::sprite),
             Codec.intRange(0, 15).fieldOf("x").forGetter(AreaMaskSource::x),
             Codec.intRange(0, 15).fieldOf("y").forGetter(AreaMaskSource::y),
@@ -44,13 +46,14 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
     @Override
     public void run(ResourceManager manager, Output out)
     {
+        run(manager, out, Set.of());
+    }
+
+    @Override
+    public void run(ResourceManager manager, Output out, Set<MetadataSectionType<?>> additionalMetadata)
+    {
         ResourceLocation srcPath = TEXTURE_ID_CONVERTER.idToFile(src);
         Optional<Resource> optSource = manager.getResource(srcPath);
-        if (optSource.isEmpty() && fallback.isPresent())
-        {
-            srcPath = TEXTURE_ID_CONVERTER.idToFile(fallback.get());
-            optSource = manager.getResource(srcPath);
-        }
         if (optSource.isEmpty())
         {
             RedstoneControllerUnit.LOGGER.warn("Missing source texture: {}", srcPath);
@@ -59,7 +62,7 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
 
         Resource srcRes = optSource.get();
         Rect2i rect = new Rect2i(x, y, w - 1, h - 1);
-        out.add(sprite, new AreaMaskInstance(srcPath, srcRes, new LazyLoadedImage(srcPath, srcRes, 1), rect, sprite));
+        out.add(sprite, new AreaMaskInstance(srcPath, srcRes, new LazyLoadedImage(srcPath, srcRes, 1), rect, sprite, additionalMetadata));
     }
 
     @Override
@@ -73,7 +76,8 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
             Resource srcRes,
             LazyLoadedImage srcImg,
             Rect2i rect,
-            ResourceLocation sprite
+            ResourceLocation sprite,
+            Set<MetadataSectionType<?>> additionalMetadata
     ) implements SpriteSupplier
     {
         @Override
@@ -84,7 +88,8 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
             {
                 NativeImage source = srcImg.get();
 
-                AnimationMetadataSection sourceAnim = srcRes.metadata()
+                ResourceMetadata srcMeta = srcRes.metadata();
+                AnimationMetadataSection sourceAnim = srcMeta
                         .getSection(AnimationMetadataSection.TYPE)
                         .orElse(null);
                 FrameSize frameSize = calculateFrameSize(source, sourceAnim);
@@ -97,7 +102,8 @@ public record AreaMaskSource(ResourceLocation src, Optional<ResourceLocation> fa
                 NativeImage imageOut = new NativeImage(NativeImage.Format.RGBA, source.getWidth(), source.getHeight(), false);
                 List<FrameInfo> frames = collectFrames(source, frameSize, sourceAnim);
                 buildOutputImage(frames, source, rect, imageOut, frameSize);
-                return new SpriteContents(sprite, frameSize, imageOut, srcRes.metadata());
+                List<MetadataSectionType.WithValue<?>> metadata = srcMeta.getTypedSections(additionalMetadata);
+                return new SpriteContents(sprite, frameSize, imageOut, Optional.ofNullable(sourceAnim), metadata);
             }
             catch (Exception e)
             {

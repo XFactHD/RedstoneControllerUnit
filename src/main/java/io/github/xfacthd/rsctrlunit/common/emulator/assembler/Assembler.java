@@ -29,6 +29,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+// TODO: add support for referencing directive labels (i.e. from DB directives) as addresses or immediate values
+//       (most likely requires splitting directive parsing and op parsing into separate stages)
 public final class Assembler
 {
     private static final String[] EMPTY_ARRAY = new String[0];

@@ -20,6 +20,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Direction;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -345,29 +347,29 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int btn)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
         if (tab == TAB_REDSTONE)
         {
             PortConfig[] configs = menu.getPortConfigs();
             for (RedstoneConfig config : redstoneConfigs)
             {
-                if (config.mouseClicked(mouseX, mouseY, btn, configs))
+                if (config.mouseClicked(event, configs))
                 {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
                     return true;
                 }
             }
         }
-        else if (horScrollBar && isHoveringHorBar(mouseX, mouseY))
+        else if (horScrollBar && isHoveringHorBar(event.x(), event.y()))
         {
             dragScrollingHor = true;
         }
-        else if (vertScrollBar && isHoveringVertBar(mouseX, mouseY))
+        else if (vertScrollBar && isHoveringVertBar(event.x(), event.y()))
         {
             dragScrollingVert = true;
         }
-        return super.mouseClicked(mouseX, mouseY, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 
     private boolean isHoveringHorBar(double mouseX, double mouseY)
@@ -387,14 +389,14 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button)
+    public boolean mouseReleased(MouseButtonEvent event)
     {
-        if (button == 0)
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_1)
         {
             dragScrollingHor = false;
             dragScrollingVert = false;
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -410,7 +412,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
             {
                 codeHorOffset = scroll(codeHorOffset, scrollX, codeWidth, width);
             }
-            else if (hasShiftDown())
+            else if (Minecraft.getInstance().hasShiftDown())
             {
                 codeHorOffset = scroll(codeHorOffset, scrollY, codeWidth, width);
             }
@@ -429,19 +431,19 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY)
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY)
     {
         if (dragScrollingHor)
         {
             int width = vertScrollBar ? DISASSEMBLY_WIDTH_VERT_SCROLL : DISASSEMBLY_WIDTH;
-            codeHorOffset = drag(leftPos + DISASSEMBLY_X, width, mouseX, codeWidth);
+            codeHorOffset = drag(leftPos + DISASSEMBLY_X, width, event.x(), codeWidth);
         }
         else if (dragScrollingVert)
         {
             int height = horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT;
-            codeVertOffset = drag(topPos + DISASSEMBLY_Y, height, mouseY, codeHeight);
+            codeVertOffset = drag(topPos + DISASSEMBLY_Y, height, event.y(), codeHeight);
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     private static int drag(int origin, int barSize, double mousePos, int codeSize)

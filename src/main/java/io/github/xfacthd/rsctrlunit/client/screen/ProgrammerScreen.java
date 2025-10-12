@@ -215,14 +215,14 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
             drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
         }
 
-        graphics.drawString(font, LABEL_FILE_PATH, leftPos + LABEL_X, topPos + LINE_FILE_PATH, 0x404040, false);
-        graphics.drawString(font, pathDisplay, descX, topPos + LINE_FILE_PATH, 0x404040, false);
+        graphics.drawString(font, LABEL_FILE_PATH, leftPos + LABEL_X, topPos + LINE_FILE_PATH, 0xFF404040, false);
+        graphics.drawString(font, pathDisplay, descX, topPos + LINE_FILE_PATH, 0xFF404040, false);
 
-        graphics.drawString(font, LABEL_FILE_TYPE, leftPos + LABEL_X, topPos + LINE_FILE_TYPE, 0x404040, false);
-        graphics.drawString(font, fileType, descX, topPos + LINE_FILE_TYPE, 0x404040, false);
+        graphics.drawString(font, LABEL_FILE_TYPE, leftPos + LABEL_X, topPos + LINE_FILE_TYPE, 0xFF404040, false);
+        graphics.drawString(font, fileType, descX, topPos + LINE_FILE_TYPE, 0xFF404040, false);
 
-        graphics.drawString(font, LABEL_CODE_INFO, leftPos + LABEL_X, topPos + LINE_CODE_INFO, 0x404040, false);
-        graphics.drawString(font, codeInfo, descX, topPos + LINE_CODE_INFO, 0x404040, false);
+        graphics.drawString(font, LABEL_CODE_INFO, leftPos + LABEL_X, topPos + LINE_CODE_INFO, 0xFF404040, false);
+        graphics.drawString(font, codeInfo, descX, topPos + LINE_CODE_INFO, 0xFF404040, false);
 
         if (lastErrorMsg != null)
         {
@@ -236,11 +236,11 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
 
     private void drawMessage(GuiGraphics graphics, Component label, List<FormattedCharSequence> message)
     {
-        graphics.drawString(font, label, leftPos + LABEL_X, topPos + LINE_MESSAGE, 0x404040, false);
+        graphics.drawString(font, label, leftPos + LABEL_X, topPos + LINE_MESSAGE, 0xFF404040, false);
         int y = topPos + LINE_MESSAGE;
         for (FormattedCharSequence line : message)
         {
-            graphics.drawString(font, line, descX, y, 0x404040, false);
+            graphics.drawString(font, line, descX, y, 0xFF404040, false);
             y += LINE_HEIGHT;
         }
     }

@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.80'
+    id 'net.neoforged.moddev' version '2.0.110'
 }
 
 version = mod_version
@@ -32,6 +32,9 @@ neoForge {
             client()
 
             systemProperty 'neoforge.enabledGameTestNamespaces', 'rsctrlunit'
+
+            // TODO: this should be moved to a NeoForge patch or MDG
+            programArgument '--offlineDeveloperMode'
         }
 
         server {

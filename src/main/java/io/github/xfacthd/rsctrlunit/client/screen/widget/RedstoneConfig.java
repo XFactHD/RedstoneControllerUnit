@@ -9,9 +9,10 @@ import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.SinglePortConfig;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -188,12 +189,12 @@ public final class RedstoneConfig
         }
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int btn, PortConfig[] configs)
+    public boolean mouseClicked(MouseButtonEvent event, PortConfig[] configs)
     {
-        if (btn == GLFW.GLFW_MOUSE_BUTTON_1 && mouseX >= x + X_TYPE && mouseX < x + WIDTH && mouseY >= y && mouseY <= y + HEIGHT)
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_1 && event.x() >= x + X_TYPE && event.x() < x + WIDTH && event.y() >= y && event.y() <= y + HEIGHT)
         {
             PortConfig config = configs[port];
-            if (mouseX < x + X_TYPE + WIDTH_TYPE)
+            if (event.x() < x + X_TYPE + WIDTH_TYPE)
             {
                 screen.setPortConfig(port, config.cycleType());
                 return true;
@@ -204,17 +205,17 @@ public final class RedstoneConfig
                 case NonePortConfig ignored -> { }
                 case SinglePortConfig single ->
                 {
-                    if (mouseX >= x + X_DIR && mouseX < x + X_DIR + WIDTH_DIR)
+                    if (event.x() >= x + X_DIR && event.x() < x + X_DIR + WIDTH_DIR)
                     {
                         screen.setPortConfig(port, new SinglePortConfig(single.pin(), !single.input()));
                         return true;
                     }
-                    if (single.pin() > 0 && mouseX >= x + X_PIN_BTN_LEFT && mouseX < x + X_PIN_BTN_LEFT + WIDTH_PIN_BTN)
+                    if (single.pin() > 0 && event.x() >= x + X_PIN_BTN_LEFT && event.x() < x + X_PIN_BTN_LEFT + WIDTH_PIN_BTN)
                     {
                         screen.setPortConfig(port, new SinglePortConfig(single.pin() - 1, single.input()));
                         return true;
                     }
-                    if (single.pin() < 7 && mouseX >= x + X_PIN_BTN_RIGHT && mouseX < x + X_PIN_BTN_RIGHT + WIDTH_PIN_BTN)
+                    if (single.pin() < 7 && event.x() >= x + X_PIN_BTN_RIGHT && event.x() < x + X_PIN_BTN_RIGHT + WIDTH_PIN_BTN)
                     {
                         screen.setPortConfig(port, new SinglePortConfig(single.pin() + 1, single.input()));
                         return true;
@@ -222,7 +223,7 @@ public final class RedstoneConfig
                 }
                 case BundledPortConfig bundle ->
                 {
-                    if (isHoveringBundledButtons(x, y, (int) mouseX, (int) mouseY))
+                    if (isHoveringBundledButtons(x, y, (int) event.x(), (int) event.y()))
                     {
                         byte mask = (byte) (~bundle.inputMask() & 0xFF);
                         screen.setPortConfig(port, new BundledPortConfig(bundle.upper(), mask));
@@ -231,7 +232,7 @@ public final class RedstoneConfig
                     for (int i = 0; i < 8; i++)
                     {
                         int px = x + X_DIR + i * WIDTH_BUNDLE_BIT;
-                        if (mouseX >= px && mouseX < px + WIDTH_BUNDLE_BIT)
+                        if (event.x() >= px && event.x() < px + WIDTH_BUNDLE_BIT)
                         {
                             byte mask = bundle.inputMask();
                             mask = (byte) (mask ^ (1 << i));
@@ -239,7 +240,7 @@ public final class RedstoneConfig
                             return true;
                         }
                     }
-                    if (mouseX >= x + X_PIN_BTN_LEFT && mouseX < x + X_PIN_BTN_LEFT + WIDTH_PIN)
+                    if (event.x() >= x + X_PIN_BTN_LEFT && event.x() < x + X_PIN_BTN_LEFT + WIDTH_PIN)
                     {
                         screen.setPortConfig(port, new BundledPortConfig(!bundle.upper(), bundle.inputMask()));
                         return true;
@@ -252,7 +253,7 @@ public final class RedstoneConfig
 
     private static boolean isHoveringBundledButtons(int x, int y, int mouseX, int mouseY)
     {
-        if (Screen.hasShiftDown())
+        if (Minecraft.getInstance().hasShiftDown())
         {
             int minX = x + X_DIR;
             return mouseX >= minX && mouseX < minX + WIDTH_DIR && mouseY >= y && mouseY < y + HEIGHT;

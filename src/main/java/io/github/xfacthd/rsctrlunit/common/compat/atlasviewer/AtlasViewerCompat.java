@@ -17,7 +17,7 @@ public final class AtlasViewerCompat
 
     public static void init(IEventBus modBus)
     {
-        if (FMLEnvironment.dist.isClient() && ModList.get().isLoaded("atlasviewer"))
+        if (FMLEnvironment.getDist().isClient() && ModList.get().isLoaded("atlasviewer"))
         {
             try
             {
