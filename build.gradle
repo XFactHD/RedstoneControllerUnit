@@ -32,9 +32,6 @@ neoForge {
             client()
 
             systemProperty 'neoforge.enabledGameTestNamespaces', 'rsctrlunit'
-
-            // TODO: this should be moved to a NeoForge patch or MDG
-            programArgument '--offlineDeveloperMode'
         }
 
         server {
