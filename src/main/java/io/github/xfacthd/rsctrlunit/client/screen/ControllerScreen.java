@@ -25,7 +25,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,15 +39,15 @@ import java.util.List;
 
 public final class ControllerScreen extends CardInventoryContainerScreen<ControllerMenu>
 {
-    private static final ResourceLocation BACKGROUND = Utils.rl("background");
-    private static final ResourceLocation INVENTORY = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
-    private static final ResourceLocation REGISTERS = Utils.rl("textures/gui/controller_registers.png");
-    private static final ResourceLocation CODE_BACKGROUND = Utils.rl("code_background");
-    private static final ResourceLocation CODE_SCROLLER_VERT = Utils.rl("code_scroller_vert");
-    private static final ResourceLocation CODE_SCROLLER_HOR = Utils.rl("code_scroller_hor");
-    private static final ResourceLocation SLOT_BACKGROUND = ResourceLocation.withDefaultNamespace("container/slot");
-    private static final ResourceLocation INDICATOR_RUNNING = Utils.rl("indicator_green");
-    private static final ResourceLocation INDICATOR_STOPPED = Utils.rl("indicator_red");
+    private static final Identifier BACKGROUND = Utils.rl("background");
+    private static final Identifier INVENTORY = Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
+    private static final Identifier REGISTERS = Utils.rl("textures/gui/controller_registers.png");
+    private static final Identifier CODE_BACKGROUND = Utils.rl("code_background");
+    private static final Identifier CODE_SCROLLER_VERT = Utils.rl("code_scroller_vert");
+    private static final Identifier CODE_SCROLLER_HOR = Utils.rl("code_scroller_hor");
+    private static final Identifier SLOT_BACKGROUND = Identifier.withDefaultNamespace("container/slot");
+    private static final Identifier INDICATOR_RUNNING = Utils.rl("indicator_green");
+    private static final Identifier INDICATOR_STOPPED = Utils.rl("indicator_red");
     private static final int IMAGE_WIDTH = 360;
     private static final int IMAGE_HEIGHT = 221;
     private static final int TAB_HEIGHT = 22;
@@ -511,7 +511,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         ClientUtils.drawCenteredString(graphics, font, LABEL_PORT_REG_IN, x, y, 0xFF404040, false);
 
         boolean running = menu.isRunning();
-        ResourceLocation indicator = running ? INDICATOR_RUNNING : INDICATOR_STOPPED;
+        Identifier indicator = running ? INDICATOR_RUNNING : INDICATOR_STOPPED;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, indicator, leftPos + INDICATOR_X, topPos + INDICATOR_Y, INDICATOR_SIZE, INDICATOR_SIZE);
 
         renderDisassembly(graphics, true);

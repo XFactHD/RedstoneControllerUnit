@@ -1,7 +1,7 @@
 package io.github.xfacthd.rsctrlunit.client.util;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 import java.io.IOException;
 import java.net.URI;

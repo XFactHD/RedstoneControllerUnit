@@ -14,7 +14,8 @@ import net.minecraft.client.renderer.texture.atlas.SpriteSource;
 import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -26,11 +27,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int x, int y, int w, int h) implements SpriteSource
+public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, int w, int h) implements SpriteSource
 {
     public static final MapCodec<AreaMaskSource> CODEC = RecordCodecBuilder.<AreaMaskSource>mapCodec(inst -> inst.group(
-            ResourceLocation.CODEC.fieldOf("src").forGetter(AreaMaskSource::src),
-            ResourceLocation.CODEC.fieldOf("sprite").forGetter(AreaMaskSource::sprite),
+            Identifier.CODEC.fieldOf("src").forGetter(AreaMaskSource::src),
+            Identifier.CODEC.fieldOf("sprite").forGetter(AreaMaskSource::sprite),
             Codec.intRange(0, 15).fieldOf("x").forGetter(AreaMaskSource::x),
             Codec.intRange(0, 15).fieldOf("y").forGetter(AreaMaskSource::y),
             Codec.intRange(1, 16).fieldOf("width").forGetter(AreaMaskSource::w),
@@ -41,7 +42,7 @@ public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int 
         if (res.y + res.h > 16) return DataResult.error(() -> "y + height must be <= 16!");
         return DataResult.success(res);
     });
-    public static final ResourceLocation ID = Utils.rl("mask");
+    public static final Identifier ID = Utils.rl("mask");
 
     @Override
     public void run(ResourceManager manager, Output out)
@@ -52,7 +53,7 @@ public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int 
     @Override
     public void run(ResourceManager manager, Output out, Set<MetadataSectionType<?>> additionalMetadata)
     {
-        ResourceLocation srcPath = TEXTURE_ID_CONVERTER.idToFile(src);
+        Identifier srcPath = TEXTURE_ID_CONVERTER.idToFile(src);
         Optional<Resource> optSource = manager.getResource(srcPath);
         if (optSource.isEmpty())
         {
@@ -72,17 +73,17 @@ public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int 
     }
 
     public record AreaMaskInstance(
-            ResourceLocation srcPath,
+            Identifier srcPath,
             Resource srcRes,
             LazyLoadedImage srcImg,
             Rect2i rect,
-            ResourceLocation sprite,
+            Identifier sprite,
             Set<MetadataSectionType<?>> additionalMetadata
-    ) implements SpriteSupplier
+    ) implements DiscardableLoader
     {
         @Override
         @Nullable
-        public SpriteContents apply(SpriteResourceLoader loader)
+        public SpriteContents get(SpriteResourceLoader loader)
         {
             try
             {
@@ -103,7 +104,8 @@ public record AreaMaskSource(ResourceLocation src, ResourceLocation sprite, int 
                 List<FrameInfo> frames = collectFrames(source, frameSize, sourceAnim);
                 buildOutputImage(frames, source, rect, imageOut, frameSize);
                 List<MetadataSectionType.WithValue<?>> metadata = srcMeta.getTypedSections(additionalMetadata);
-                return new SpriteContents(sprite, frameSize, imageOut, Optional.ofNullable(sourceAnim), metadata);
+                Optional<TextureMetadataSection> texMeta = srcMeta.getSection(TextureMetadataSection.TYPE);
+                return new SpriteContents(sprite, frameSize, imageOut, Optional.ofNullable(sourceAnim), metadata, texMeta);
             }
             catch (Exception e)
             {

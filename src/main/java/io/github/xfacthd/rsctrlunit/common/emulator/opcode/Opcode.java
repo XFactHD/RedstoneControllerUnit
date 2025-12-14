@@ -4,7 +4,7 @@ import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.ErrorNode;
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.NoArgOpNode;
 import io.github.xfacthd.rsctrlunit.common.emulator.assembler.node.Node;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.NodeParser;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

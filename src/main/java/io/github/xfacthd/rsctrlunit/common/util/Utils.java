@@ -3,14 +3,14 @@ package io.github.xfacthd.rsctrlunit.common.util;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 public final class Utils
 {
-    private static final ResourceLocation RL_TEMPLATE = ResourceLocation.fromNamespaceAndPath(RedstoneControllerUnit.MOD_ID, "");
+    private static final Identifier RL_TEMPLATE = Identifier.fromNamespaceAndPath(RedstoneControllerUnit.MOD_ID, "");
     private static final Long2ObjectMap<Direction> DIRECTION_BY_NORMAL = Arrays.stream(Direction.values())
             .collect(Collectors.toMap(
                     side -> new BlockPos(side.getUnitVec3i()).asLong(),
@@ -52,7 +52,7 @@ public final class Utils
         }
     });
 
-    public static ResourceLocation rl(String path)
+    public static Identifier rl(String path)
     {
         return RL_TEMPLATE.withPath(path);
     }

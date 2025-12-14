@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.110'
+    id 'net.neoforged.moddev' version '2.0.124'
 }
 
 version = mod_version
@@ -18,7 +18,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 neoForge {
     version = neo_version
 
-    //validateAccessTransformers = true
+    validateAccessTransformers = true
 
     runs {
         configureEach {

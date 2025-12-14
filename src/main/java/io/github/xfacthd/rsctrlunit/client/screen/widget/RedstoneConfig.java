@@ -8,7 +8,6 @@ import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.SinglePortConfig;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,7 +15,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.DyeColor;
 import org.lwjgl.glfw.GLFW;
 
@@ -77,8 +77,8 @@ public final class RedstoneConfig
             arr[i] = Component.translatable(TEXT_PORT_IDX_KEY, i);
         }
     });
-    public static final ResourceLocation BACKGROUND = Utils.rl("port_config_background");
-    public static final ResourceLocation TEXT_FIELD = ResourceLocation.withDefaultNamespace("widget/text_field");
+    public static final Identifier BACKGROUND = Utils.rl("port_config_background");
+    public static final Identifier TEXT_FIELD = Identifier.withDefaultNamespace("widget/text_field");
 
     private final ControllerScreen screen;
     private final int port;

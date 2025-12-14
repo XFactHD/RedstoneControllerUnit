@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -35,8 +35,8 @@ import java.util.stream.Stream;
 
 public final class RCUBlockStateProvider extends ModelProvider
 {
-    private static final ResourceLocation CONTROLLER = Utils.rl("block/controller");
-    private static final ResourceLocation CONVERTER_BASE = Utils.rl("block/converter");
+    private static final Identifier CONTROLLER = Utils.rl("block/controller");
+    private static final Identifier CONVERTER_BASE = Utils.rl("block/converter");
     private static final TextureSlot DIR_OVERLAY = TextureSlot.create("dir_overlay");
     private static final TextureSlot OVERLAY = TextureSlot.create("overlay");
     private static final ModelTemplate CONVERTER = new ModelTemplate(Optional.of(CONVERTER_BASE), Optional.empty(), DIR_OVERLAY);
@@ -88,13 +88,13 @@ public final class RCUBlockStateProvider extends ModelProvider
 
     private static void makeConverterBlockStateAndItemModel(BlockModelGenerators blockModels, Holder<Block> block)
     {
-        ResourceLocation name = Utils.getKeyOrThrow(block).location();
-        ResourceLocation baseLoc = name.withPrefix("block/");
+        Identifier name = Utils.getKeyOrThrow(block).identifier();
+        Identifier baseLoc = name.withPrefix("block/");
 
         TextureMapping textures = TextureMapping.singleSlot(DIR_OVERLAY, name.withPrefix("block/dir_overlay_"));
-        ResourceLocation converter = CONVERTER.create(baseLoc, textures, blockModels.modelOutput);
+        Identifier converter = CONVERTER.create(baseLoc, textures, blockModels.modelOutput);
 
-        ResourceLocation[] converters = new ResourceLocation[] {
+        Identifier[] converters = new Identifier[] {
                 converter,
                 makeConverterRotation(blockModels, converter, baseLoc.withSuffix("_cw90"), 90),
                 makeConverterRotation(blockModels, converter, baseLoc.withSuffix("_cw180"), 180),
@@ -125,7 +125,7 @@ public final class RCUBlockStateProvider extends ModelProvider
         blockModels.registerSimpleItemModel(block.value(), converter);
     }
 
-    private static ResourceLocation makeConverterRotation(BlockModelGenerators blockModels, ResourceLocation converter, ResourceLocation name, int rot)
+    private static Identifier makeConverterRotation(BlockModelGenerators blockModels, Identifier converter, Identifier name, int rot)
     {
         ModelTemplate template = ExtendedModelTemplateBuilder.builder()
                 .parent(converter)
@@ -138,7 +138,7 @@ public final class RCUBlockStateProvider extends ModelProvider
         return template.create(name, new TextureMapping(), blockModels.modelOutput);
     }
 
-    private static void plateOverlay(BlockModelGenerators blockModels, ResourceLocation name, ResourceLocation texture, int edge, boolean withSide, boolean mirrorTopX)
+    private static void plateOverlay(BlockModelGenerators blockModels, Identifier name, Identifier texture, int edge, boolean withSide, boolean mirrorTopX)
     {
         ExtendedModelTemplate template = ExtendedModelTemplateBuilder.builder()
                 .requiredTextureSlot(OVERLAY)

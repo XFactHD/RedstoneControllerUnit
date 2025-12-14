@@ -1,7 +1,7 @@
 package io.github.xfacthd.rsctrlunit.client.util;
 
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.codec.digest.Sha2Crypt;
 import org.jetbrains.annotations.Nullable;

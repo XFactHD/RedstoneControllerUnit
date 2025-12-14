@@ -6,15 +6,15 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 
 public final class ClientUtils
 {
     private static final WidgetSprites BTN_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("widget/button"),
-            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
-            ResourceLocation.withDefaultNamespace("widget/button_highlighted")
+            Identifier.withDefaultNamespace("widget/button"),
+            Identifier.withDefaultNamespace("widget/button_disabled"),
+            Identifier.withDefaultNamespace("widget/button_highlighted")
     );
 
     public static void drawButton(
@@ -54,7 +54,7 @@ public final class ClientUtils
     )
     {
         boolean hovered = enabled && (hoverOverride || (mouseY >= y && mouseY < y + height && mouseX >= x && mouseX < x + width));
-        ResourceLocation sprite = BTN_SPRITES.get(enabled, hovered);
+        Identifier sprite = BTN_SPRITES.get(enabled, hovered);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, width, height);
 
         int color = enabled ? 0xFFFFFFFF : 0xFFA0A0A0;

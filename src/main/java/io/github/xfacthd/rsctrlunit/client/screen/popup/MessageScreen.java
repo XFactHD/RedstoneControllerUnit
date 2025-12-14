@@ -2,6 +2,7 @@ package io.github.xfacthd.rsctrlunit.client.screen.popup;
 
 import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
+import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -10,7 +11,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 public sealed class MessageScreen extends Screen permits ConfirmationScreen
 {
-    private static final ResourceLocation BACKGROUND = Utils.rl("background");
+    private static final Identifier BACKGROUND = Utils.rl("background");
     public static final Component INFO_TITLE = Component.translatable("title.rsctrlunit.message.info");
     public static final Component ERROR_TITLE = Component.translatable("title.rsctrlunit.message.error");
     public static final Component CONFIRM_TITLE = Component.translatable("title.rsctrlunit.message.confirm");
@@ -125,8 +126,9 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
         Style style = findTextLine((int) event.x(), (int) event.y());
-        if (style != null && handleComponentClicked(style))
+        if (style != null && style.getClickEvent() != null)
         {
+            defaultHandleClickEvent(style.getClickEvent(), minecraft, this);
             return true;
         }
         return super.mouseClicked(event, doubleClick);
@@ -135,23 +137,21 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     @Nullable
     private Style findTextLine(int mouseX, int mouseY)
     {
-        int localX = mouseX - leftPos - TITLE_X;
-        if (localX < 0) return null;
+        int x = leftPos - TITLE_X;
+        if (mouseX < x) return null;
 
+        ActiveTextCollector.ClickableStyleFinder styleFinder = new ActiveTextCollector.ClickableStyleFinder(font, mouseX, mouseY);
         int y = topPos + TITLE_Y + font.lineHeight * 2;
         for (List<FormattedCharSequence> block : textBlocks)
         {
-            int height = block.size() * font.lineHeight;
-            if (mouseY >= y && mouseY <= y + height)
+            for (FormattedCharSequence line : block)
             {
-                int idx = (mouseY - y) / font.lineHeight;
-                if (idx >= block.size()) return null;
-                return font.getSplitter().componentStyleAtWidth(block.get(idx), localX);
+                styleFinder.accept(x, y, line);
+                y += font.lineHeight;
             }
-
-            y += height + font.lineHeight;
+            y += font.lineHeight;
         }
-        return null;
+        return styleFinder.result();
     }
 
     @Override

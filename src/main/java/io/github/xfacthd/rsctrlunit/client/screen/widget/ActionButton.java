@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public final class ActionButton extends Button
+public final class ActionButton extends Button.Plain
 {
     private final ControllerScreen owner;
     private final ServerboundControllerActionPayload.Action action;
@@ -28,8 +28,6 @@ public final class ActionButton extends Button
     {
         ClientPacketDistributor.sendToServer(new ServerboundControllerActionPayload(owner.getMenu().containerId, action));
     }
-
-
 
     public static Builder builder(Component message)
     {

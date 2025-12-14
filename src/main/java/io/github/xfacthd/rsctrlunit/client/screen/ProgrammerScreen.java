@@ -25,7 +25,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -47,10 +47,10 @@ import java.util.regex.Pattern;
 
 public final class ProgrammerScreen extends CardInventoryContainerScreen<ProgrammerMenu>
 {
-    private static final ResourceLocation BACKGROUND = Utils.rl("background");
-    private static final ResourceLocation INVENTORY = ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
-    private static final ResourceLocation LOCK_ICON = ResourceLocation.withDefaultNamespace("container/cartography_table/locked");
-    private static final ResourceLocation SLOT_BACKGROUND = ResourceLocation.withDefaultNamespace("container/slot");
+    private static final Identifier BACKGROUND = Utils.rl("background");
+    private static final Identifier INVENTORY = Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
+    private static final Identifier LOCK_ICON = Identifier.withDefaultNamespace("container/cartography_table/locked");
+    private static final Identifier SLOT_BACKGROUND = Identifier.withDefaultNamespace("container/slot");
     private static final int IMAGE_WIDTH = 360;
     private static final int IMAGE_HEIGHT = 212;
     private static final int INVENTORY_WIDTH = 162;

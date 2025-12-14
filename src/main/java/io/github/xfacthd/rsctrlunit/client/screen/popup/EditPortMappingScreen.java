@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.UnknownNullability;
 public final class EditPortMappingScreen extends Screen
 {
     public static final Component TITLE = Component.translatable("screen.rsctrlunit.edit_port_mapping");
-    private static final ResourceLocation BACKGROUND = Utils.rl("background");
+    private static final Identifier BACKGROUND = Utils.rl("background");
     private static final int EDGE_PADDING_X = 8;
     private static final int EDGE_PADDING_Y = 6;
     private static final int PADDING = 5;

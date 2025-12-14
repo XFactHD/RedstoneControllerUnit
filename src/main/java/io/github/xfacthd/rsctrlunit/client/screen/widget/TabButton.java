@@ -1,17 +1,15 @@
 package io.github.xfacthd.rsctrlunit.client.screen.widget;
 
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.Mth;
 
-public final class TabButton extends Button
+public final class TabButton extends Button.Plain
 {
     private Position pos = Position.CENTER;
     private boolean selected = false;
@@ -22,18 +20,18 @@ public final class TabButton extends Button
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
     {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, pos.getSprite(selected), getX(), getY(), getWidth(), getHeight(), ARGB.white(alpha));
-        renderString(graphics, Minecraft.getInstance().font, getFGColor() | Mth.ceil(alpha * 255F) << 24);
+        renderDefaultLabel(graphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
     }
 
     @Override
-    protected void renderScrollingString(GuiGraphics graphics, Font font, int border, int color)
+    public void renderScrollingStringOverContents(ActiveTextCollector textCollector, Component text, int border)
     {
         int minX = getX() + border;
         int maxX = getX() + getWidth() - border;
-        renderScrollingString(graphics, font, getMessage(), minX, getY(), maxX, getY() + getHeight() - 1, color);
+        textCollector.acceptScrollingWithDefaultCenter(text, minX, maxX, getY(), getY() + getHeight() - 1);
     }
 
     public void setPos(Position pos)
@@ -52,16 +50,16 @@ public final class TabButton extends Button
         CENTER(Utils.rl("tab/tab_middle"), Utils.rl("tab/tab_middle_selected")),
         RIGHT(Utils.rl("tab/tab_right"), Utils.rl("tab/tab_right_selected"));
 
-        private final ResourceLocation sprite;
-        private final ResourceLocation spriteSelected;
+        private final Identifier sprite;
+        private final Identifier spriteSelected;
 
-        Position(ResourceLocation sprite, ResourceLocation spriteSelected)
+        Position(Identifier sprite, Identifier spriteSelected)
         {
             this.sprite = sprite;
             this.spriteSelected = spriteSelected;
         }
 
-        public ResourceLocation getSprite(boolean selected)
+        public Identifier getSprite(boolean selected)
         {
             return selected ? spriteSelected : sprite;
         }

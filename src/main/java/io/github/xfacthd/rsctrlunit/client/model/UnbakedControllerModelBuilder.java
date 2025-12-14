@@ -2,7 +2,7 @@ package io.github.xfacthd.rsctrlunit.client.model;
 
 import net.minecraft.client.renderer.block.model.Variant;
 import net.minecraft.client.renderer.block.model.VariantMutator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import net.neoforged.neoforge.client.model.generators.blockstate.CustomBlockStateModelBuilder;
 import net.neoforged.neoforge.client.model.generators.blockstate.UnbakedMutator;
@@ -11,7 +11,7 @@ public final class UnbakedControllerModelBuilder extends CustomBlockStateModelBu
 {
     private final Variant variant;
 
-    public UnbakedControllerModelBuilder(ResourceLocation baseModel, Variant.SimpleModelState modelState)
+    public UnbakedControllerModelBuilder(Identifier baseModel, Variant.SimpleModelState modelState)
     {
         this(new Variant(baseModel, modelState));
     }

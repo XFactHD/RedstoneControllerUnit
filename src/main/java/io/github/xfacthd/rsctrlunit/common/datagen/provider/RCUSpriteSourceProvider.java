@@ -6,7 +6,7 @@ import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.data.SpriteSourceProvider;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
@@ -24,17 +24,17 @@ public final class RCUSpriteSourceProvider extends SpriteSourceProvider
     {
         atlas(AtlasIds.BLOCKS)
                 .addSource(new AreaMaskSource(
-                        ResourceLocation.withDefaultNamespace("block/moss_block"),
+                        Identifier.withDefaultNamespace("block/moss_block"),
                         Utils.rl("block/pcb"),
                         2, 2, 12, 12
                 ))
                 .addSource(new AreaMaskSource(
-                        ResourceLocation.fromNamespaceAndPath("morered", "block/redwire_post_plate_overlay"),
+                        Identifier.fromNamespaceAndPath("morered", "block/redwire_post_plate_overlay"),
                         Utils.rl("block/overlay_single"),
                         0, 0, 16, 2
                 ), new ModLoadedCondition("morered"))
                 .addSource(new AreaMaskSource(
-                        ResourceLocation.fromNamespaceAndPath("morered", "block/bundled_cable_plate_overlay"),
+                        Identifier.fromNamespaceAndPath("morered", "block/bundled_cable_plate_overlay"),
                         Utils.rl("block/overlay_bundled"),
                         0, 0, 16, 2
                 ), new ModLoadedCondition("morered"));
