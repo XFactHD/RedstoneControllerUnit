@@ -2,7 +2,7 @@ package io.github.xfacthd.rsctrlunit.client.screen.widget;
 
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.gui.ActiveTextCollector;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -20,14 +20,14 @@ public final class TabButton extends Button.Plain
     }
 
     @Override
-    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, pos.getSprite(selected), getX(), getY(), getWidth(), getHeight(), ARGB.white(alpha));
-        renderDefaultLabel(graphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
+        extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
     }
 
     @Override
-    public void renderScrollingStringOverContents(ActiveTextCollector textCollector, Component text, int border)
+    public void extractScrollingStringOverContents(ActiveTextCollector textCollector, Component text, int border)
     {
         int minX = getX() + border;
         int maxX = getX() + getWidth() - border;

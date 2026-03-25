@@ -6,7 +6,7 @@ import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundSe
 import io.github.xfacthd.rsctrlunit.common.redstone.RedstoneInterface;
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortMapping;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -69,12 +69,12 @@ public final class EditPortMappingScreen extends Screen
         for (int i = 0; i < 4; i++)
         {
             int port = i;
-            addRenderableWidget(Button.builder(Component.literal("<"), btn -> cycle(port, -1))
+            addRenderableWidget(Button.builder(Component.literal("<"), _ -> cycle(port, -1))
                     .pos(leftPos + CYCLE_BUTTON_LEFT_X, btnY)
                     .size(RedstoneConfig.WIDTH_PIN_BTN, RedstoneConfig.HEIGHT)
                     .build()
             );
-            addRenderableWidget(Button.builder(Component.literal(">"), btn -> cycle(port, 1))
+            addRenderableWidget(Button.builder(Component.literal(">"), _ -> cycle(port, 1))
                     .pos(leftPos + CYCLE_BUTTON_RIGHT_X, btnY)
                     .size(RedstoneConfig.WIDTH_PIN_BTN, RedstoneConfig.HEIGHT)
                     .build()
@@ -82,7 +82,7 @@ public final class EditPortMappingScreen extends Screen
             btnY += RedstoneConfig.HEIGHT_PADDED;
         }
 
-        buttonDone = addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, btn -> save())
+        buttonDone = addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, _ -> save())
                 .pos(leftPos + EDGE_PADDING_X, topPos + HEIGHT - Button.DEFAULT_HEIGHT - EDGE_PADDING_Y)
                 .size(DONE_BUTTON_WIDTH, Button.DEFAULT_HEIGHT)
                 .build()
@@ -90,12 +90,12 @@ public final class EditPortMappingScreen extends Screen
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
-        renderTransparentBackground(graphics);
+        extractTransparentBackground(graphics);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos, WIDTH, HEIGHT);
-        graphics.drawString(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
+        graphics.text(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
 
         int x = leftPos + ENTRY_X;
         for (int i = 0; i < 4; i++)
@@ -104,9 +104,9 @@ public final class EditPortMappingScreen extends Screen
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RedstoneConfig.BACKGROUND, x, y, ENTRY_WIDTH, RedstoneConfig.HEIGHT_PADDED);
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RedstoneConfig.TEXT_FIELD, leftPos + DIR_FIELD_X, y + SMALL_PADDING, DIR_FIELD_WIDTH, RedstoneConfig.HEIGHT);
 
-            graphics.drawString(font, RedstoneConfig.TEXT_PORT_IDX[i], x + ENTRY_TEXT_PADDING, y + ENTRY_TEXT_PADDING, 0xFF000000, false);
+            graphics.text(font, RedstoneConfig.TEXT_PORT_IDX[i], x + ENTRY_TEXT_PADDING, y + ENTRY_TEXT_PADDING, 0xFF000000, false);
             Direction dir = PortMapping.getPortSide(screen.getMenu().getFacing(), mapping[i]);
-            graphics.drawString(font, Utils.DIRECTION_NAMES[dir.ordinal()], leftPos + DIR_TEXT_X, y + ENTRY_TEXT_PADDING, 0xFFFFFFFF, false);
+            graphics.text(font, Utils.DIRECTION_NAMES[dir.ordinal()], leftPos + DIR_TEXT_X, y + ENTRY_TEXT_PADDING, 0xFFFFFFFF, false);
         }
     }
 

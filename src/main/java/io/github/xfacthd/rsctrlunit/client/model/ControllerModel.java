@@ -3,11 +3,11 @@ package io.github.xfacthd.rsctrlunit.client.model;
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.util.property.PropertyHolder;
 import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DelegateBlockStateModel;
 
@@ -28,7 +28,7 @@ public final class ControllerModel extends DelegateBlockStateModel
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts)
+    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts)
     {
         super.collectParts(level, pos, state, random, parts);
 

@@ -19,7 +19,7 @@ import io.github.xfacthd.rsctrlunit.common.util.ThrowingSupplier;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -151,10 +151,8 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
 
     public ProgrammerScreen(ProgrammerMenu menu, Inventory inventory, Component title)
     {
-        super(menu, inventory, title);
+        super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
         this.forBlock = menu.isForBlock();
-        this.imageWidth = IMAGE_WIDTH;
-        this.imageHeight = IMAGE_HEIGHT;
         this.inventoryLabelX = INVENTORY_X;
         this.inventoryLabelY = INVENTORY_Y - 10;
     }
@@ -190,7 +188,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
 
     private Button addButton(Component title, int line, Runnable action)
     {
-        return addRenderableWidget(Button.builder(title, btn -> action.run())
+        return addRenderableWidget(Button.builder(title, _ -> action.run())
                 .pos(buttonX, topPos + BUTTON_TOP_Y + BUTTON_Y_OFF * line)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
@@ -198,15 +196,10 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        renderTooltip(graphics, mouseX, mouseY);
-    }
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
-    @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
-    {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
         graphics.blit(RenderPipelines.GUI_TEXTURED, INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT, 256, 256);
         if (!forBlock)
@@ -215,14 +208,14 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
             drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
         }
 
-        graphics.drawString(font, LABEL_FILE_PATH, leftPos + LABEL_X, topPos + LINE_FILE_PATH, 0xFF404040, false);
-        graphics.drawString(font, pathDisplay, descX, topPos + LINE_FILE_PATH, 0xFF404040, false);
+        graphics.text(font, LABEL_FILE_PATH, leftPos + LABEL_X, topPos + LINE_FILE_PATH, 0xFF404040, false);
+        graphics.text(font, pathDisplay, descX, topPos + LINE_FILE_PATH, 0xFF404040, false);
 
-        graphics.drawString(font, LABEL_FILE_TYPE, leftPos + LABEL_X, topPos + LINE_FILE_TYPE, 0xFF404040, false);
-        graphics.drawString(font, fileType, descX, topPos + LINE_FILE_TYPE, 0xFF404040, false);
+        graphics.text(font, LABEL_FILE_TYPE, leftPos + LABEL_X, topPos + LINE_FILE_TYPE, 0xFF404040, false);
+        graphics.text(font, fileType, descX, topPos + LINE_FILE_TYPE, 0xFF404040, false);
 
-        graphics.drawString(font, LABEL_CODE_INFO, leftPos + LABEL_X, topPos + LINE_CODE_INFO, 0xFF404040, false);
-        graphics.drawString(font, codeInfo, descX, topPos + LINE_CODE_INFO, 0xFF404040, false);
+        graphics.text(font, LABEL_CODE_INFO, leftPos + LABEL_X, topPos + LINE_CODE_INFO, 0xFF404040, false);
+        graphics.text(font, codeInfo, descX, topPos + LINE_CODE_INFO, 0xFF404040, false);
 
         if (lastErrorMsg != null)
         {
@@ -234,21 +227,21 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         }
     }
 
-    private void drawMessage(GuiGraphics graphics, Component label, List<FormattedCharSequence> message)
+    private void drawMessage(GuiGraphicsExtractor graphics, Component label, List<FormattedCharSequence> message)
     {
-        graphics.drawString(font, label, leftPos + LABEL_X, topPos + LINE_MESSAGE, 0xFF404040, false);
+        graphics.text(font, label, leftPos + LABEL_X, topPos + LINE_MESSAGE, 0xFF404040, false);
         int y = topPos + LINE_MESSAGE;
         for (FormattedCharSequence line : message)
         {
-            graphics.drawString(font, line, descX, y, 0xFF404040, false);
+            graphics.text(font, line, descX, y, 0xFF404040, false);
             y += LINE_HEIGHT;
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
         if (filePath != null && pathCropped && mouseX >= descX && mouseX < descX + maxPathWidth && mouseY >= topPos + LINE_FILE_PATH && mouseY < topPos + LINE_FILE_PATH + LINE_HEIGHT)
         {
             renderFixedTooltip(graphics, Component.literal(filePath.toString()), LINE_FILE_PATH);
@@ -315,7 +308,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
                mouseY < button.getY() + button.getHeight();
     }
 
-    private void renderFixedTooltip(GuiGraphics graphics, Component line, int y)
+    private void renderFixedTooltip(GuiGraphicsExtractor graphics, Component line, int y)
     {
         int lineWidth = font.width(line);
         int x = descX;
@@ -327,7 +320,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics graphics, ItemStack stack, Slot slot, @Nullable String countString)
+    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack stack, Slot slot, @Nullable String countString)
     {
         super.renderSlotContents(graphics, stack, slot, countString);
         if (slot instanceof Lockable lockable && lockable.isLocked())

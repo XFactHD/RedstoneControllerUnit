@@ -10,7 +10,7 @@ import io.github.xfacthd.rsctrlunit.common.redstone.port.SinglePortConfig;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Direction;
@@ -93,17 +93,17 @@ public final class RedstoneConfig
         this.y = y;
     }
 
-    public void draw(GuiGraphics graphics, Font font, Direction facing, PortConfig[] configs, int mouseX, int mouseY)
+    public void draw(GuiGraphicsExtractor graphics, Font font, Direction facing, PortConfig[] configs, int mouseX, int mouseY)
     {
         PortConfig cfg = configs[port];
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, x - FRAME_PADDING, y - FRAME_PADDING, WIDTH_PADDED, HEIGHT_PADDED);
 
-        graphics.drawString(font, TEXT_PORT_IDX[port], x + 4, y + 4, 0xFF000000, false);
+        graphics.text(font, TEXT_PORT_IDX[port], x + 4, y + 4, 0xFF000000, false);
 
         int mapped = screen.getMenu().getPortMapping()[port];
         Direction side = PortMapping.getPortSide(facing, mapped);
-        graphics.drawString(font, Utils.DIRECTION_NAMES[side.ordinal()], x + X_SIDE + 4, y + 4, 0xFF000000, false);
+        graphics.text(font, Utils.DIRECTION_NAMES[side.ordinal()], x + X_SIDE + 4, y + 4, 0xFF000000, false);
 
         ClientUtils.drawButton(graphics, font, x + X_TYPE, y, WIDTH_TYPE, HEIGHT, cfg.getType().getTranslatedName(), true, true, true, false, 0, mouseX, mouseY);
 
@@ -121,7 +121,7 @@ public final class RedstoneConfig
                 ClientUtils.drawButton(graphics, font, x + X_PIN_BTN_RIGHT, y, WIDTH_PIN_BTN, HEIGHT, ">", single.pin() < 7, true, false, 0, mouseX, mouseY);
 
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TEXT_FIELD, x + X_PIN_FIELD, y, WIDTH_PIN_FIELD, HEIGHT);
-                graphics.drawCenteredString(font, Integer.toString(single.pin()), x + X_PIN_FIELD + WIDTH_PIN_FIELD / 2, y + 4, 0xFFFFFFFF);
+                graphics.centeredText(font, Integer.toString(single.pin()), x + X_PIN_FIELD + WIDTH_PIN_FIELD / 2, y + 4, 0xFFFFFFFF);
             }
             case BundledPortConfig bundle ->
             {
@@ -137,7 +137,7 @@ public final class RedstoneConfig
         }
     }
 
-    public void drawTooltip(GuiGraphics graphics, Font font, int mouseX, int mouseY, PortConfig[] configs)
+    public void drawTooltip(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, PortConfig[] configs)
     {
         if (mouseX >= x + X_TYPE && mouseX < x + WIDTH && mouseY >= y && mouseY <= y + HEIGHT)
         {

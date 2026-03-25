@@ -3,7 +3,7 @@ package io.github.xfacthd.rsctrlunit.client.screen.popup;
 import io.github.xfacthd.rsctrlunit.client.util.ClientUtils;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.gui.ActiveTextCollector;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -83,7 +83,7 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
 
     protected void addButtons()
     {
-        addRenderableWidget(Button.builder(CommonComponents.GUI_OK, btn -> onClose())
+        addRenderableWidget(Button.builder(CommonComponents.GUI_OK, _ -> onClose())
                 .pos(leftPos + (WIDTH / 2) - (BTN_WIDTH / 2), topPos + imageHeight - BTN_BOTTOM_OFFSET)
                 .size(BTN_WIDTH, BTN_HEIGHT)
                 .build()
@@ -91,19 +91,19 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.renderBackground(graphics, mouseX, mouseY, partialTicks);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos, WIDTH, imageHeight);
-        graphics.drawString(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
+        graphics.text(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
 
         int y = topPos + TITLE_Y + font.lineHeight * 2;
         for (List<FormattedCharSequence> block : textBlocks)
         {
             for (FormattedCharSequence line : block)
             {
-                graphics.drawString(font, line, leftPos + TITLE_X, y, 0, false);
+                graphics.text(font, line, leftPos + TITLE_X, y, 0, false);
                 y += font.lineHeight;
             }
             y += font.lineHeight;
@@ -111,14 +111,14 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         Style style = findTextLine(mouseX, mouseY);
         if (style != null)
         {
-            graphics.renderComponentHoverEffect(font, style, mouseX, mouseY);
+            graphics.componentHoverEffect(font, style, mouseX, mouseY);
         }
     }
 

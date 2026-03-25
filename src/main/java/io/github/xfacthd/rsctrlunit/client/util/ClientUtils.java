@@ -1,7 +1,7 @@
 package io.github.xfacthd.rsctrlunit.client.util;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ public final class ClientUtils
     );
 
     public static void drawButton(
-            GuiGraphics graphics,
+            GuiGraphicsExtractor graphics,
             Font font,
             int x,
             int y,
@@ -37,7 +37,7 @@ public final class ClientUtils
     }
 
     public static void drawButton(
-            GuiGraphics graphics,
+            GuiGraphicsExtractor graphics,
             Font font,
             int x,
             int y,
@@ -64,14 +64,14 @@ public final class ClientUtils
         }
         else
         {
-            graphics.drawString(font, text, x + 4 + xTextOff, y + 4, color, shadow);
+            graphics.text(font, text, x + 4 + xTextOff, y + 4, color, shadow);
         }
     }
 
-    public static void drawCenteredString(GuiGraphics graphics, Font font, Component text, int x, int y, int color, boolean shadow)
+    public static void drawCenteredString(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int color, boolean shadow)
     {
         FormattedCharSequence charSeq = text.getVisualOrderText();
-        graphics.drawString(font, charSeq, x - font.width(charSeq) / 2, y, color, shadow);
+        graphics.text(font, charSeq, x - font.width(charSeq) / 2, y, color, shadow);
     }
 
     public static int getWrappedHeight(Font font, FormattedText text, int width)

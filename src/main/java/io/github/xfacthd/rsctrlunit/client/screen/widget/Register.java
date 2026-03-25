@@ -3,7 +3,7 @@ package io.github.xfacthd.rsctrlunit.client.screen.widget;
 import io.github.xfacthd.rsctrlunit.common.emulator.opcode.OpcodeHelpers;
 import io.github.xfacthd.rsctrlunit.common.emulator.util.Constants;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
@@ -41,23 +41,23 @@ public sealed class Register
 
     public Register(int x, int y, String name, int digits, int address)
     {
-        this(x, y, name, digits, (ram, sfr) -> address, (ram, sfr) -> sfr[address - Constants.SFR_START] & 0xFF);
+        this(x, y, name, digits, (_, _) -> address, (_, sfr) -> sfr[address - Constants.SFR_START] & 0xFF);
     }
 
     public Register(int x, int y, int regIdx)
     {
-        this(x, y, "R" + regIdx, 2, (ram, sfr) -> OpcodeHelpers.getRegisterAddress(sfr[Constants.ADDRESS_STATUS_WORD - Constants.SFR_START], regIdx));
+        this(x, y, "R" + regIdx, 2, (_, sfr) -> OpcodeHelpers.getRegisterAddress(sfr[Constants.ADDRESS_STATUS_WORD - Constants.SFR_START], regIdx));
     }
 
-    public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
+    public void extract(GuiGraphicsExtractor graphics, Font font, byte[] ram, byte[] sfr)
     {
-        graphics.drawString(font, name, tooltipRect.getX(), y + 2, 0xFF404040, false);
+        graphics.text(font, name, tooltipRect.getX(), y + 2, 0xFF404040, false);
 
         int value = reader.applyAsInt(ram, sfr);
-        graphics.drawString(font, String.format(Locale.ROOT, valFormat, value), x + 2, y + 2, 0xFF000000, false);
+        graphics.text(font, String.format(Locale.ROOT, valFormat, value), x + 2, y + 2, 0xFF000000, false);
     }
 
-    public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY)
+    public void extractTooltip(GuiGraphicsExtractor graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY)
     {
         if (tooltipRect.contains(mouseX, mouseY))
         {
@@ -85,18 +85,18 @@ public sealed class Register
 
         public Port(int x, int y, int port, byte[] outputs, byte[] inputs)
         {
-            super(x, y, "P" + port, 2, (ram, sfr) -> Constants.IO_PORTS[port], (ram, sfr) -> outputs[port] & 0xFF);
+            super(x, y, "P" + port, 2, (_, _) -> Constants.IO_PORTS[port], (_, _) -> outputs[port] & 0xFF);
             this.port = port;
             this.inputs = inputs;
         }
 
         @Override
-        public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
+        public void extract(GuiGraphicsExtractor graphics, Font font, byte[] ram, byte[] sfr)
         {
-            super.draw(graphics, font, ram, sfr);
+            super.extract(graphics, font, ram, sfr);
 
             int value = inputs[port] & 0xFF;
-            graphics.drawString(font, String.format(Locale.ROOT, valFormat, value), x + 29, y + 2, 0xFF000000, false);
+            graphics.text(font, String.format(Locale.ROOT, valFormat, value), x + 29, y + 2, 0xFF000000, false);
         }
 
         @Override
@@ -114,11 +114,11 @@ public sealed class Register
     {
         public ProgramCounter(int x, int y, IntSupplier reader)
         {
-            super(x, y, "PC", 4, (ram, sfr) -> -1, (ram, sfr) -> reader.getAsInt());
+            super(x, y, "PC", 4, (_, _) -> -1, (_, _) -> reader.getAsInt());
         }
 
         @Override // Unaddressable -> no tooltip
-        public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY) { }
+        public void extractTooltip(GuiGraphicsExtractor graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY) { }
     }
 
     public static final class StatusWord extends Register
@@ -129,20 +129,20 @@ public sealed class Register
         }
 
         @Override
-        public void draw(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr)
+        public void extract(GuiGraphicsExtractor graphics, Font font, byte[] ram, byte[] sfr)
         {
-            graphics.drawString(font, name, tooltipRect.getX(), y + 2, 0xFF404040, false);
+            graphics.text(font, name, tooltipRect.getX(), y + 2, 0xFF404040, false);
 
             int psw = sfr[Constants.ADDRESS_STATUS_WORD - Constants.SFR_START] & 0xFF;
             for (int i = 0; i < 8; i++)
             {
                 String bit = (psw & (1 << (7 - i))) != 0 ? "1" : "0";
-                graphics.drawString(font, bit, x + 2 + i * 9, y + 2, 0xFF000000, false);
+                graphics.text(font, bit, x + 2 + i * 9, y + 2, 0xFF000000, false);
             }
         }
 
         @Override
-        public void drawTooltip(GuiGraphics graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY)
+        public void extractTooltip(GuiGraphicsExtractor graphics, Font font, byte[] ram, byte[] sfr, int mouseX, int mouseY)
         {
             if (tooltipRect.contains(mouseX, mouseY))
             {
@@ -165,7 +165,7 @@ public sealed class Register
                     graphics.setTooltipForNextFrame(font, Component.literal(label), mouseX, mouseY);
                     return;
                 }
-                super.drawTooltip(graphics, font, ram, sfr, mouseX, mouseY);
+                super.extractTooltip(graphics, font, ram, sfr, mouseX, mouseY);
             }
         }
 

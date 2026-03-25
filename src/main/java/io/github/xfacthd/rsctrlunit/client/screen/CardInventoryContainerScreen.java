@@ -2,7 +2,7 @@ package io.github.xfacthd.rsctrlunit.client.screen;
 
 import io.github.xfacthd.rsctrlunit.common.RCUContent;
 import io.github.xfacthd.rsctrlunit.common.menu.CardInventoryContainerMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,16 +15,16 @@ abstract class CardInventoryContainerScreen<T extends CardInventoryContainerMenu
 
     private final ItemStack cardStack = new ItemStack(RCUContent.ITEM_MEMORY_CARD);
 
-    protected CardInventoryContainerScreen(T menu, Inventory inventory, Component title)
+    protected CardInventoryContainerScreen(T menu, Inventory inventory, Component title, int imageWidth, int imageHeight)
     {
-        super(menu, inventory, title);
+        super(menu, inventory, title, imageWidth, imageHeight);
     }
 
-    protected void drawGhostCard(GuiGraphics graphics, int x, int y)
+    protected void drawGhostCard(GuiGraphicsExtractor graphics, int x, int y)
     {
         if (!menu.slots.getFirst().hasItem())
         {
-            graphics.renderFakeItem(cardStack, x, y, 0);
+            graphics.fakeItem(cardStack, x, y, 0);
             graphics.fill(x, y, x + SLOT_SIZE_INNER, y + SLOT_SIZE_INNER, 0x80888888);
         }
     }

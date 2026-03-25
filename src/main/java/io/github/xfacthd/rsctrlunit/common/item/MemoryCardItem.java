@@ -19,8 +19,8 @@ public final class MemoryCardItem extends Item
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> tooltipAdder, TooltipFlag flag)
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> appender, TooltipFlag flag)
     {
-        stack.addToTooltip(RCUContent.COMPONENT_TYPE_CODE, ctx, tooltipAdder, flag);
+        stack.addToTooltip(RCUContent.COMPONENT_TYPE_CODE, ctx, display, appender, flag);
     }
 }

@@ -19,7 +19,6 @@
       ]
     }
   ],
-  "render_type": "minecraft:cutout",
   "textures": {
     "overlay": "rsctrlunit:block/port_1",
     "particle": "rsctrlunit:block/port_1"

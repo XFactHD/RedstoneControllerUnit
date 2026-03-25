@@ -16,8 +16,9 @@ import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
@@ -76,12 +77,12 @@ public final class RCUBlockStateProvider extends ModelProvider
 
         for (int edge = 0; edge < 4; edge++)
         {
-            plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_SINGLE[edge], Utils.rl("block/overlay_single"), edge, true, true);
-            plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_BUNDLED[edge], Utils.rl("block/overlay_bundled"), edge, true, true);
+            plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_SINGLE[edge], new Material(Utils.rl("block/overlay_single")), edge, true, true);
+            plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_BUNDLED[edge], new Material(Utils.rl("block/overlay_bundled")), edge, true, true);
 
             for (int port = 0; port < 4; port++)
             {
-                plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_PORT[edge][port], Utils.rl("block/port_" + port), edge, false, false);
+                plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_PORT[edge][port], new Material(Utils.rl("block/port_" + port)), edge, false, false);
             }
         }
     }
@@ -91,7 +92,7 @@ public final class RCUBlockStateProvider extends ModelProvider
         Identifier name = Utils.getKeyOrThrow(block).identifier();
         Identifier baseLoc = name.withPrefix("block/");
 
-        TextureMapping textures = TextureMapping.singleSlot(DIR_OVERLAY, name.withPrefix("block/dir_overlay_"));
+        TextureMapping textures = TextureMapping.singleSlot(DIR_OVERLAY, new Material(name.withPrefix("block/dir_overlay_")));
         Identifier converter = CONVERTER.create(baseLoc, textures, blockModels.modelOutput);
 
         Identifier[] converters = new Identifier[] {
@@ -138,12 +139,11 @@ public final class RCUBlockStateProvider extends ModelProvider
         return template.create(name, new TextureMapping(), blockModels.modelOutput);
     }
 
-    private static void plateOverlay(BlockModelGenerators blockModels, Identifier name, Identifier texture, int edge, boolean withSide, boolean mirrorTopX)
+    private static void plateOverlay(BlockModelGenerators blockModels, Identifier name, Material texture, int edge, boolean withSide, boolean mirrorTopX)
     {
         ExtendedModelTemplate template = ExtendedModelTemplateBuilder.builder()
                 .requiredTextureSlot(OVERLAY)
                 .requiredTextureSlot(TextureSlot.PARTICLE)
-                .renderType("minecraft:cutout")
                 .element(element ->
                 {
                     element.from(0, 0, 0)

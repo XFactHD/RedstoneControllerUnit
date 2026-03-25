@@ -18,7 +18,7 @@ import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundSe
 import io.github.xfacthd.rsctrlunit.common.redstone.port.PortConfig;
 import io.github.xfacthd.rsctrlunit.common.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -167,9 +167,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
     public ControllerScreen(ControllerMenu menu, Inventory inventory, Component title)
     {
-        super(menu, inventory, title);
-        imageWidth = IMAGE_WIDTH;
-        imageHeight = IMAGE_HEIGHT;
+        super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
         inventoryLabelX = INVENTORY_X;
         inventoryLabelY = INVENTORY_Y - 10;
     }
@@ -215,7 +213,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
                 .size(CTRL_BUTTON_WIDTH, BUTTON_HEIGHT - 4)
                 .build(this, ServerboundControllerActionPayload.Action.RESET)
         );
-        buttonEditPortMap = addRenderableWidget(Button.builder(BUTTON_EDIT_PORT_MAP, btn -> editPortMap())
+        buttonEditPortMap = addRenderableWidget(Button.builder(BUTTON_EDIT_PORT_MAP, _ -> editPortMap())
                 .pos(leftPos + PORT_MAP_BUTTON_X, topPos + EDIT_PORT_MAP_BUTTON_Y)
                 .size(PORT_MAP_BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build()
@@ -279,15 +277,10 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        renderTooltip(graphics, mouseX, mouseY);
-    }
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
-    @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
-    {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
         switch (tab)
         {
@@ -298,25 +291,25 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
         if (tab == TAB_CODE)
         {
-            graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF404040, false);
+            graphics.text(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF404040, false);
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
         switch (tab)
         {
             case TAB_STATUS ->
             {
                 for (Register reg : registers)
                 {
-                    reg.drawTooltip(graphics, font, ramView, sfrView, mouseX, mouseY);
+                    reg.extractTooltip(graphics, font, ramView, sfrView, mouseX, mouseY);
                 }
                 if (mouseX >= leftPos + INDICATOR_X && mouseX < leftPos + INDICATOR_X + INDICATOR_SIZE && mouseY >= topPos + INDICATOR_Y && mouseY < topPos + INDICATOR_Y + INDICATOR_SIZE)
                 {
@@ -454,9 +447,9 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         return (int) Mth.clamp(factor * size, 0, Math.max(size, 0));
     }
 
-    private void renderDisassembly(GuiGraphics graphics, boolean renderCursor)
+    private void renderDisassembly(GuiGraphicsExtractor graphics, boolean renderCursor)
     {
-        graphics.drawString(font, TITLE_DISASSEMBLY, leftPos + DISASSEMBLY_X, topPos + TITLE_Y, 0xFF404040, false);
+        graphics.text(font, TITLE_DISASSEMBLY, leftPos + DISASSEMBLY_X, topPos + TITLE_Y, 0xFF404040, false);
 
         int x = leftPos + DISASSEMBLY_X;
         int y = topPos + DISASSEMBLY_Y;
@@ -487,21 +480,21 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         {
             if (renderCursor && i == pcLine)
             {
-                graphics.drawString(font, ">", x - codeHorOffset, y, 0xFFFFFFFF, false);
+                graphics.text(font, ">", x - codeHorOffset, y, 0xFFFFFFFF, false);
             }
-            graphics.drawString(font, disassembly.getLines().get(i), x + 7 - codeHorOffset, y, 0xFFFFFFFF, false);
+            graphics.text(font, disassembly.getLines().get(i), x + 7 - codeHorOffset, y, 0xFFFFFFFF, false);
             y += lineHeight;
         }
         graphics.disableScissor();
     }
 
-    private void renderStatusTab(GuiGraphics graphics, int mouseX, int mouseY)
+    private void renderStatusTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        graphics.drawString(font, TITLE_REGISTERS, leftPos + REGISTER_X, topPos + TITLE_Y, 0xFF404040, false);
+        graphics.text(font, TITLE_REGISTERS, leftPos + REGISTER_X, topPos + TITLE_Y, 0xFF404040, false);
         graphics.blit(RenderPipelines.GUI_TEXTURED, REGISTERS, leftPos + REGISTER_X, topPos + REGISTER_Y, 0, 0, REGISTER_WIDTH, REGISTER_HEIGHT, 256, 256);
         for (Register reg : registers)
         {
-            reg.draw(graphics, font, ramView, sfrView);
+            reg.extract(graphics, font, ramView, sfrView);
         }
 
         int x = leftPos + REGISTER_LEFT_X + REGISTER_ENTRY_WIDTH / 2 + 1;
@@ -517,10 +510,10 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         renderDisassembly(graphics, true);
     }
 
-    private void renderCodeTab(GuiGraphics graphics, int mouseX, int mouseY)
+    private void renderCodeTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
         Component program = Component.translatable(LABEL_PROGRAM_KEY, menu.getCode().displayName());
-        graphics.drawString(font, program, leftPos + INVENTORY_X, topPos + LABEL_PROGRAM_Y, 0xFF404040, false);
+        graphics.text(font, program, leftPos + INVENTORY_X, topPos + LABEL_PROGRAM_Y, 0xFF404040, false);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
         Slot slot = menu.slots.getFirst();
@@ -542,7 +535,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         renderDisassembly(graphics, false);
     }
 
-    private void renderRedstoneTab(GuiGraphics graphics, int mouseX, int mouseY)
+    private void renderRedstoneTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
         int x = leftPos + REDSTONE_CFG_X;
         int y = topPos + REDSTONE_HEADER_Y;
@@ -550,11 +543,11 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         int yBg = y - RedstoneConfig.FRAME_PADDING;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RedstoneConfig.BACKGROUND, xBg, yBg, RedstoneConfig.WIDTH_PADDED, RedstoneConfig.HEIGHT_PADDED);
 
-        graphics.drawString(font, TABLE_HEADER_PORT, x + 4, y + 4, 0xFF000000, false);
-        graphics.drawString(font, TABLE_HEADER_SIDE, x + RedstoneConfig.X_SIDE + 4, y + 4, 0xFF000000, false);
-        graphics.drawString(font, TABLE_HEADER_TYPE, x + RedstoneConfig.X_TYPE + 4, y + 4, 0xFF000000, false);
-        graphics.drawString(font, TABLE_HEADER_DIRECTION, x + RedstoneConfig.X_DIR + 4, y + 4, 0xFF000000, false);
-        graphics.drawString(font, TABLE_HEADER_MAPPING, x + RedstoneConfig.X_PIN_BTN_LEFT + 4, y + 4, 0xFF000000, false);
+        graphics.text(font, TABLE_HEADER_PORT, x + 4, y + 4, 0xFF000000, false);
+        graphics.text(font, TABLE_HEADER_SIDE, x + RedstoneConfig.X_SIDE + 4, y + 4, 0xFF000000, false);
+        graphics.text(font, TABLE_HEADER_TYPE, x + RedstoneConfig.X_TYPE + 4, y + 4, 0xFF000000, false);
+        graphics.text(font, TABLE_HEADER_DIRECTION, x + RedstoneConfig.X_DIR + 4, y + 4, 0xFF000000, false);
+        graphics.text(font, TABLE_HEADER_MAPPING, x + RedstoneConfig.X_PIN_BTN_LEFT + 4, y + 4, 0xFF000000, false);
 
         Direction facing = menu.getFacing();
         PortConfig[] configs = menu.getPortConfigs();
