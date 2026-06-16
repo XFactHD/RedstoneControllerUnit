@@ -1,12 +1,12 @@
 package io.github.xfacthd.rsctrlunit.common.compat.atlasviewer;
 
+import io.github.xfacthd.atlasviewer.client.api.RegisterSpriteSourceDetailsEvent;
 import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import io.github.xfacthd.rsctrlunit.client.texture.AreaMaskSource;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
-import xfacthd.atlasviewer.client.api.RegisterSpriteSourceDetailsEvent;
 
 public final class AtlasViewerCompat
 {

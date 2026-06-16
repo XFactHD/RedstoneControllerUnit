@@ -81,7 +81,7 @@ public final class RCUContent
             CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.rsctrlunit"))
                     .icon(() -> BLOCK_CONTROLLER.value().asItem().getDefaultInstance())
-                    .displayItems((params, output) ->
+                    .displayItems((_, output) ->
                     {
                         output.accept(BLOCK_CONTROLLER.value());
                         output.accept(BLOCK_ADC.value());
@@ -95,7 +95,7 @@ public final class RCUContent
 
     private static Holder<Block> registerBlock(String name, Function<BlockBehaviour.Properties, Block> blockFactory)
     {
-        Holder<Block> block = BLOCKS.registerBlock(name, blockFactory, BlockBehaviour.Properties.of());
+        Holder<Block> block = BLOCKS.registerBlock(name, blockFactory);
         ITEMS.registerSimpleBlockItem(block);
         return block;
     }

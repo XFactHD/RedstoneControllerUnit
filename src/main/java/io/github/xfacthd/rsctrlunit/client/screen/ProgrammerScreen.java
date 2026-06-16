@@ -477,7 +477,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         else if (!lines.isEmpty())
         {
             lines.addFirst(MSG_ERROR_ASSEMBLY_FAILED);
-            Minecraft.getInstance().pushGuiLayer(MessageScreen.error(lines));
+            Minecraft.getInstance().gui.pushScreenLayer(MessageScreen.error(lines));
         }
     }
 
@@ -559,7 +559,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         {
             if (checkEmpty && !menu.isInterpreterEmpty())
             {
-                Minecraft.getInstance().pushGuiLayer(MessageScreen.confirm(
+                Minecraft.getInstance().gui.pushScreenLayer(MessageScreen.confirm(
                         List.of(MSG_CONFIRM_NOT_EMPTY_BLOCK),
                         () -> writeBinaryToTarget(false)
                 ));
@@ -570,7 +570,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         {
             if (checkEmpty && !isMemoryCardEmpty())
             {
-                Minecraft.getInstance().pushGuiLayer(MessageScreen.confirm(
+                Minecraft.getInstance().gui.pushScreenLayer(MessageScreen.confirm(
                         List.of(MSG_CONFIRM_NOT_EMPTY_CARD),
                         () -> writeBinaryToTarget(false)
                 ));

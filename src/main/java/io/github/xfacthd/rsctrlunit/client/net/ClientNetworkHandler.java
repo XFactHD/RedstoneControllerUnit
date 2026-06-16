@@ -25,7 +25,7 @@ public final class ClientNetworkHandler
 
     private static void handleUpdateStatus(ClientboundUpdateStatusPayload payload, IPayloadContext ctx)
     {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = Minecraft.getInstance().gui.screen();
         if (screen instanceof ControllerScreen ctrlScreen && ctrlScreen.getMenu().containerId == payload.windowId())
         {
             ClientboundUpdateStatusPayload.InterpreterState state = payload.state();
@@ -35,7 +35,7 @@ public final class ClientNetworkHandler
 
     private static void handleUpdateCode(ClientboundUpdateCodePayload payload, IPayloadContext ctx)
     {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = Minecraft.getInstance().gui.screen();
         if (screen instanceof ControllerScreen ctrlScreen && ctrlScreen.getMenu().containerId == payload.windowId())
         {
             ctrlScreen.getMenu().updateCode(payload.code());
@@ -45,7 +45,7 @@ public final class ClientNetworkHandler
 
     private static void handleUpdatePortConfigs(ClientboundUpdatePortConfigsPayload payload, IPayloadContext ctx)
     {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = Minecraft.getInstance().gui.screen();
         if (screen instanceof ControllerScreen ctrlScreen && ctrlScreen.getMenu().containerId == payload.windowId())
         {
             ctrlScreen.getMenu().updatePortConfigs(payload.facing(), payload.configs());
@@ -54,7 +54,7 @@ public final class ClientNetworkHandler
 
     private static void handleReplyCode(ClientboundReplyCodePayload payload, IPayloadContext ctx)
     {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = Minecraft.getInstance().gui.screen();
         if (screen instanceof ProgrammerScreen progScreen && progScreen.getMenu().containerId == payload.windowId())
         {
             progScreen.receiveBlockCodeFromServer(payload.code());
@@ -63,7 +63,7 @@ public final class ClientNetworkHandler
 
     private static void handleUpdatePortMapping(ClientboundUpdatePortMappingPayload payload, IPayloadContext ctx)
     {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = Minecraft.getInstance().gui.screen();
         if (screen instanceof ControllerScreen ctrlScreen && ctrlScreen.getMenu().containerId == payload.windowId())
         {
             ctrlScreen.getMenu().updatePortMapping(payload.portMapping());

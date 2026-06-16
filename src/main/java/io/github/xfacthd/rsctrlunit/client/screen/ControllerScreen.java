@@ -576,7 +576,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
     private void editPortMap()
     {
-        Minecraft.getInstance().pushGuiLayer(new EditPortMappingScreen(this));
+        Minecraft.getInstance().gui.pushScreenLayer(new EditPortMappingScreen(this));
     }
 
     public void updateStatus(byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter)

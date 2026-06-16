@@ -21,14 +21,14 @@ public final class RCUBlockTagsProvider extends BlockTagsProvider
     protected void addTags(HolderLookup.Provider provider)
     {
         tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(
-                RCUContent.BLOCK_CONTROLLER.value(),
-                RCUContent.BLOCK_ADC.value(),
-                RCUContent.BLOCK_DAC.value()
+                RCUContent.BLOCK_CONTROLLER.getKey(),
+                RCUContent.BLOCK_ADC.getKey(),
+                RCUContent.BLOCK_DAC.getKey()
         );
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
-                RCUContent.BLOCK_CONTROLLER.value(),
-                RCUContent.BLOCK_ADC.value(),
-                RCUContent.BLOCK_DAC.value()
+                RCUContent.BLOCK_CONTROLLER.getKey(),
+                RCUContent.BLOCK_ADC.getKey(),
+                RCUContent.BLOCK_DAC.getKey()
         );
     }
 }

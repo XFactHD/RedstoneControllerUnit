@@ -4,6 +4,7 @@ import io.github.xfacthd.rsctrlunit.RedstoneControllerUnit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.Util;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -23,7 +24,7 @@ public final class FileDialog
                 .thenAcceptAsync(filePath ->
                 {
                     // Make sure the screen that requested the file dialog is still the active one
-                    if (filePath != null && Minecraft.getInstance().screen == screen)
+                    if (filePath != null && Minecraft.getInstance().gui.screen() == screen)
                     {
                         String lastPath = lastPathStorage.getAsTinyFDString();
                         if (!lastPath.equals(path))
@@ -44,7 +45,7 @@ public final class FileDialog
                 });
     }
 
-    private static CompletableFuture<String> openFileDialogAsync(String path, String title, Filter filter, boolean save)
+    private static CompletableFuture<@Nullable String> openFileDialogAsync(String path, String title, Filter filter, boolean save)
     {
         return CompletableFuture.supplyAsync(() ->
         {
