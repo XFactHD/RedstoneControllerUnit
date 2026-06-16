@@ -13,68 +13,49 @@ import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public final class FileDialog
-{
+public final class FileDialog {
     public static void openFileDialog(
             Screen screen, LastPathStorage lastPathStorage, String title, Filter filter, boolean save, Consumer<Path> action
-    )
-    {
+    ) {
         String path = lastPathStorage.getAsTinyFDString();
         openFileDialogAsync(path, title, filter, save)
-                .thenAcceptAsync(filePath ->
-                {
+                .thenAcceptAsync(filePath -> {
                     // Make sure the screen that requested the file dialog is still the active one
-                    if (filePath != null && Minecraft.getInstance().gui.screen() == screen)
-                    {
+                    if (filePath != null && Minecraft.getInstance().gui.screen() == screen) {
                         String lastPath = lastPathStorage.getAsTinyFDString();
-                        if (!lastPath.equals(path))
-                        {
+                        if (!lastPath.equals(path)) {
                             RedstoneControllerUnit.LOGGER.warn("Last path changed unexpectedly during file chooser invocation");
-                        }
-                        else
-                        {
+                        } else {
                             lastPathStorage.update(filePath);
                         }
                         action.accept(Path.of(filePath));
                     }
                 }, Minecraft.getInstance())
-                .exceptionally(ex ->
-                {
+                .exceptionally(ex -> {
                     RedstoneControllerUnit.LOGGER.error("Encountered an error while opening file chooser", ex);
                     return null;
                 });
     }
 
-    private static CompletableFuture<@Nullable String> openFileDialogAsync(String path, String title, Filter filter, boolean save)
-    {
-        return CompletableFuture.supplyAsync(() ->
-        {
-            try (MemoryStack stack = MemoryStack.stackPush())
-            {
+    private static CompletableFuture<@Nullable String> openFileDialogAsync(String path, String title, Filter filter, boolean save) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (MemoryStack stack = MemoryStack.stackPush()) {
                 PointerBuffer filterBuffer = stack.mallocPointer(filter.filters.length);
-                for (String filterEntry : filter.filters)
-                {
+                for (String filterEntry : filter.filters) {
                     filterBuffer.put(stack.UTF8(filterEntry));
                 }
                 filterBuffer.flip();
 
-                if (save)
-                {
+                if (save) {
                     return TinyFileDialogs.tinyfd_saveFileDialog(title, path, filterBuffer, filter.filderDesc);
-                }
-                else
-                {
+                } else {
                     return TinyFileDialogs.tinyfd_openFileDialog(title, path, filterBuffer, filter.filderDesc, false);
                 }
             }
         }, Util.backgroundExecutor());
     }
 
-
-
     public record Filter(String[] filters, String filderDesc) { }
-
-
 
     private FileDialog() { }
 }

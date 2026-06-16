@@ -12,8 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.function.IntFunction;
 
-public record ServerboundControllerActionPayload(int windowId, Action action) implements CustomPacketPayload
-{
+public record ServerboundControllerActionPayload(int windowId, Action action) implements CustomPacketPayload {
     public static final Type<ServerboundControllerActionPayload> TYPE = Utils.payloadType("serverbound_controller_action");
     public static final StreamCodec<ByteBuf, ServerboundControllerActionPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
@@ -23,12 +22,9 @@ public record ServerboundControllerActionPayload(int windowId, Action action) im
             ServerboundControllerActionPayload::new
     );
 
-    public void handle(IPayloadContext ctx)
-    {
-        if (ctx.player().containerMenu instanceof ControllerMenu ctrlMenu && ctrlMenu.containerId == windowId)
-        {
-            switch (action)
-            {
+    public void handle(IPayloadContext ctx) {
+        if (ctx.player().containerMenu instanceof ControllerMenu ctrlMenu && ctrlMenu.containerId == windowId) {
+            switch (action) {
                 case UNKNOWN -> ctx.disconnect(Component.literal("Received invalid controller action"));
                 case LOAD_ROM -> ctrlMenu.loadRomFromCard();
                 case SAVE_ROM -> ctrlMenu.saveRomToCard();
@@ -42,15 +38,11 @@ public record ServerboundControllerActionPayload(int windowId, Action action) im
     }
 
     @Override
-    public Type<ServerboundControllerActionPayload> type()
-    {
+    public Type<ServerboundControllerActionPayload> type() {
         return TYPE;
     }
 
-
-
-    public enum Action
-    {
+    public enum Action {
         UNKNOWN,
         LOAD_ROM,
         SAVE_ROM,
@@ -58,8 +50,7 @@ public record ServerboundControllerActionPayload(int windowId, Action action) im
         PAUSE_RESUME,
         STEP,
         RESET,
-        TOGGLE_PORT_MAP
-        ;
+        TOGGLE_PORT_MAP;
 
         private static final IntFunction<Action> BY_ID = ByIdMap.continuous(
                 Action::ordinal, values(), ByIdMap.OutOfBoundsStrategy.ZERO

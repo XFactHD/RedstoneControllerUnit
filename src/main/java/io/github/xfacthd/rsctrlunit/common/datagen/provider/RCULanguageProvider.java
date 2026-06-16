@@ -17,19 +17,15 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
-public final class RCULanguageProvider extends LanguageProvider
-{
-    public RCULanguageProvider(PackOutput output)
-    {
+public final class RCULanguageProvider extends LanguageProvider {
+    public RCULanguageProvider(PackOutput output) {
         super(output, RedstoneControllerUnit.MOD_ID, "en_us");
     }
 
     @Override
-    protected void addTranslations()
-    {
+    protected void addTranslations() {
         addBlockTranslations();
         addItemTranslations();
         addGenericTranslations();
@@ -37,21 +33,18 @@ public final class RCULanguageProvider extends LanguageProvider
         addSpecialTranslations();
     }
 
-    private void addBlockTranslations()
-    {
+    private void addBlockTranslations() {
         add(RCUContent.BLOCK_CONTROLLER.value(), "Controller");
         add(RCUContent.BLOCK_ADC.value(), "Analog-to-Digital Converter");
         add(RCUContent.BLOCK_DAC.value(), "Digital-to-Analog Converter");
     }
 
-    private void addItemTranslations()
-    {
+    private void addItemTranslations() {
         add(RCUContent.ITEM_MEMORY_CARD.value(), "Memory Card");
         add(RCUContent.ITEM_PROGRAMMER.value(), "Programmer");
     }
 
-    private void addGenericTranslations()
-    {
+    private void addGenericTranslations() {
         add("rsctrlunit.code.name", "Program: %s");
         add("rsctrlunit.code.name.empty", "[None]");
 
@@ -66,26 +59,25 @@ public final class RCULanguageProvider extends LanguageProvider
         add(Utils.DIRECTION_NAMES[Direction.WEST.ordinal()], "West");
         add(Utils.DIRECTION_NAMES[Direction.EAST.ordinal()], "East");
 
-        add(Utils.COLOR_NAMES[DyeColor.WHITE.ordinal()], "White");
-        add(Utils.COLOR_NAMES[DyeColor.ORANGE.ordinal()], "Orange");
-        add(Utils.COLOR_NAMES[DyeColor.MAGENTA.ordinal()], "Magenta");
-        add(Utils.COLOR_NAMES[DyeColor.LIGHT_BLUE.ordinal()], "Light Blue");
-        add(Utils.COLOR_NAMES[DyeColor.YELLOW.ordinal()], "Yellow");
-        add(Utils.COLOR_NAMES[DyeColor.LIME.ordinal()], "Lime");
-        add(Utils.COLOR_NAMES[DyeColor.PINK.ordinal()], "Pink");
-        add(Utils.COLOR_NAMES[DyeColor.GRAY.ordinal()], "Gray");
-        add(Utils.COLOR_NAMES[DyeColor.LIGHT_GRAY.ordinal()], "Light Gray");
-        add(Utils.COLOR_NAMES[DyeColor.CYAN.ordinal()], "Cyan");
-        add(Utils.COLOR_NAMES[DyeColor.PURPLE.ordinal()], "Purple");
-        add(Utils.COLOR_NAMES[DyeColor.BLUE.ordinal()], "Blue");
-        add(Utils.COLOR_NAMES[DyeColor.BROWN.ordinal()], "Brown");
-        add(Utils.COLOR_NAMES[DyeColor.GREEN.ordinal()], "Green");
-        add(Utils.COLOR_NAMES[DyeColor.RED.ordinal()], "Red");
-        add(Utils.COLOR_NAMES[DyeColor.BLACK.ordinal()], "Black");
+        add(Utils.COLOR_NAMES.white(), "White");
+        add(Utils.COLOR_NAMES.orange(), "Orange");
+        add(Utils.COLOR_NAMES.magenta(), "Magenta");
+        add(Utils.COLOR_NAMES.lightBlue(), "Light Blue");
+        add(Utils.COLOR_NAMES.yellow(), "Yellow");
+        add(Utils.COLOR_NAMES.lime(), "Lime");
+        add(Utils.COLOR_NAMES.pink(), "Pink");
+        add(Utils.COLOR_NAMES.gray(), "Gray");
+        add(Utils.COLOR_NAMES.lightGray(), "Light Gray");
+        add(Utils.COLOR_NAMES.cyan(), "Cyan");
+        add(Utils.COLOR_NAMES.purple(), "Purple");
+        add(Utils.COLOR_NAMES.blue(), "Blue");
+        add(Utils.COLOR_NAMES.brown(), "Brown");
+        add(Utils.COLOR_NAMES.green(), "Green");
+        add(Utils.COLOR_NAMES.red(), "Red");
+        add(Utils.COLOR_NAMES.black(), "Black");
     }
 
-    private void addScreenTranslations()
-    {
+    private void addScreenTranslations() {
         add(ControllerBlockEntity.TITLE, "Controller");
         add(ProgrammerMenu.TITLE, "Programmer");
 
@@ -172,8 +164,7 @@ public final class RCULanguageProvider extends LanguageProvider
         add(EditPortMappingScreen.TITLE, "Port Mapping");
     }
 
-    private void addSpecialTranslations()
-    {
+    private void addSpecialTranslations() {
         add(RCUContent.CREATIVE_TAB.value().getDisplayName(), "RedstoneControllerUnit");
 
         add(AtlasViewerCompat.LABEL_TEXTURE, "Texture");
@@ -182,15 +173,11 @@ public final class RCULanguageProvider extends LanguageProvider
         add(AtlasViewerCompat.VALUE_AREA, "X: %s Y: %s Width: %s Height: %s");
     }
 
-    private void add(Component key, String value)
-    {
+    private void add(Component key, String value) {
         ComponentContents contents = key.getContents();
-        if (contents instanceof TranslatableContents translatable)
-        {
+        if (contents instanceof TranslatableContents translatable) {
             add(translatable.getKey(), value);
-        }
-        else
-        {
+        } else {
             add(key.getString(), value);
         }
     }

@@ -18,8 +18,7 @@ import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
 
-public final class EditPortMappingScreen extends Screen
-{
+public final class EditPortMappingScreen extends Screen {
     public static final Component TITLE = Component.translatable("screen.rsctrlunit.edit_port_mapping");
     private static final Identifier BACKGROUND = Utils.rl("background");
     private static final int EDGE_PADDING_X = 8;
@@ -52,22 +51,19 @@ public final class EditPortMappingScreen extends Screen
     @UnknownNullability
     private Button buttonDone;
 
-    public EditPortMappingScreen(ControllerScreen screen)
-    {
+    public EditPortMappingScreen(ControllerScreen screen) {
         super(TITLE);
         this.screen = screen;
         this.mapping = screen.getMenu().getPortMapping().clone();
     }
 
     @Override
-    protected void init()
-    {
+    protected void init() {
         leftPos = (this.width - WIDTH) / 2;
         topPos = (this.height - HEIGHT) / 2;
 
         int btnY = topPos + CYCLE_BUTTON_TOP_Y;
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             int port = i;
             addRenderableWidget(Button.builder(Component.literal("<"), _ -> cycle(port, -1))
                     .pos(leftPos + CYCLE_BUTTON_LEFT_X, btnY)
@@ -90,16 +86,14 @@ public final class EditPortMappingScreen extends Screen
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
-    {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         extractTransparentBackground(graphics);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos, WIDTH, HEIGHT);
         graphics.text(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
 
         int x = leftPos + ENTRY_X;
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             int y = topPos + ENTRY_TOP_Y + RedstoneConfig.HEIGHT_PADDED * i;
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RedstoneConfig.BACKGROUND, x, y, ENTRY_WIDTH, RedstoneConfig.HEIGHT_PADDED);
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, RedstoneConfig.TEXT_FIELD, leftPos + DIR_FIELD_X, y + SMALL_PADDING, DIR_FIELD_WIDTH, RedstoneConfig.HEIGHT);
@@ -111,25 +105,21 @@ public final class EditPortMappingScreen extends Screen
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         buttonDone.active = RedstoneInterface.validatePortMapping(mapping);
     }
 
-    private void cycle(int port, int dir)
-    {
+    private void cycle(int port, int dir) {
         mapping[port] = Mth.positiveModulo(mapping[port] + dir, 4);
     }
 
-    private void save()
-    {
+    private void save() {
         ClientPacketDistributor.sendToServer(new ServerboundSetPortMappingPayload(screen.getMenu().containerId, mapping));
         onClose();
     }
 
     @Override
-    public boolean isPauseScreen()
-    {
+    public boolean isPauseScreen() {
         return false;
     }
 }

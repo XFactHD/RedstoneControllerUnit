@@ -5,44 +5,37 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public final class CustomSlot extends Slot implements Hideable, Lockable
-{
+public final class CustomSlot extends Slot implements Hideable, Lockable {
     private final boolean locked;
     private boolean active = true;
 
-    public CustomSlot(Container inv, int slot, int x, int y, boolean locked)
-    {
+    public CustomSlot(Container inv, int slot, int x, int y, boolean locked) {
         super(inv, slot, x, y);
         this.locked = locked;
     }
 
     @Override
-    public boolean mayPickup(Player player)
-    {
+    public boolean mayPickup(Player player) {
         return !locked && super.mayPickup(player);
     }
 
     @Override
-    public boolean mayPlace(ItemStack stack)
-    {
+    public boolean mayPlace(ItemStack stack) {
         return !locked && super.mayPlace(stack);
     }
 
     @Override
-    public void setActive(boolean active)
-    {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
     @Override
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 
     @Override
-    public boolean isLocked()
-    {
+    public boolean isLocked() {
         return locked;
     }
 }

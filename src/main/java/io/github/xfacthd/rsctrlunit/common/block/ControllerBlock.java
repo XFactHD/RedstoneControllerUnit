@@ -13,6 +13,7 @@ import io.github.xfacthd.rsctrlunit.common.util.property.RedstoneType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -34,42 +35,33 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public final class ControllerBlock extends PlateBlock
-{
-    public ControllerBlock(Properties props)
-    {
+public final class ControllerBlock extends PlateBlock {
+    public ControllerBlock(Properties props) {
         super(props.strength(1.5F, 6.0F));
         registerDefaultState(defaultBlockState().setValue(PropertyHolder.SHOW_PORT_MAPPING, false));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
-    {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(PropertyHolder.SHOW_PORT_MAPPING);
         builder.add(PropertyHolder.RS_CON_PROPS);
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
-    {
-        if (stack.has(DataComponents.BLOCK_ENTITY_DATA) && level.getBlockEntity(pos) instanceof ControllerBlockEntity be)
-        {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        if (stack.has(DataComponents.BLOCK_ENTITY_DATA) && level.getBlockEntity(pos) instanceof ControllerBlockEntity be) {
             BlockState newState = be.getRedstoneInterface().updateStateFromConfigs(state);
-            if (newState != state)
-            {
+            if (newState != state) {
                 level.setBlockAndUpdate(pos, newState);
             }
         }
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
-    {
-        if (stack.is(RCUContent.ITEM_PROGRAMMER) && level.getBlockEntity(pos) instanceof ControllerBlockEntity controller)
-        {
-            if (!level.isClientSide())
-            {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (stack.is(RCUContent.ITEM_PROGRAMMER) && level.getBlockEntity(pos) instanceof ControllerBlockEntity controller) {
+            if (!level.isClientSide()) {
                 ProgrammerItem.openMenu(player, stack, controller);
             }
             return InteractionResult.SUCCESS;
@@ -78,55 +70,47 @@ public final class ControllerBlock extends PlateBlock
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit)
-    {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ControllerBlockEntity be)
-        {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ControllerBlockEntity be) {
             Direction facing = state.getValue(BlockStateProperties.FACING);
-            player.openMenu(new MenuProvider()
-            {
+            player.openMenu(new MenuProvider() {
                 @Override
-                public Component getDisplayName()
-                {
+                public Component getDisplayName() {
                     return ControllerBlockEntity.TITLE;
                 }
 
                 @Override
-                public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player)
-                {
+                public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
                     return ControllerMenu.createServer(windowId, be, (ServerPlayer) player, facing);
                 }
-            }, buf ->
-            {
-                BlockPos.STREAM_CODEC.encode(buf, pos);
-                Code.STREAM_CODEC.encode(buf, be.getInterpreter().getCode());
-                Direction.STREAM_CODEC.encode(buf, facing);
-                RedstoneType.PORT_ARRAY_STREAM_CODEC.encode(buf, be.getRedstoneInterface().getPortConfigs());
-                RedstoneInterface.PORT_MAPPING_STREAM_CODEC.encode(buf, be.getRedstoneInterface().getPortMapping());
+
+                @Override
+                public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
+                    BlockPos.STREAM_CODEC.encode(buffer, pos);
+                    Code.STREAM_CODEC.encode(buffer, be.getInterpreter().getCode());
+                    Direction.STREAM_CODEC.encode(buffer, facing);
+                    RedstoneType.PORT_ARRAY_STREAM_CODEC.encode(buffer, be.getRedstoneInterface().getPortConfigs());
+                    RedstoneInterface.PORT_MAPPING_STREAM_CODEC.encode(buffer, be.getRedstoneInterface().getPortMapping());
+                }
             });
         }
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public RedstoneType getRedstoneTypeOnSide(BlockState state, Direction facing, Direction side)
-    {
+    public RedstoneType getRedstoneTypeOnSide(BlockState state, Direction facing, Direction side) {
         int port = PortMapping.getPortIndex(facing, side);
         return port != -1 ? state.getValue(PropertyHolder.RS_CON_PROPS[port]) : RedstoneType.NONE;
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
-    {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ControllerBlockEntity(pos, state);
     }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
-    {
-        if (!level.isClientSide())
-        {
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (!level.isClientSide()) {
             return Utils.createBlockEntityTicker(type, RCUContent.BE_TYPE_CONTROLLER.get(), ControllerBlockEntity::tick);
         }
         return null;

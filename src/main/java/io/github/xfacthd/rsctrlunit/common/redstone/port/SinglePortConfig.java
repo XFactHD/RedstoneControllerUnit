@@ -13,8 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public record SinglePortConfig(int pin, boolean input) implements PortConfig
-{
+public record SinglePortConfig(int pin, boolean input) implements PortConfig {
     public static final MapCodec<SinglePortConfig> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.intRange(0, 7).fieldOf("pin").forGetter(SinglePortConfig::pin),
             Codec.BOOL.fieldOf("input").forGetter(SinglePortConfig::input)
@@ -28,42 +27,35 @@ public record SinglePortConfig(int pin, boolean input) implements PortConfig
     );
 
     @Override
-    public int getRedstoneOutput(byte portState)
-    {
+    public int getRedstoneOutput(byte portState) {
         return input ? 0 : ((portState >> pin) & 0x01) * 15;
     }
 
     @Override
-    public int getBundledOutput(byte portState, int channel)
-    {
+    public int getBundledOutput(byte portState, int channel) {
         return 0;
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side)
-    {
-        if (input && level.hasSignal(adjPos, side.getOpposite()))
-        {
+    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side) {
+        if (input && level.hasSignal(adjPos, side.getOpposite())) {
             return (byte) (1 << pin);
         }
         return 0;
     }
 
     @Override
-    public boolean hasInputs()
-    {
+    public boolean hasInputs() {
         return input;
     }
 
     @Override
-    public boolean hasOutputs()
-    {
+    public boolean hasOutputs() {
         return !input;
     }
 
     @Override
-    public RedstoneType getType()
-    {
+    public RedstoneType getType() {
         return RedstoneType.SINGLE;
     }
 }

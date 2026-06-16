@@ -34,36 +34,30 @@ import org.joml.Vector3f;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public final class RCUBlockStateProvider extends ModelProvider
-{
+public final class RCUBlockStateProvider extends ModelProvider {
     private static final Identifier CONTROLLER = Utils.rl("block/controller");
     private static final Identifier CONVERTER_BASE = Utils.rl("block/converter");
     private static final TextureSlot DIR_OVERLAY = TextureSlot.create("dir_overlay");
     private static final TextureSlot OVERLAY = TextureSlot.create("overlay");
     private static final ModelTemplate CONVERTER = new ModelTemplate(Optional.of(CONVERTER_BASE), Optional.empty(), DIR_OVERLAY);
 
-    public RCUBlockStateProvider(PackOutput output)
-    {
+    public RCUBlockStateProvider(PackOutput output) {
         super(output, RedstoneControllerUnit.MOD_ID);
     }
 
     @Override
-    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels)
-    {
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         MultiVariantGenerator generator = MultiVariantGenerator.dispatch(
                 RCUContent.BLOCK_CONTROLLER.value(),
                 MultiVariant.of(new UnbakedControllerModelBuilder(CONTROLLER, Variant.SimpleModelState.DEFAULT))
-        ).with(PropertyDispatch.modify(BlockStateProperties.FACING).generate(dir ->
-        {
-            Quadrant rotX = switch (dir)
-            {
+        ).with(PropertyDispatch.modify(BlockStateProperties.FACING).generate(dir -> {
+            Quadrant rotX = switch (dir) {
                 case UP -> Quadrant.R180;
                 case DOWN -> Quadrant.R0;
                 default -> Quadrant.R90;
             };
             Quadrant rotY = Quadrant.R0;
-            if (dir.getAxis() != Direction.Axis.Y)
-            {
+            if (dir.getAxis() != Direction.Axis.Y) {
                 rotY = Quadrant.values()[(int) dir.toYRot() / 90];
             }
             return VariantMutator.X_ROT.withValue(rotX).then(VariantMutator.Y_ROT.withValue(rotY));
@@ -75,20 +69,17 @@ public final class RCUBlockStateProvider extends ModelProvider
         makeConverterBlockStateAndItemModel(blockModels, RCUContent.BLOCK_ADC);
         makeConverterBlockStateAndItemModel(blockModels, RCUContent.BLOCK_DAC);
 
-        for (int edge = 0; edge < 4; edge++)
-        {
+        for (int edge = 0; edge < 4; edge++) {
             plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_SINGLE[edge], new Material(Utils.rl("block/overlay_single")), edge, true, true);
             plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_BUNDLED[edge], new Material(Utils.rl("block/overlay_bundled")), edge, true, true);
 
-            for (int port = 0; port < 4; port++)
-            {
+            for (int port = 0; port < 4; port++) {
                 plateOverlay(blockModels, UnbakedControllerModel.LOCATIONS_PORT[edge][port], new Material(Utils.rl("block/port_" + port)), edge, false, false);
             }
         }
     }
 
-    private static void makeConverterBlockStateAndItemModel(BlockModelGenerators blockModels, Holder<Block> block)
-    {
+    private static void makeConverterBlockStateAndItemModel(BlockModelGenerators blockModels, Holder<Block> block) {
         Identifier name = Utils.getKeyOrThrow(block).identifier();
         Identifier baseLoc = name.withPrefix("block/");
 
@@ -103,18 +94,15 @@ public final class RCUBlockStateProvider extends ModelProvider
         };
 
         MultiVariantGenerator generator = MultiVariantGenerator.dispatch(block.value())
-                .with(PropertyDispatch.initial(PropertyHolder.FACING_DIR).generate(cmpDir ->
-                {
+                .with(PropertyDispatch.initial(PropertyHolder.FACING_DIR).generate(cmpDir -> {
                     Direction dir = cmpDir.direction();
-                    Quadrant rotX = switch (dir)
-                    {
+                    Quadrant rotX = switch (dir) {
                         case UP -> Quadrant.R180;
                         case DOWN -> Quadrant.R0;
                         default -> Quadrant.R90;
                     };
                     Quadrant rotY = Quadrant.R0;
-                    if (dir.getAxis() != Direction.Axis.Y)
-                    {
+                    if (dir.getAxis() != Direction.Axis.Y) {
                         rotY = Quadrant.values()[(int) dir.toYRot() / 90];
                     }
                     return BlockModelGenerators.plainVariant(converters[cmpDir.rotation().ordinal()])
@@ -126,8 +114,7 @@ public final class RCUBlockStateProvider extends ModelProvider
         blockModels.registerSimpleItemModel(block.value(), converter);
     }
 
-    private static Identifier makeConverterRotation(BlockModelGenerators blockModels, Identifier converter, Identifier name, int rot)
-    {
+    private static Identifier makeConverterRotation(BlockModelGenerators blockModels, Identifier converter, Identifier name, int rot) {
         ModelTemplate template = ExtendedModelTemplateBuilder.builder()
                 .parent(converter)
                 .rootTransforms(xforms ->
@@ -139,13 +126,11 @@ public final class RCUBlockStateProvider extends ModelProvider
         return template.create(name, new TextureMapping(), blockModels.modelOutput);
     }
 
-    private static void plateOverlay(BlockModelGenerators blockModels, Identifier name, Material texture, int edge, boolean withSide, boolean mirrorTopX)
-    {
+    private static void plateOverlay(BlockModelGenerators blockModels, Identifier name, Material texture, int edge, boolean withSide, boolean mirrorTopX) {
         ExtendedModelTemplate template = ExtendedModelTemplateBuilder.builder()
                 .requiredTextureSlot(OVERLAY)
                 .requiredTextureSlot(TextureSlot.PARTICLE)
-                .element(element ->
-                {
+                .element(element -> {
                     element.from(0, 0, 0)
                             .to(16, 2, 16)
                             .face(Direction.UP, face ->
@@ -154,8 +139,7 @@ public final class RCUBlockStateProvider extends ModelProvider
                                             .texture(OVERLAY)
                             );
 
-                    if (withSide)
-                    {
+                    if (withSide) {
                         Direction edgeDir = Direction.from2DDataValue(edge);
                         element.face(edgeDir, face ->
                                 face.cullface(edgeDir)
@@ -171,14 +155,12 @@ public final class RCUBlockStateProvider extends ModelProvider
     }
 
     @Override
-    protected Stream<? extends Holder<Item>> getKnownItems()
-    {
+    protected Stream<? extends Holder<Item>> getKnownItems() {
         return super.getKnownItems().filter(item -> item.value() instanceof BlockItem);
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "Block Models - RedstoneControllerUnit";
     }
 }

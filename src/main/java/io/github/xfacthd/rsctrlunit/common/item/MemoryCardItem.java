@@ -10,17 +10,14 @@ import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.function.Consumer;
 
-public final class MemoryCardItem extends Item
-{
-    public MemoryCardItem(Properties props)
-    {
+public final class MemoryCardItem extends Item {
+    public MemoryCardItem(Properties props) {
         super(props.component(RCUContent.COMPONENT_TYPE_CODE.value(), Code.EMPTY));
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> appender, TooltipFlag flag)
-    {
+    public void appendHoverText(ItemStack stack, TooltipContext ctx, TooltipDisplay display, Consumer<Component> appender, TooltipFlag flag) {
         stack.addToTooltip(RCUContent.COMPONENT_TYPE_CODE, ctx, display, appender, flag);
     }
 }

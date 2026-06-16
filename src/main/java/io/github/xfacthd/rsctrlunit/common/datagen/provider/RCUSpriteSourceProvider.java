@@ -12,16 +12,13 @@ import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 import java.util.concurrent.CompletableFuture;
 
-public final class RCUSpriteSourceProvider extends SpriteSourceProvider
-{
-    public RCUSpriteSourceProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider)
-    {
+public final class RCUSpriteSourceProvider extends SpriteSourceProvider {
+    public RCUSpriteSourceProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider, RedstoneControllerUnit.MOD_ID);
     }
 
     @Override
-    protected void gather()
-    {
+    protected void gather() {
         atlas(AtlasIds.BLOCKS)
                 .addSource(new AreaMaskSource(
                         Identifier.withDefaultNamespace("block/moss_block"),

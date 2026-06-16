@@ -6,8 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Disassembly
-{
+public final class Disassembly {
     public static final Disassembly EMPTY = new Disassembly();
 
     private final List<String> lines = new ArrayList<>();
@@ -15,24 +14,20 @@ public final class Disassembly
 
     Disassembly() { }
 
-    void addCodeLine(int programCounter, String line)
-    {
+    void addCodeLine(int programCounter, String line) {
         lines.add(line);
         lineIndexByProgramCounter.put(programCounter, lines.size() - 1);
     }
 
-    void addLabelLine(String line)
-    {
+    void addLabelLine(String line) {
         lines.add(line);
     }
 
-    public List<String> getLines()
-    {
+    public List<String> getLines() {
         return lines;
     }
 
-    public int getLineIndexForProgramCounter(int programCounter)
-    {
+    public int getLineIndexForProgramCounter(int programCounter) {
         return lineIndexByProgramCounter.getOrDefault(programCounter, -1);
     }
 }

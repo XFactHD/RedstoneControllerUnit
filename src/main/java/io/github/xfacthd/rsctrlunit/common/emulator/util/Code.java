@@ -16,14 +16,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implements TooltipProvider
-{
+public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implements TooltipProvider {
     public static final Codec<Code> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             Codec.STRING.fieldOf("name").forGetter(Code::name),
             RCUCodecs.BYTE_ARRAY.fieldOf("rom").forGetter(Code::rom),
@@ -41,35 +41,33 @@ public record Code(String name, byte[] rom, Int2ObjectMap<String> labels) implem
     public static final Code EMPTY = new Code("", new byte[0], Int2ObjectMaps.emptyMap());
     public static final Component EMPTY_NAME = Component.translatable("rsctrlunit.code.name.empty").withStyle(ChatFormatting.ITALIC);
 
-    public Component displayName()
-    {
+    public Component displayName() {
         return EMPTY.equals(this) ? EMPTY_NAME : Component.literal(name);
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Code code = (Code) o;
-        return Arrays.equals(rom, code.rom) && Objects.equals(labels, code.labels);
+    public boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o instanceof Code other) {
+            return Arrays.equals(rom, other.rom) && Objects.equals(labels, other.labels);
+        }
+        return false;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(Arrays.hashCode(rom), labels);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.format(Locale.ROOT, "Code[name=%s, rom=%s, labels=%s]", name, Utils.toHexString(rom), labels);
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext context, Consumer<Component> adder, TooltipFlag flag, DataComponentGetter componentGetter)
-    {
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> adder, TooltipFlag flag, DataComponentGetter componentGetter) {
         adder.accept(Component.translatable("rsctrlunit.code.name", displayName()));
     }
 }

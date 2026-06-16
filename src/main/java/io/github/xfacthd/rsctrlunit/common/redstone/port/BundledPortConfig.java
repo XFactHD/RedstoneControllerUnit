@@ -13,8 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public record BundledPortConfig(boolean upper, byte inputMask) implements PortConfig
-{
+public record BundledPortConfig(boolean upper, byte inputMask) implements PortConfig {
     public static final MapCodec<BundledPortConfig> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             Codec.BOOL.fieldOf("upper").forGetter(BundledPortConfig::upper),
             Codec.BYTE.fieldOf("input_mask").forGetter(BundledPortConfig::inputMask)
@@ -28,20 +27,16 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
     );
 
     @Override
-    public int getRedstoneOutput(byte portState)
-    {
+    public int getRedstoneOutput(byte portState) {
         return 0;
     }
 
     @Override
-    public int getBundledOutput(byte portState, int channel)
-    {
-        if (upper)
-        {
+    public int getBundledOutput(byte portState, int channel) {
+        if (upper) {
             channel -= 8;
         }
-        if (channel >= 0 && channel < 8)
-        {
+        if (channel >= 0 && channel < 8) {
             boolean output = (inputMask & (1 << channel)) == 0;
             return output ? ((portState >> channel) & 0x01) : 0;
         }
@@ -49,26 +44,22 @@ public record BundledPortConfig(boolean upper, byte inputMask) implements PortCo
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side)
-    {
+    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side) {
         return (byte) BundledConnectionHelper.readBundledInput(level, state, pos, facing, adjPos, side, upper ? 8 : 0, 8, inputMask);
     }
 
     @Override
-    public boolean hasInputs()
-    {
+    public boolean hasInputs() {
         return inputMask != 0;
     }
 
     @Override
-    public boolean hasOutputs()
-    {
+    public boolean hasOutputs() {
         return (~inputMask & 0xFF) != 0;
     }
 
     @Override
-    public RedstoneType getType()
-    {
+    public RedstoneType getType() {
         return RedstoneType.BUNDLED;
     }
 }

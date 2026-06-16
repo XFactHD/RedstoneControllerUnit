@@ -31,8 +31,7 @@ import java.util.Set;
 
 // TODO: add support for referencing directive labels (i.e. from DB directives) as addresses or immediate values
 //       (most likely requires splitting directive parsing and op parsing into separate stages)
-public final class Assembler
-{
+public final class Assembler {
     private static final String[] EMPTY_ARRAY = new String[0];
     private static final Opcode[] AJMP_OPCODES = new Opcode[] {
             Opcode.AJMP_000, Opcode.AJMP_001, Opcode.AJMP_010, Opcode.AJMP_011, Opcode.AJMP_100, Opcode.AJMP_101, Opcode.AJMP_110, Opcode.AJMP_111
@@ -43,90 +42,79 @@ public final class Assembler
 
     private Assembler() { }
 
-    public static Code assemble(String name, String source, ErrorPrinter errorPrinter)
-    {
+    public static Code assemble(String name, String source, ErrorPrinter errorPrinter) {
         List<Node> nodes = parseSource(source, errorPrinter);
-        if (nodes.isEmpty()) return Code.EMPTY;
-        if (!validateLabels(nodes, errorPrinter)) return Code.EMPTY;
+        if (nodes.isEmpty() || !validateLabels(nodes, errorPrinter)) {
+            return Code.EMPTY;
+        }
 
         int codeSize = computeCodeSize(nodes, errorPrinter);
-        if (codeSize <= 0) return Code.EMPTY;
+        if (codeSize <= 0) {
+            return Code.EMPTY;
+        }
         byte[] code = new byte[codeSize];
         return buildRomImage(name, nodes, code, errorPrinter);
     }
 
-    private static List<Node> parseSource(String source, ErrorPrinter errorPrinter)
-    {
+    private static List<Node> parseSource(String source, ErrorPrinter errorPrinter) {
         List<Node> nodes = new ArrayList<>();
-        try (LineNumberReader reader = new LineNumberReader(new StringReader(source)))
-        {
-            while (reader.ready())
-            {
+        try (LineNumberReader reader = new LineNumberReader(new StringReader(source))) {
+            while (reader.ready()) {
                 int lineNum = reader.getLineNumber() + 1;
                 String line = reader.readLine();
-                if (line == null) break;
+                if (line == null) {
+                    break;
+                }
 
                 int commentStart = line.indexOf(';');
-                if (commentStart >= 0)
-                {
+                if (commentStart >= 0) {
                     line = line.substring(0, commentStart);
                 }
                 line = line.trim();
-                if (line.isEmpty())
-                {
+                if (line.isEmpty()) {
                     continue;
                 }
 
-                if (line.endsWith(":"))
-                {
+                if (line.endsWith(":")) {
                     nodes.add(new LabelNode(lineNum, line.substring(0, line.length() - 1)));
                     continue;
                 }
 
                 String[] parts = line.split(" ");
                 Node directiveNode = Directive.parseDirective(lineNum, parts);
-                if (directiveNode instanceof ErrorNode error)
-                {
+                if (directiveNode instanceof ErrorNode error) {
                     errorPrinter.error(error.error());
                     return List.of();
-                }
-                else if (directiveNode instanceof EndDirectiveNode)
-                {
+                } else if (directiveNode instanceof EndDirectiveNode) {
                     break;
-                }
-                else if (directiveNode != null)
-                {
+                } else if (directiveNode != null) {
                     nodes.add(directiveNode);
                     continue;
                 }
 
                 String[] operands = extractOperands(parts);
                 Node node = Opcode.parse(lineNum, parts[0].toLowerCase(Locale.ROOT), operands);
-                if (node instanceof ErrorNode error)
-                {
+                if (node instanceof ErrorNode error) {
                     errorPrinter.error(error.error());
                     return List.of();
                 }
                 nodes.add(node);
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             return List.of();
         }
         return nodes;
     }
 
-    private static String[] extractOperands(String[] parts)
-    {
-        if (parts.length == 1) return EMPTY_ARRAY;
+    private static String[] extractOperands(String[] parts) {
+        if (parts.length == 1) {
+            return EMPTY_ARRAY;
+        }
 
         String operands = parts[1];
-        if (parts.length > 2)
-        {
+        if (parts.length > 2) {
             StringBuilder builder = new StringBuilder(operands);
-            for (int i = 2; i < parts.length; i++)
-            {
+            for (int i = 2; i < parts.length; i++) {
                 builder.append(parts[i]);
             }
             operands = builder.toString();
@@ -134,18 +122,17 @@ public final class Assembler
         return operands.split(",");
     }
 
-    private static boolean validateLabels(List<Node> nodes, ErrorPrinter errorPrinter)
-    {
+    private static boolean validateLabels(List<Node> nodes, ErrorPrinter errorPrinter) {
         boolean valid = true;
 
         Map<String, LabelNode> existingLabels = new HashMap<>();
-        for (Node node : nodes)
-        {
-            if (!(node instanceof LabelNode labelNode)) continue;
+        for (Node node : nodes) {
+            if (!(node instanceof LabelNode labelNode)) {
+                continue;
+            }
 
             String label = labelNode.label();
-            if (existingLabels.containsKey(label))
-            {
+            if (existingLabels.containsKey(label)) {
                 errorPrinter.error("Duplicate label '%s' defined on line %d", label, labelNode.label());
                 valid = false;
                 continue;
@@ -154,21 +141,20 @@ public final class Assembler
         }
 
         Set<String> usedLabels = new HashSet<>();
-        for (Node node : nodes)
-        {
-            if (!(node instanceof JumpNode jumpNode)) continue;
+        for (Node node : nodes) {
+            if (!(node instanceof JumpNode jumpNode)) {
+                continue;
+            }
 
             String target = jumpNode.label();
-            if (!existingLabels.containsKey(target))
-            {
+            if (!existingLabels.containsKey(target)) {
                 errorPrinter.error("Undefined label '%s' on line %d", target, node.line());
                 valid = false;
             }
             usedLabels.add(target);
         }
 
-        for (String unusedLabel : Sets.difference(existingLabels.keySet(), usedLabels))
-        {
+        for (String unusedLabel : Sets.difference(existingLabels.keySet(), usedLabels)) {
             int line = existingLabels.get(unusedLabel).line();
             errorPrinter.warning("Unused label '%s' on line %d", unusedLabel, line);
         }
@@ -176,99 +162,83 @@ public final class Assembler
         return valid;
     }
 
-    private static int computeCodeSize(List<Node> nodes, ErrorPrinter errorPrinter)
-    {
+    private static int computeCodeSize(List<Node> nodes, ErrorPrinter errorPrinter) {
         int size = 0;
         boolean skip = false;
-        for (Node node : nodes)
-        {
-            if (node instanceof OpNode opNode && !skip)
-            {
+        for (Node node : nodes) {
+            if (node instanceof OpNode opNode && !skip) {
                 size += 1 + opNode.opcode().getOperandBytes();
-            }
-            else if (node instanceof OriginDirectiveNode org)
-            {
-                if (size < org.origin())
-                {
+            } else if (node instanceof OriginDirectiveNode org) {
+                if (size < org.origin()) {
                     size = org.origin();
                     skip = false;
-                }
-                else
-                {
+                } else {
                     skip = true;
                 }
-            }
-            else if (node instanceof DefineByteDirectiveNode dbNode && !skip)
-            {
+            } else if (node instanceof DefineByteDirectiveNode dbNode && !skip) {
                 size += dbNode.data().length;
             }
         }
-        if (size > Constants.ROM_SIZE)
-        {
+        if (size > Constants.ROM_SIZE) {
             errorPrinter.error("Assembled code size %d exceeds maximum ROM size %d", size, Constants.ROM_SIZE);
             return -1;
         }
         return size;
     }
 
-    private static Code buildRomImage(String name, List<Node> nodes, byte[] codeBytes, ErrorPrinter errorPrinter)
-    {
-        record UnresolvedJump(int opPointer, JumpNode node) { }
+    private static Code buildRomImage(String name, List<Node> nodes, byte[] codeBytes, ErrorPrinter errorPrinter) {
+        record UnresolvedJump(int opPointer, JumpNode node) {
+        }
 
         int pointer = 0;
         Object2IntMap<String> resolvedLabels = new Object2IntOpenHashMap<>();
         Map<String, List<UnresolvedJump>> unresolvedJumps = new HashMap<>();
-        for (Node node : nodes)
-        {
-            if (node instanceof LabelNode labelNode)
-            {
-                resolvedLabels.put(labelNode.label(), pointer);
-                continue;
-            }
-            if (node instanceof OriginDirectiveNode orgNode)
-            {
-                pointer = orgNode.origin();
-                continue;
-            }
-            if (node instanceof DefineByteDirectiveNode dbNode)
-            {
-                System.arraycopy(dbNode.data(), 0, codeBytes, pointer, dbNode.data().length);
-                pointer += dbNode.data().length;
-                continue;
+        for (Node node : nodes) {
+            switch (node) {
+                case LabelNode labelNode -> {
+                    resolvedLabels.put(labelNode.label(), pointer);
+                    continue;
+                }
+                case OriginDirectiveNode orgNode -> {
+                    pointer = orgNode.origin();
+                    continue;
+                }
+                case DefineByteDirectiveNode dbNode -> {
+                    System.arraycopy(dbNode.data(), 0, codeBytes, pointer, dbNode.data().length);
+                    pointer += dbNode.data().length;
+                    continue;
+                }
+                default -> { }
             }
 
-            if (!(node instanceof OpNode opNode)) continue;
+            if (!(node instanceof OpNode opNode)) {
+                continue;
+            }
 
             int opPointer = pointer;
             codeBytes[pointer] = opNode.opcode().toByte();
             pointer++;
             pointer = opNode.appendOperands(codeBytes, pointer);
 
-            if (node instanceof JumpNode jumpNode)
-            {
-                unresolvedJumps.computeIfAbsent(jumpNode.label(), $ -> new ArrayList<>())
+            if (node instanceof JumpNode jumpNode) {
+                unresolvedJumps.computeIfAbsent(jumpNode.label(), _ -> new ArrayList<>())
                         .add(new UnresolvedJump(opPointer, jumpNode));
             }
         }
 
         Int2ObjectMap<String> labelsByPosition = new Int2ObjectOpenHashMap<>();
 
-        for (Map.Entry<String, List<UnresolvedJump>> entry : unresolvedJumps.entrySet())
-        {
+        for (Map.Entry<String, List<UnresolvedJump>> entry : unresolvedJumps.entrySet()) {
             String label = entry.getKey();
             int labelPointer = resolvedLabels.getInt(label);
 
             labelsByPosition.put(labelPointer, label);
 
-            for (UnresolvedJump jump : entry.getValue())
-            {
-                switch (jump.node.opcode())
-                {
-                    case AJMP_000, ACALL_000 ->
-                    {
+            for (UnresolvedJump jump : entry.getValue()) {
+                switch (jump.node.opcode()) {
+                    case AJMP_000, ACALL_000 -> {
                         int bits = 32 - Integer.numberOfLeadingZeros(labelPointer);
-                        if (bits > 11 || OpcodeHelpers.calculateAjmpTarget(jump.opPointer + 2, labelPointer) != labelPointer)
-                        {
+                        if (bits > 11 || OpcodeHelpers.calculateAjmpTarget(jump.opPointer + 2, labelPointer) != labelPointer) {
                             errorPrinter.error("%s target %d on line %d exceeds max range", jump.node.opcode().getMnemonic(), labelPointer, jump.node.line());
                             return Code.EMPTY;
                         }
@@ -278,16 +248,13 @@ public final class Assembler
                         codeBytes[jump.opPointer] = op.toByte();
                         codeBytes[jump.opPointer + 1] = (byte) (labelPointer & 0xFF);
                     }
-                    case LJMP, LCALL ->
-                    {
+                    case LJMP, LCALL -> {
                         codeBytes[jump.opPointer + 1] = (byte) ((labelPointer >> 8) & 0xFF);
                         codeBytes[jump.opPointer + 2] = (byte) (labelPointer & 0xFF);
                     }
-                    case JC, JNC, JZ, JNZ, SJMP, DJNZ_DR0, DJNZ_DR1, DJNZ_DR2, DJNZ_DR3, DJNZ_DR4, DJNZ_DR5, DJNZ_DR6, DJNZ_DR7 ->
-                    {
+                    case JC, JNC, JZ, JNZ, SJMP, DJNZ_DR0, DJNZ_DR1, DJNZ_DR2, DJNZ_DR3, DJNZ_DR4, DJNZ_DR5, DJNZ_DR6, DJNZ_DR7 -> {
                         int offset = calculateShortJumpOffset(jump.opPointer + 2, labelPointer);
-                        if (offset == Integer.MAX_VALUE)
-                        {
+                        if (offset == Integer.MAX_VALUE) {
                             errorPrinter.error("%s target %d on line %d exceeds max range", jump.node.opcode().getMnemonic(), labelPointer, jump.node.line());
                             return Code.EMPTY;
                         }
@@ -297,11 +264,9 @@ public final class Assembler
                          CJNE_ACC_MEM,
                          CJNE_IR0_IMM, CJNE_IR1_IMM,
                          CJNE_DR0_IMM, CJNE_DR1_IMM, CJNE_DR2_IMM, CJNE_DR3_IMM, CJNE_DR4_IMM, CJNE_DR5_IMM, CJNE_DR6_IMM, CJNE_DR7_IMM,
-                         DJNZ_MEM ->
-                    {
+                         DJNZ_MEM -> {
                         int offset = calculateShortJumpOffset(jump.opPointer + 3, labelPointer);
-                        if (offset == Integer.MAX_VALUE)
-                        {
+                        if (offset == Integer.MAX_VALUE) {
                             errorPrinter.error("%s target %d on line %d exceeds max range", jump.node.opcode().getMnemonic(), labelPointer, jump.node.line());
                             return Code.EMPTY;
                         }
@@ -315,8 +280,7 @@ public final class Assembler
         return new Code(name, codeBytes, labelsByPosition);
     }
 
-    private static int calculateShortJumpOffset(int src, int dest)
-    {
+    private static int calculateShortJumpOffset(int src, int dest) {
         int diff = dest - src;
         return (diff > 127 || diff < -128) ? Integer.MAX_VALUE : ((byte) diff);
     }

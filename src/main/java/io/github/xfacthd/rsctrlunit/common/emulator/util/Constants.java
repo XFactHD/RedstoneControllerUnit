@@ -1,7 +1,6 @@
 package io.github.xfacthd.rsctrlunit.common.emulator.util;
 
-public final class Constants
-{
+public final class Constants {
     public static final int ROM_SIZE = 65536;
     public static final int RAM_SIZE = 256;
     public static final int SFR_SIZE = 128; // Size of the double-mapped RAM area (SFR via direct, data via indirect)

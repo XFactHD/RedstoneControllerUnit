@@ -26,8 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
-{
+public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity {
     public static final Component TITLE = Component.translatable("menu.rsctrlunit.controller");
     public static final ModelProperty<int[]> PORT_MAPPING_PROPERTY = new ModelProperty<>();
 
@@ -35,114 +34,95 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
     private final Timers timers = interpreter.getTimers();
     private final RedstoneInterface redstone = new RedstoneInterface(this);
 
-    public ControllerBlockEntity(BlockPos pos, BlockState state)
-    {
+    public ControllerBlockEntity(BlockPos pos, BlockState state) {
         super(RCUContent.BE_TYPE_CONTROLLER.value(), pos, state);
         redstone.setFacing(state.getValue(BlockStateProperties.FACING));
     }
 
-    public void tick()
-    {
+    public void tick() {
         timers.tickClock();
         redstone.tick();
         setChangedWithoutSignalUpdate();
     }
 
-    public void loadCode(@Nullable Code code)
-    {
+    public void loadCode(@Nullable Code code) {
         code = Objects.requireNonNullElse(code, Code.EMPTY);
         interpreter.writeLockGuarded(code, Interpreter::loadCode);
         setChangedWithoutSignalUpdate();
     }
 
-    public Interpreter getInterpreter()
-    {
+    public Interpreter getInterpreter() {
         return interpreter;
     }
 
-    public RedstoneInterface getRedstoneInterface()
-    {
+    public RedstoneInterface getRedstoneInterface() {
         return redstone;
     }
 
     @Override
-    public int getRedstoneOutput(Direction side)
-    {
+    public int getRedstoneOutput(Direction side) {
         return redstone.getRedstoneOutput(side);
     }
 
     @Override
-    public int getBundledOutput(Direction side, int channel)
-    {
+    public int getBundledOutput(Direction side, int channel) {
         return redstone.getBundledOutput(side, channel);
     }
 
     @Override
-    public void handleNeighborUpdate(BlockPos adjPos, Direction side)
-    {
+    public void handleNeighborUpdate(BlockPos adjPos, Direction side) {
         redstone.handleNeighborUpdate(getBlockState(), adjPos, side);
     }
 
-    public void markForSyncAndSave()
-    {
+    public void markForSyncAndSave() {
         level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         setChangedWithoutSignalUpdate();
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries)
-    {
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         tag.put("redstone", redstone.writeToNetwork());
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(ValueInput valueInput)
-    {
+    public void handleUpdateTag(ValueInput valueInput) {
         redstone.readFromNetwork(valueInput.childOrEmpty("redstone"));
         requestModelDataUpdate();
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket()
-    {
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void onDataPacket(Connection net, ValueInput valueInput)
-    {
-        if (redstone.readFromNetwork(valueInput.childOrEmpty("redstone")))
-        {
+    public void onDataPacket(Connection net, ValueInput valueInput) {
+        if (redstone.readFromNetwork(valueInput.childOrEmpty("redstone"))) {
             requestModelDataUpdate();
             level().sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
     }
 
     @Override
-    public ModelData getModelData()
-    {
+    public ModelData getModelData() {
         return ModelData.of(PORT_MAPPING_PROPERTY, redstone.getPortMapping().clone());
     }
 
     @Override
-    public void clearRemoved()
-    {
+    public void clearRemoved() {
         super.clearRemoved();
-        if (!level().isClientSide())
-        {
+        if (!level().isClientSide()) {
             interpreter.startup();
             InterpreterThreadPool.addInterpreter(interpreter);
         }
     }
 
     @Override
-    public void setRemoved()
-    {
+    public void setRemoved() {
         super.setRemoved();
-        if (!level().isClientSide())
-        {
+        if (!level().isClientSide()) {
             interpreter.shutdown();
             InterpreterThreadPool.removeInterpreter(interpreter);
         }
@@ -150,24 +130,21 @@ public final class ControllerBlockEntity extends RedstoneHandlerBlockEntity
 
     @Override
     @SuppressWarnings("deprecation")
-    public void setBlockState(BlockState state)
-    {
+    public void setBlockState(BlockState state) {
         super.setBlockState(state);
         redstone.setFacing(state.getValue(BlockStateProperties.FACING));
         setChangedWithoutSignalUpdate();
     }
 
     @Override
-    protected void loadAdditional(ValueInput valueInput)
-    {
+    protected void loadAdditional(ValueInput valueInput) {
         super.loadAdditional(valueInput);
         interpreter.writeLockGuarded(valueInput.childOrEmpty("interpreter"), Interpreter::load);
         redstone.load(valueInput.childOrEmpty("redstone"));
     }
 
     @Override
-    protected void saveAdditional(ValueOutput valueOutput)
-    {
+    protected void saveAdditional(ValueOutput valueOutput) {
         super.saveAdditional(valueOutput);
         interpreter.writeLockGuarded(valueOutput.child("interpreter"), Interpreter::save);
         redstone.save(valueOutput.child("redstone"));

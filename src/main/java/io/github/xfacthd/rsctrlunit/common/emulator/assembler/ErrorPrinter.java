@@ -6,8 +6,7 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 import java.util.Locale;
 
-public interface ErrorPrinter
-{
+public interface ErrorPrinter {
     void warning(String msg);
 
     void warning(String msg, Object... args);
@@ -16,31 +15,24 @@ public interface ErrorPrinter
 
     void error(String msg, Object... args);
 
-
-
-    record Collecting(List<Component> lines) implements ErrorPrinter
-    {
+    record Collecting(List<Component> lines) implements ErrorPrinter {
         @Override
-        public void warning(String msg)
-        {
+        public void warning(String msg) {
             lines.add(Component.literal(msg).withStyle(ChatFormatting.GOLD));
         }
 
         @Override
-        public void warning(String msg, Object... args)
-        {
+        public void warning(String msg, Object... args) {
             warning(String.format(Locale.ROOT, msg, args));
         }
 
         @Override
-        public void error(String msg)
-        {
+        public void error(String msg) {
             lines.add(Component.literal(msg).withStyle(ChatFormatting.DARK_RED));
         }
 
         @Override
-        public void error(String msg, Object... args)
-        {
+        public void error(String msg, Object... args) {
             error(String.format(Locale.ROOT, msg, args));
         }
     }

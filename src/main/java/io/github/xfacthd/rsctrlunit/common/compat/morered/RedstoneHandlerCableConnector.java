@@ -8,8 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-final class RedstoneHandlerCableConnector implements WireConnector
-{
+final class RedstoneHandlerCableConnector implements WireConnector {
     static final RedstoneHandlerCableConnector INSTANCE = new RedstoneHandlerCableConnector();
 
     private RedstoneHandlerCableConnector() { }
@@ -23,10 +22,8 @@ final class RedstoneHandlerCableConnector implements WireConnector
             BlockState wireState,
             Direction wireFace,
             Direction directionToWire
-    )
-    {
-        if (!(thisState.getBlock() instanceof PlateBlock block))
-        {
+    ) {
+        if (!(thisState.getBlock() instanceof PlateBlock block)) {
             return false;
         }
 

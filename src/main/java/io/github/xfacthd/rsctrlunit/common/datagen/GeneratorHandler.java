@@ -18,13 +18,11 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = RedstoneControllerUnit.MOD_ID)
-public final class GeneratorHandler
-{
+public final class GeneratorHandler {
     private GeneratorHandler() { }
 
     @SubscribeEvent
-    static void onGatherData(final GatherDataEvent.Client event)
-    {
+    static void onGatherData(final GatherDataEvent.Client event) {
         DataGenerator generator = event.getGenerator();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         PackOutput output = generator.getPackOutput();

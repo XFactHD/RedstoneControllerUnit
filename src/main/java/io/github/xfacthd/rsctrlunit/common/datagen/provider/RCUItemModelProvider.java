@@ -13,35 +13,29 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.stream.Stream;
 
-public final class RCUItemModelProvider extends ModelProvider
-{
-    public RCUItemModelProvider(PackOutput output)
-    {
+public final class RCUItemModelProvider extends ModelProvider {
+    public RCUItemModelProvider(PackOutput output) {
         super(output, RedstoneControllerUnit.MOD_ID);
     }
 
     @Override
-    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels)
-    {
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         itemModels.generateFlatItem(RCUContent.ITEM_MEMORY_CARD.value(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(RCUContent.ITEM_PROGRAMMER.value(), ModelTemplates.FLAT_ITEM);
     }
 
     @Override
-    protected Stream<? extends Holder<Block>> getKnownBlocks()
-    {
+    protected Stream<? extends Holder<Block>> getKnownBlocks() {
         return Stream.empty();
     }
 
     @Override
-    protected Stream<? extends Holder<Item>> getKnownItems()
-    {
+    protected Stream<? extends Holder<Item>> getKnownItems() {
         return Stream.of(RCUContent.ITEM_MEMORY_CARD, RCUContent.ITEM_PROGRAMMER);
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "Item Models - RedstoneControllerUnit";
     }
 }

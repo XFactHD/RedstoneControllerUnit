@@ -2,6 +2,7 @@ package io.github.xfacthd.rsctrlunit.common.item;
 
 import io.github.xfacthd.rsctrlunit.common.blockentity.ControllerBlockEntity;
 import io.github.xfacthd.rsctrlunit.common.menu.ProgrammerMenu;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,47 +15,39 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public final class ProgrammerItem extends Item
-{
-    public ProgrammerItem(Properties props)
-    {
+public final class ProgrammerItem extends Item {
+    public ProgrammerItem(Properties props) {
         super(props.stacksTo(1));
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand)
-    {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!level.isClientSide())
-        {
+        if (!level.isClientSide()) {
             openMenu(player, stack, null);
         }
         return InteractionResult.SUCCESS;
     }
 
-
-
-    public static void openMenu(Player player, ItemStack stack, @Nullable ControllerBlockEntity controller)
-    {
+    public static void openMenu(Player player, ItemStack stack, @Nullable ControllerBlockEntity controller) {
         int slot = player.getInventory().getSelectedSlot();
         boolean forBlock = controller != null;
-        player.openMenu(new MenuProvider()
-        {
+        player.openMenu(new MenuProvider() {
             @Override
-            public Component getDisplayName()
-            {
+            public Component getDisplayName() {
                 return ProgrammerMenu.TITLE;
             }
 
             @Override
-            public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player)
-            {
+            public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
                 return new ProgrammerMenu(windowId, inventory, stack, slot, forBlock, controller);
             }
-        }, buf ->
-        {
-            buf.writeVarInt(slot);
-            buf.writeBoolean(forBlock);
+
+            @Override
+            public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
+                buffer.writeVarInt(slot);
+                buffer.writeBoolean(forBlock);
+            }
         });
     }
 }

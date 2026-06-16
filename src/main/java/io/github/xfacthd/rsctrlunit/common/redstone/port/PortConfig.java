@@ -6,8 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public sealed interface PortConfig permits NonePortConfig, SinglePortConfig, BundledPortConfig
-{
+public sealed interface PortConfig permits NonePortConfig, SinglePortConfig, BundledPortConfig {
     /**
      * Returns the vanilla redstone output (0-15) for the given port state on this port config
      */
@@ -28,10 +27,8 @@ public sealed interface PortConfig permits NonePortConfig, SinglePortConfig, Bun
 
     RedstoneType getType();
 
-    default PortConfig cycleType()
-    {
-        return switch (getType())
-        {
+    default PortConfig cycleType() {
+        return switch (getType()) {
             case NONE -> new SinglePortConfig(0, false);
             case SINGLE -> new BundledPortConfig(false, (byte) 0);
             case BUNDLED -> NonePortConfig.INSTANCE;

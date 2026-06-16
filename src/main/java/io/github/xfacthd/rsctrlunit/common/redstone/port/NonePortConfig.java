@@ -9,8 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public final class NonePortConfig implements PortConfig
-{
+public final class NonePortConfig implements PortConfig {
     public static final NonePortConfig INSTANCE = new NonePortConfig();
     public static final MapCodec<NonePortConfig> MAP_CODEC = MapCodec.unit(INSTANCE);
     public static final StreamCodec<ByteBuf, NonePortConfig> STREAM_CODEC = StreamCodec.unit(INSTANCE);
@@ -18,38 +17,32 @@ public final class NonePortConfig implements PortConfig
     private NonePortConfig() { }
 
     @Override
-    public int getRedstoneOutput(byte portState)
-    {
+    public int getRedstoneOutput(byte portState) {
         return 0;
     }
 
     @Override
-    public int getBundledOutput(byte portState, int channel)
-    {
+    public int getBundledOutput(byte portState, int channel) {
         return 0;
     }
 
     @Override
-    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side)
-    {
+    public byte updateInput(Level level, BlockState state, BlockPos pos, Direction facing, BlockPos adjPos, Direction side) {
         return 0;
     }
 
     @Override
-    public boolean hasInputs()
-    {
+    public boolean hasInputs() {
         return false;
     }
 
     @Override
-    public boolean hasOutputs()
-    {
+    public boolean hasOutputs() {
         return false;
     }
 
     @Override
-    public RedstoneType getType()
-    {
+    public RedstoneType getType() {
         return RedstoneType.NONE;
     }
 }

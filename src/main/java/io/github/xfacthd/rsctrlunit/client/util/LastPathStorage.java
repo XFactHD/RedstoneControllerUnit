@@ -15,10 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
-public final class LastPathStorage
-{
-    private static final String SYSTEM_UUID = Util.make(() ->
-    {
+public final class LastPathStorage {
+    private static final String SYSTEM_UUID = Util.make(() -> {
         String uuid = new SystemInfo().getHardware().getComputerSystem().getHardwareUUID();
         // Hash the system UUID just in case someone (accidentally) publishes a last-path file in a modpack
         return Sha2Crypt.sha256Crypt(uuid.getBytes(StandardCharsets.UTF_8), "$5$HashedHardwareIdAsSafeguard");
@@ -34,50 +32,38 @@ public final class LastPathStorage
     @Nullable
     private Path lastDirectoryPath = null;
 
-    public LastPathStorage(String fileName, String defaultFolder)
-    {
+    public LastPathStorage(String fileName, String defaultFolder) {
         this.saveFilePath = ROOT_PATH.resolve(fileName).toAbsolutePath().normalize();
         this.defaultDirectoryPath = ROOT_PATH.resolve(defaultFolder);
 
-        try
-        {
+        try {
             Files.createDirectories(ROOT_PATH);
             Files.createDirectories(defaultDirectoryPath);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             RedstoneControllerUnit.LOGGER.error("Encountered an error while creating ");
         }
     }
 
-    public Path get()
-    {
-        if (lastDirectoryPath == null)
-        {
-            if (!Files.isRegularFile(saveFilePath))
-            {
+    public Path get() {
+        if (lastDirectoryPath == null) {
+            if (!Files.isRegularFile(saveFilePath)) {
                 return defaultDirectoryPath;
             }
 
-            try
-            {
+            try {
                 List<String> data = Files.readAllLines(saveFilePath);
-                if (data.size() != 2)
-                {
+                if (data.size() != 2) {
                     RedstoneControllerUnit.LOGGER.warn("Encountered invalid last-used-path info in file '{}', deleting", saveFilePath);
                     Files.delete(saveFilePath);
                     return defaultDirectoryPath;
                 }
-                if (!data.getFirst().equals(SYSTEM_UUID))
-                {
+                if (!data.getFirst().equals(SYSTEM_UUID)) {
                     RedstoneControllerUnit.LOGGER.error("Encountered last-used-path info from unknown system ID in file '{}', deleting", saveFilePath);
                     Files.delete(saveFilePath);
                     return defaultDirectoryPath;
                 }
                 lastDirectoryPath = Path.of(data.getLast());
-            }
-            catch (Throwable t)
-            {
+            } catch (Throwable t) {
                 RedstoneControllerUnit.LOGGER.error("Encountered an error while loading last-used-path info from file '{}'", saveFilePath, t);
                 return defaultDirectoryPath;
             }
@@ -85,40 +71,29 @@ public final class LastPathStorage
         return lastDirectoryPath;
     }
 
-    public String getAsTinyFDString()
-    {
+    public String getAsTinyFDString() {
         return get() + File.separator;
     }
 
-    public void update(String fileOrDirPath)
-    {
-        try
-        {
+    public void update(String fileOrDirPath) {
+        try {
             Path path = Path.of(fileOrDirPath);
-            if (Files.isRegularFile(path))
-            {
+            if (Files.isRegularFile(path)) {
                 path = path.subpath(0, path.getNameCount() - 1);
             }
             update(path);
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
             RedstoneControllerUnit.LOGGER.error("Encountered an error while saving last used path information in file '{}'", saveFilePath, t);
         }
     }
 
-    public void update(Path directoryPath)
-    {
-        if (!directoryPath.equals(lastDirectoryPath))
-        {
-            try
-            {
+    public void update(Path directoryPath) {
+        if (!directoryPath.equals(lastDirectoryPath)) {
+            try {
                 String pathString = directoryPath.toAbsolutePath().normalize().toString();
                 Files.write(saveFilePath, List.of(SYSTEM_UUID, pathString), WRITE_OPTIONS);
                 lastDirectoryPath = directoryPath;
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 RedstoneControllerUnit.LOGGER.error("Encountered an error while saving last used path information in file '{}'", saveFilePath, e);
             }
         }

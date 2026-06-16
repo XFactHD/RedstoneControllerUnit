@@ -4,15 +4,13 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
-public final class FixedTooltipPositioner implements ClientTooltipPositioner
-{
+public final class FixedTooltipPositioner implements ClientTooltipPositioner {
     public static final FixedTooltipPositioner INSTANCE = new FixedTooltipPositioner();
 
     private FixedTooltipPositioner() { }
 
     @Override
-    public Vector2ic positionTooltip(int screenWidth, int screenHeight, int x, int y, int w, int h)
-    {
+    public Vector2ic positionTooltip(int screenWidth, int screenHeight, int x, int y, int w, int h) {
         return new Vector2i(x, y);
     }
 }

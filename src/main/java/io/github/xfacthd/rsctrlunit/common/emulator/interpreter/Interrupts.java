@@ -7,8 +7,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
-final class Interrupts
-{
+final class Interrupts {
     private static final int NO_ISR = -1;
     private static final int[] ISR_ADDRESSES = new int[] {
             0x0003, // External 0
@@ -30,16 +29,13 @@ final class Interrupts
     @Nullable
     private ISR activeIsrLowPrio = null;
 
-    Interrupts(RAM ram)
-    {
+    Interrupts(RAM ram) {
         this.ram = ram;
     }
 
-    int run()
-    {
+    int run() {
         byte ie = ram.readByte(Constants.ADDRESS_IE);
-        if ((ie & MASK_ENABLE_ALL) == 0)
-        {
+        if ((ie & MASK_ENABLE_ALL) == 0) {
             return NO_ISR;
         }
 
@@ -47,55 +43,49 @@ final class Interrupts
         // All interrupt trigger bits except those for the serial port are stored in TCON
         byte tcon = ram.readByte(Constants.ADDRESS_TCON);
 
-        if (activeIsrHighPrio != null)
-        {
+        if (activeIsrHighPrio != null) {
             return NO_ISR;
         }
 
         activeIsrHighPrio = findNextInterrupt(true, ie, ip, tcon);
-        if (activeIsrHighPrio != null)
-        {
+        if (activeIsrHighPrio != null) {
             return activeIsrHighPrio.isrAddress;
         }
 
-        if (activeIsrLowPrio != null)
-        {
+        if (activeIsrLowPrio != null) {
             return NO_ISR;
         }
 
         activeIsrLowPrio = findNextInterrupt(false, ie, ip, tcon);
-        if (activeIsrLowPrio != null)
-        {
+        if (activeIsrLowPrio != null) {
             return activeIsrLowPrio.isrAddress;
         }
 
         return NO_ISR;
     }
 
-    @Nullable
-    private ISR findNextInterrupt(boolean serviceHighPrio, byte ie, byte ip, byte tcon)
-    {
+    private @Nullable ISR findNextInterrupt(boolean serviceHighPrio, byte ie, byte ip, byte tcon) {
         // 8051 technically has 5 interrupts but the serial port is unsupported, so its interrupt is ignored
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             // Interrupt may have switched priority while its ISR is running, ignore
-            if (activeIsrHighPrio != null && activeIsrHighPrio.index == i) continue;
-            if (activeIsrLowPrio != null && activeIsrLowPrio.index == i) continue;
+            if (activeIsrHighPrio != null && activeIsrHighPrio.index == i) {
+                continue;
+            }
+            if (activeIsrLowPrio != null && activeIsrLowPrio.index == i) {
+                continue;
+            }
 
-            if ((ie & (1 << i)) == 0)
-            {
+            if ((ie & (1 << i)) == 0) {
                 continue;
             }
 
             boolean isHighPrio = (ip & (1 << i)) != 0;
-            if (isHighPrio != serviceHighPrio)
-            {
+            if (isHighPrio != serviceHighPrio) {
                 continue;
             }
 
             int mask = TRIGGER_MASKS[i];
-            if ((tcon & mask) != 0)
-            {
+            if ((tcon & mask) != 0) {
                 ram.write(Constants.ADDRESS_TCON, tcon & ~mask);
                 return new ISR(i, ISR_ADDRESSES[i], isHighPrio);
             }
@@ -103,32 +93,25 @@ final class Interrupts
         return null;
     }
 
-    void returnFromIsr()
-    {
-        if (activeIsrHighPrio != null)
-        {
+    void returnFromIsr() {
+        if (activeIsrHighPrio != null) {
             activeIsrHighPrio = null;
-        }
-        else if (activeIsrLowPrio != null)
-        {
+        } else if (activeIsrLowPrio != null) {
             activeIsrLowPrio = null;
         }
     }
 
-    public void load(ValueInput valueInput)
-    {
+    public void load(ValueInput valueInput) {
         activeIsrHighPrio = valueInput.read("isr_high_prio", ISR.CODEC).orElse(null);
         activeIsrLowPrio = valueInput.read("isr_low_prio", ISR.CODEC).orElse(null);
     }
 
-    public void save(ValueOutput valueOutput)
-    {
+    public void save(ValueOutput valueOutput) {
         valueOutput.storeNullable("isr_high_prio", ISR.CODEC, activeIsrHighPrio);
         valueOutput.storeNullable("isr_low_prio", ISR.CODEC, activeIsrLowPrio);
     }
 
-    private record ISR(int index, int isrAddress, boolean highPriority)
-    {
+    private record ISR(int index, int isrAddress, boolean highPriority) {
         private static final Codec<ISR> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 Codec.INT.fieldOf("index").forGetter(ISR::index),
                 Codec.INT.fieldOf("address").forGetter(ISR::isrAddress),

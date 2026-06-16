@@ -12,16 +12,13 @@ import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
-public final class RCURecipeProvider extends RecipeProvider
-{
-    private RCURecipeProvider(HolderLookup.Provider registries, RecipeOutput output)
-    {
+public final class RCURecipeProvider extends RecipeProvider {
+    private RCURecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
         super(registries, output);
     }
 
     @Override
-    protected void buildRecipes()
-    {
+    protected void buildRecipes() {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.REDSTONE, RCUContent.BLOCK_CONTROLLER.value())
                 .pattern("DRD")
                 .pattern("RCR")
@@ -75,22 +72,18 @@ public final class RCURecipeProvider extends RecipeProvider
                 .save(output);
     }
 
-    public static final class Runner extends RecipeProvider.Runner
-    {
-        public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
-        {
+    public static final class Runner extends RecipeProvider.Runner {
+        public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
             super(output, registries);
         }
 
         @Override
-        protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output)
-        {
+        protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
             return new RCURecipeProvider(registries, output);
         }
 
         @Override
-        public String getName()
-        {
+        public String getName() {
             return "RCU Recipes";
         }
     }

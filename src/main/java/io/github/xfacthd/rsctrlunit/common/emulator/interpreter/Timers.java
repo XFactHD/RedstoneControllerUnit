@@ -20,8 +20,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  *      TR: 0 => timer stopped, 1 => timer running
  *      TF: 1 => count register overflow
  */
-public final class Timers
-{
+public final class Timers {
     private static final int MAX_COUNT_5BIT = (1 << 5) - 1;
     private static final int MAX_COUNT_8BIT = (1 << 8) - 1;
     private static final int MODE_13BIT = 0b00000000;
@@ -41,20 +40,19 @@ public final class Timers
     private boolean lastTrigger0 = false;
     private boolean lastTrigger1 = false;
 
-    public Timers(RAM ram, IOPorts ioPorts)
-    {
+    public Timers(RAM ram, IOPorts ioPorts) {
         this.ram = ram;
         this.ioPorts = ioPorts;
     }
 
-    public void tickClock()
-    {
+    public void tickClock() {
         ticked = true;
     }
 
-    void run()
-    {
-        if (!ticked) return;
+    void run() {
+        if (!ticked) {
+            return;
+        }
         ticked = false;
 
         byte port3 = ioPorts.readInputPort(3);
@@ -69,37 +67,32 @@ public final class Timers
         lastTrigger1 = trigger1;
     }
 
-    private void updateTimer(int idx, byte port3, boolean extTrigger)
-    {
+    private void updateTimer(int idx, byte port3, boolean extTrigger) {
         byte tmod = ram.readByte(Constants.ADDRESS_TMOD);
         int mode = (tmod >>> (4 * idx)) & MASK_MODE;
-        if (idx == 1 && mode == MODE_8BIT_SPLIT) return;
+        if (idx == 1 && mode == MODE_8BIT_SPLIT) {
+            return;
+        }
 
         boolean counter = (tmod & (MASK_CT_0 << (4 * idx))) != 0;
-        if (counter && !extTrigger)
-        {
+        if (counter && !extTrigger) {
             return;
         }
 
         byte tcon = ram.readByte(Constants.ADDRESS_TCON);
         boolean running = (tcon & (MASK_RUN0 << (2 * idx))) != 0 && isNotGated(port3, tmod, idx);
-        if ((idx != 0 || mode != MODE_8BIT_SPLIT) && !running)
-        {
+        if ((idx != 0 || mode != MODE_8BIT_SPLIT) && !running) {
             return;
         }
 
-        switch (mode)
-        {
-            case MODE_13BIT ->
-            {
+        switch (mode) {
+            case MODE_13BIT -> {
                 int countLow = ram.read(Constants.ADDRESS_TL0 + idx) + 1;
                 int countHigh = ram.read(Constants.ADDRESS_TH0 + idx);
-                if (countLow > MAX_COUNT_5BIT)
-                {
+                if (countLow > MAX_COUNT_5BIT) {
                     countLow = 0;
                     countHigh++;
-                    if (countHigh > MAX_COUNT_8BIT)
-                    {
+                    if (countHigh > MAX_COUNT_8BIT) {
                         countHigh = 0;
                         setOverflow(idx);
                     }
@@ -108,15 +101,12 @@ public final class Timers
                 ram.write(Constants.ADDRESS_TL0 + idx, ((countHigh & 0b00000111) << 5) | (countLow & 0x1F));
                 ram.write(Constants.ADDRESS_TH0 + idx, countHigh);
             }
-            case MODE_16BIT ->
-            {
+            case MODE_16BIT -> {
                 int countLow = ram.read(Constants.ADDRESS_TL0 + idx) + 1;
-                if (countLow > MAX_COUNT_8BIT)
-                {
+                if (countLow > MAX_COUNT_8BIT) {
                     countLow = 0;
                     int countHigh = ram.read(Constants.ADDRESS_TH0 + idx) + 1;
-                    if (countHigh > MAX_COUNT_8BIT)
-                    {
+                    if (countHigh > MAX_COUNT_8BIT) {
                         countHigh = 0;
                         setOverflow(idx);
                     }
@@ -124,34 +114,27 @@ public final class Timers
                 }
                 ram.write(Constants.ADDRESS_TL0 + idx, countLow);
             }
-            case MODE_8BIT_AUTORELOAD ->
-            {
+            case MODE_8BIT_AUTORELOAD -> {
                 int count = ram.read(Constants.ADDRESS_TL0 + idx) + 1;
-                if (count > MAX_COUNT_8BIT)
-                {
+                if (count > MAX_COUNT_8BIT) {
                     count = ram.readByte(Constants.ADDRESS_TH0 + idx) & 0xFF;
                     setOverflow(idx);
                 }
                 ram.write(Constants.ADDRESS_TL0 + idx, count);
             }
-            case MODE_8BIT_SPLIT ->
-            {
-                if (running)
-                {
+            case MODE_8BIT_SPLIT -> {
+                if (running) {
                     int count = ram.read(Constants.ADDRESS_TL0) + 1;
-                    if (count > MAX_COUNT_8BIT)
-                    {
+                    if (count > MAX_COUNT_8BIT) {
                         count = 0;
                         setOverflow(idx);
                     }
                     ram.write(Constants.ADDRESS_TL0, count);
                 }
                 boolean runningUpper = (tcon & MASK_RUN1) != 0;
-                if (runningUpper)
-                {
+                if (runningUpper) {
                     int count = ram.read(Constants.ADDRESS_TH0) + 1;
-                    if (count > MAX_COUNT_8BIT)
-                    {
+                    if (count > MAX_COUNT_8BIT) {
                         count = 0;
                         setOverflow(1);
                     }
@@ -161,28 +144,23 @@ public final class Timers
         }
     }
 
-    private static boolean isNotGated(byte port3, byte tmod, int idx)
-    {
-        if ((tmod & (MASK_GATE0 << (4 * idx))) != 0)
-        {
+    private static boolean isNotGated(byte port3, byte tmod, int idx) {
+        if ((tmod & (MASK_GATE0 << (4 * idx))) != 0) {
             return (port3 & (MASK_INT0 << idx)) != 0;
         }
         return true;
     }
 
-    private void setOverflow(int idx)
-    {
+    private void setOverflow(int idx) {
         ram.writeBit(Constants.BIT_ADDRESS_TIMER0_OVERFLOW + (idx * 2), BitWriteMode.SET);
     }
 
-    public void load(ValueInput valueInput)
-    {
+    public void load(ValueInput valueInput) {
         lastTrigger0 = valueInput.getBooleanOr("last_trigger_0", false);
         lastTrigger1 = valueInput.getBooleanOr("last_trigger_1", false);
     }
 
-    public void save(ValueOutput valueOutput)
-    {
+    public void save(ValueOutput valueOutput) {
         valueOutput.putBoolean("last_trigger_0", lastTrigger0);
         valueOutput.putBoolean("last_trigger_1", lastTrigger1);
     }

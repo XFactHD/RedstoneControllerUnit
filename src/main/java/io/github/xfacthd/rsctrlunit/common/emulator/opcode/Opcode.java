@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public enum Opcode
-{
+public enum Opcode {
     // Irregular 0x00-0x03
     NOP             ("NOP",     0, 0, NoArgOpNode::create),
     AJMP_000        ("AJMP",    1, 1, ParseHelpers.makeOneLabelArgJumpParser()),
@@ -201,7 +200,7 @@ public enum Opcode
     INC_DPTR        ("INC",     1, 0, ParseHelpers.makeOneConstArgParser("DPTR")),
     //Regular 0xA4-0xAF
     MUL_AB          ("MUL",     1, 0, ParseHelpers.makeOneConstArgParser("AB")),
-    RESERVED        ("",        0, 0, (line, op, operands) -> null),
+    RESERVED        ("",        0, 0, (_, _, _) -> null),
     MOV_IR0_MEM     ("MOV",     2, 1, ParseHelpers.makeTwoArgOneConstOneAddressParser("@R0", false)),
     MOV_IR1_MEM     ("MOV",     2, 1, ParseHelpers.makeTwoArgOneConstOneAddressParser("@R1", false)),
     MOV_DR0_MEM     ("MOV",     2, 1, ParseHelpers.makeTwoArgOneConstOneAddressParser("R0", false), 1),
@@ -305,17 +304,14 @@ public enum Opcode
     ;
 
     private static final Opcode[] OPCODES = values();
-    private static final Map<String, List<Opcode>> OPCODES_BY_MNEMONIC = Util.make(new HashMap<>(), map ->
-    {
-        for (Opcode opcode : OPCODES)
-        {
-            if (opcode == RESERVED) continue;
-            map.computeIfAbsent(opcode.mnemonic.toLowerCase(Locale.ROOT), $ -> new ArrayList<>()).add(opcode);
+    private static final Map<String, List<Opcode>> OPCODES_BY_MNEMONIC = Util.make(new HashMap<>(), map -> {
+        for (Opcode opcode : OPCODES) {
+            if (opcode != RESERVED) {
+                map.computeIfAbsent(opcode.mnemonic.toLowerCase(Locale.ROOT), _ -> new ArrayList<>()).add(opcode);
+            }
         }
-        map.values().forEach(list -> list.sort((a, b) ->
-        {
-            if (a.priority != b.priority)
-            {
+        map.values().forEach(list -> list.sort((a, b) -> {
+            if (a.priority != b.priority) {
                 return Integer.compare(b.priority, a.priority);
             }
             return Integer.compare(a.ordinal(), b.ordinal());
@@ -331,13 +327,11 @@ public enum Opcode
     // Parser priority, opcodes with higher values are tried first
     private final int priority;
 
-    Opcode(String mnemonic, int operands, int operandBytes, NodeParser parser)
-    {
+    Opcode(String mnemonic, int operands, int operandBytes, NodeParser parser) {
         this(mnemonic, operands, operandBytes, parser, 0);
     }
 
-    Opcode(String mnemonic, int operands, int operandBytes, NodeParser parser, int priority)
-    {
+    Opcode(String mnemonic, int operands, int operandBytes, NodeParser parser, int priority) {
         this.mnemonic = mnemonic;
         this.operands = operands;
         this.operandBytes = operandBytes;
@@ -345,58 +339,46 @@ public enum Opcode
         this.priority = priority;
     }
 
-    public String getMnemonic()
-    {
+    public String getMnemonic() {
         return mnemonic;
     }
 
-    public int getOperands()
-    {
+    public int getOperands() {
         return operands;
     }
 
-    public int getOperandBytes()
-    {
+    public int getOperandBytes() {
         return operandBytes;
     }
 
-    public byte toByte()
-    {
+    public byte toByte() {
         return (byte) ordinal();
     }
 
-
-
-    public static Node parse(int line, String mnemonic, String[] operands)
-    {
+    public static Node parse(int line, String mnemonic, String[] operands) {
         List<Opcode> opcodes = OPCODES_BY_MNEMONIC.get(mnemonic);
-        if (opcodes == null)
-        {
+        if (opcodes == null) {
             return ErrorNode.unrecognizedOpcode(mnemonic, line);
         }
 
-        for (Opcode opcode : opcodes)
-        {
-            if (operands.length != opcode.getOperands()) continue;
+        for (Opcode opcode : opcodes) {
+            if (operands.length != opcode.getOperands()) {
+                continue;
+            }
 
-            try
-            {
+            try {
                 Node node = opcode.parser.parse(line, opcode, operands);
-                if (node != null)
-                {
+                if (node != null) {
                     return node;
                 }
-            }
-            catch (Throwable t)
-            {
+            } catch (Throwable t) {
                 return ErrorNode.invalidOperand(opcode, operands, line);
             }
         }
         return ErrorNode.invalidOperand(opcodes.getFirst(), operands, line);
     }
 
-    public static Opcode fromRomByte(byte romByte)
-    {
+    public static Opcode fromRomByte(byte romByte) {
         return OPCODES[romByte & 0xFF];
     }
 }

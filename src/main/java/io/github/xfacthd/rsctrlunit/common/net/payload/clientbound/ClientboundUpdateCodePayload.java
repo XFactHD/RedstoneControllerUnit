@@ -7,8 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record ClientboundUpdateCodePayload(int windowId, Code code) implements CustomPacketPayload
-{
+public record ClientboundUpdateCodePayload(int windowId, Code code) implements CustomPacketPayload {
     public static final Type<ClientboundUpdateCodePayload> TYPE = Utils.payloadType("clientbound_update_code");
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundUpdateCodePayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
@@ -19,8 +18,7 @@ public record ClientboundUpdateCodePayload(int windowId, Code code) implements C
     );
 
     @Override
-    public Type<ClientboundUpdateCodePayload> type()
-    {
+    public Type<ClientboundUpdateCodePayload> type() {
         return TYPE;
     }
 }

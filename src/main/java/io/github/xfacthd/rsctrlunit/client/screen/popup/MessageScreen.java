@@ -18,8 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public sealed class MessageScreen extends Screen permits ConfirmationScreen
-{
+public sealed class MessageScreen extends Screen permits ConfirmationScreen {
     private static final Identifier BACKGROUND = Utils.rl("background");
     public static final Component INFO_TITLE = Component.translatable("title.rsctrlunit.message.info");
     public static final Component ERROR_TITLE = Component.translatable("title.rsctrlunit.message.error");
@@ -39,35 +38,29 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     protected int topPos;
     protected int imageHeight;
 
-    public static MessageScreen info(List<Component> message)
-    {
+    public static MessageScreen info(List<Component> message) {
         return new MessageScreen(INFO_TITLE, message);
     }
 
-    public static MessageScreen error(List<Component> message)
-    {
+    public static MessageScreen error(List<Component> message) {
         return new MessageScreen(ERROR_TITLE, message);
     }
 
-    public static MessageScreen confirm(List<Component> message, Runnable action)
-    {
+    public static MessageScreen confirm(List<Component> message, Runnable action) {
         return new ConfirmationScreen(message, action);
     }
 
-    public MessageScreen(Component title, List<Component> messages)
-    {
+    public MessageScreen(Component title, List<Component> messages) {
         super(title);
         this.messages = messages;
     }
 
     @Override
-    protected void init()
-    {
+    protected void init() {
         textBlocks.clear();
 
         imageHeight = BASE_HEIGHT;
-        for (Component msg : messages)
-        {
+        for (Component msg : messages) {
             imageHeight += ClientUtils.getWrappedHeight(font, msg, TEXT_WIDTH);
             imageHeight += font.lineHeight;
 
@@ -81,8 +74,7 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
         addButtons();
     }
 
-    protected void addButtons()
-    {
+    protected void addButtons() {
         addRenderableWidget(Button.builder(CommonComponents.GUI_OK, _ -> onClose())
                 .pos(leftPos + (WIDTH / 2) - (BTN_WIDTH / 2), topPos + imageHeight - BTN_BOTTOM_OFFSET)
                 .size(BTN_WIDTH, BTN_HEIGHT)
@@ -91,18 +83,15 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
-    {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos, WIDTH, imageHeight);
         graphics.text(font, title, leftPos + TITLE_X, topPos + TITLE_Y, 0x404040, false);
 
         int y = topPos + TITLE_Y + font.lineHeight * 2;
-        for (List<FormattedCharSequence> block : textBlocks)
-        {
-            for (FormattedCharSequence line : block)
-            {
+        for (List<FormattedCharSequence> block : textBlocks) {
+            for (FormattedCharSequence line : block) {
                 graphics.text(font, line, leftPos + TITLE_X, y, 0, false);
                 y += font.lineHeight;
             }
@@ -111,41 +100,35 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
-    {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         Style style = findTextLine(mouseX, mouseY);
-        if (style != null)
-        {
+        if (style != null) {
             graphics.componentHoverEffect(font, style, mouseX, mouseY);
         }
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
-    {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         Style style = findTextLine((int) event.x(), (int) event.y());
-        if (style != null && style.getClickEvent() != null)
-        {
+        if (style != null && style.getClickEvent() != null) {
             defaultHandleClickEvent(style.getClickEvent(), minecraft, this);
             return true;
         }
         return super.mouseClicked(event, doubleClick);
     }
 
-    @Nullable
-    private Style findTextLine(int mouseX, int mouseY)
-    {
+    private @Nullable Style findTextLine(int mouseX, int mouseY) {
         int x = leftPos - TITLE_X;
-        if (mouseX < x) return null;
+        if (mouseX < x) {
+            return null;
+        }
 
         ActiveTextCollector.ClickableStyleFinder styleFinder = new ActiveTextCollector.ClickableStyleFinder(font, mouseX, mouseY);
         int y = topPos + TITLE_Y + font.lineHeight * 2;
-        for (List<FormattedCharSequence> block : textBlocks)
-        {
-            for (FormattedCharSequence line : block)
-            {
+        for (List<FormattedCharSequence> block : textBlocks) {
+            for (FormattedCharSequence line : block) {
                 styleFinder.accept(x, y, line);
                 y += font.lineHeight;
             }
@@ -155,8 +138,7 @@ public sealed class MessageScreen extends Screen permits ConfirmationScreen
     }
 
     @Override
-    public boolean isPauseScreen()
-    {
+    public boolean isPauseScreen() {
         return false;
     }
 }

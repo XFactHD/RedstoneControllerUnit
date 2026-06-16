@@ -13,30 +13,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public final class RCULootTableProvider extends LootTableProvider
-{
-    public RCULootTableProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
-    {
+public final class RCULootTableProvider extends LootTableProvider {
+    public RCULootTableProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, Set.of(), entries(), registries);
     }
 
-    private static List<SubProviderEntry> entries()
-    {
+    private static List<SubProviderEntry> entries() {
         return List.of(
                 new SubProviderEntry(RCUBlockLootSubProvider::new, LootContextParamSets.BLOCK)
         );
     }
 
-    private static final class RCUBlockLootSubProvider extends BlockLootSubProvider
-    {
-        private RCUBlockLootSubProvider(HolderLookup.Provider registries)
-        {
+    private static final class RCUBlockLootSubProvider extends BlockLootSubProvider {
+        private RCUBlockLootSubProvider(HolderLookup.Provider registries) {
             super(Set.of(), FeatureFlags.DEFAULT_FLAGS, registries);
         }
 
         @Override
-        protected Iterable<Block> getKnownBlocks()
-        {
+        protected Iterable<Block> getKnownBlocks() {
             return List.of(
                     RCUContent.BLOCK_CONTROLLER.value(),
                     RCUContent.BLOCK_ADC.value(),
@@ -45,8 +39,7 @@ public final class RCULootTableProvider extends LootTableProvider
         }
 
         @Override
-        protected void generate()
-        {
+        protected void generate() {
             dropSelf(RCUContent.BLOCK_CONTROLLER.value());
             dropSelf(RCUContent.BLOCK_ADC.value());
             dropSelf(RCUContent.BLOCK_DAC.value());

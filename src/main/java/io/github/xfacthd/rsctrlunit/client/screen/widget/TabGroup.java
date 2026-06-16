@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-public final class TabGroup
-{
+public final class TabGroup {
     private final int x;
     private final int y;
     private final int width;
@@ -18,8 +17,7 @@ public final class TabGroup
     private final List<TabButton> buttons = new ArrayList<>();
     private boolean built = false;
 
-    public TabGroup(int x, int y, int width, int height, IntConsumer tabListener)
-    {
+    public TabGroup(int x, int y, int width, int height, IntConsumer tabListener) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -27,29 +25,27 @@ public final class TabGroup
         this.tabListener = tabListener;
     }
 
-    public TabGroup addButton(Component title)
-    {
+    public TabGroup addButton(Component title) {
         Preconditions.checkState(!built, "TabGroup already built!");
 
         int idx = buttons.size();
-        buttons.add(new TabButton(x, y, width, height, title, btn -> tabPressed(idx)));
+        buttons.add(new TabButton(x, y, width, height, title, _ -> tabPressed(idx)));
 
         return this;
     }
 
-    public void build(Consumer<TabButton> registrar, int selectedTab)
-    {
-        if (built) return;
+    public void build(Consumer<TabButton> registrar, int selectedTab) {
+        if (built) {
+            return;
+        }
         built = true;
 
         int btnWidth = width / buttons.size();
-        for (int i = 0; i < buttons.size(); i++)
-        {
+        for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).setRectangle(btnWidth, height, x + btnWidth * i, y);
         }
 
-        for (int i = 0; i < buttons.size(); i++)
-        {
+        for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).setSelected(i == selectedTab);
         }
         buttons.getFirst().setPos(TabButton.Position.LEFT);
@@ -58,11 +54,9 @@ public final class TabGroup
         buttons.forEach(registrar);
     }
 
-    private void tabPressed(int idx)
-    {
+    private void tabPressed(int idx) {
         tabListener.accept(idx);
-        for (int i = 0; i < buttons.size(); i++)
-        {
+        for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).setSelected(i == idx);
         }
     }

@@ -9,8 +9,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 
-public final class ClientUtils
-{
+public final class ClientUtils {
     private static final WidgetSprites BTN_SPRITES = new WidgetSprites(
             Identifier.withDefaultNamespace("widget/button"),
             Identifier.withDefaultNamespace("widget/button_disabled"),
@@ -31,8 +30,7 @@ public final class ClientUtils
             int xTextOff,
             int mouseX,
             int mouseY
-    )
-    {
+    ) {
         drawButton(graphics, font, x, y, width, height, Component.literal(text), enabled, shadow, centered, false, xTextOff, mouseX, mouseY);
     }
 
@@ -51,45 +49,35 @@ public final class ClientUtils
             int xTextOff,
             int mouseX,
             int mouseY
-    )
-    {
+    ) {
         boolean hovered = enabled && (hoverOverride || (mouseY >= y && mouseY < y + height && mouseX >= x && mouseX < x + width));
         Identifier sprite = BTN_SPRITES.get(enabled, hovered);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, width, height);
 
         int color = enabled ? 0xFFFFFFFF : 0xFFA0A0A0;
-        if (centered)
-        {
+        if (centered) {
             drawCenteredString(graphics, font, text, x + (width % 2) + (width / 2), y + 4, color, shadow);
-        }
-        else
-        {
+        } else {
             graphics.text(font, text, x + 4 + xTextOff, y + 4, color, shadow);
         }
     }
 
-    public static void drawCenteredString(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int color, boolean shadow)
-    {
+    public static void drawCenteredString(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int color, boolean shadow) {
         FormattedCharSequence charSeq = text.getVisualOrderText();
         graphics.text(font, charSeq, x - font.width(charSeq) / 2, y, color, shadow);
     }
 
-    public static int getWrappedHeight(Font font, FormattedText text, int width)
-    {
+    public static int getWrappedHeight(Font font, FormattedText text, int width) {
         return font.split(text, width).size() * font.lineHeight;
     }
 
-    public static int getMaxWidth(Font font, Component... lines)
-    {
+    public static int getMaxWidth(Font font, Component... lines) {
         int maxWidth = 0;
-        for (Component line : lines)
-        {
+        for (Component line : lines) {
             maxWidth = Math.max(maxWidth, font.width(line));
         }
         return maxWidth;
     }
-
-
 
     private ClientUtils() { }
 }

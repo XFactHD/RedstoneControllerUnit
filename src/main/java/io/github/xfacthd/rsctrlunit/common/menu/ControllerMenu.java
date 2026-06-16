@@ -29,9 +29,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class ControllerMenu extends CardInventoryContainerMenu
-{
-    private static final SlotConfig SLOT_CONFIG = new SlotConfig(true, 14, 138, 14, 78, idx -> false);
+public final class ControllerMenu extends CardInventoryContainerMenu {
+    private static final SlotConfig SLOT_CONFIG = new SlotConfig(true, 14, 138, 14, 78, _ -> false);
 
     @Nullable
     private final ServerPlayer player;
@@ -50,8 +49,7 @@ public final class ControllerMenu extends CardInventoryContainerMenu
     private Direction facing;
     private Code code;
 
-    public static ControllerMenu createClient(int windowId, Inventory inventory, RegistryFriendlyByteBuf buf)
-    {
+    public static ControllerMenu createClient(int windowId, Inventory inventory, RegistryFriendlyByteBuf buf) {
         BlockPos pos = BlockPos.STREAM_CODEC.decode(buf);
         Code code = Code.STREAM_CODEC.decode(buf);
         Direction facing = Direction.STREAM_CODEC.decode(buf);
@@ -65,8 +63,7 @@ public final class ControllerMenu extends CardInventoryContainerMenu
             ControllerBlockEntity be,
             ServerPlayer player,
             Direction facing
-    )
-    {
+    ) {
         PortConfig[] portConfigs = be.getRedstoneInterface().getPortConfigs();
         int[] portMapping = be.getRedstoneInterface().getPortMapping();
         Code code = be.getInterpreter().getCode();
@@ -82,8 +79,7 @@ public final class ControllerMenu extends CardInventoryContainerMenu
             PortConfig[] portConfigs,
             int[] portMapping,
             Code code
-    )
-    {
+    ) {
         super(RCUContent.MENU_TYPE_CONTROLLER.get(), windowId, inventory, pos, SLOT_CONFIG);
         this.player = inventory.player instanceof ServerPlayer serverPlayer ? serverPlayer : null;
         this.blockEntity = blockEntity;
@@ -100,96 +96,80 @@ public final class ControllerMenu extends CardInventoryContainerMenu
     }
 
     @Override
-    public void broadcastChanges()
-    {
-        if (interpreter != null)
-        {
+    public void broadcastChanges() {
+        if (interpreter != null) {
             runningSlot.set(interpreter.isPaused() ? 0 : 1);
         }
-        if (blockEntity != null)
-        {
+        if (blockEntity != null) {
             showPortMapSlot.set(blockEntity.getBlockState().getValue(PropertyHolder.SHOW_PORT_MAPPING) ? 1 : 0);
         }
 
         super.broadcastChanges();
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
 
         Objects.requireNonNull(interpreter);
         Objects.requireNonNull(redstone);
 
-        if (!interpreter.getCode().equals(code))
-        {
+        if (!interpreter.getCode().equals(code)) {
             code = interpreter.getCode();
             PacketDistributor.sendToPlayer(player, new ClientboundUpdateCodePayload(containerId, code));
         }
         Direction newFacing = redstone.getFacing();
-        if (!Arrays.equals(lastPortConfigs, portConfigs))
-        {
+        if (!Arrays.equals(lastPortConfigs, portConfigs)) {
             facing = newFacing;
             Utils.copyArray(portConfigs, lastPortConfigs);
             PacketDistributor.sendToPlayer(player, new ClientboundUpdatePortConfigsPayload(containerId, facing, portConfigs));
         }
-        if (!Arrays.equals(lastPortMapping, portMapping))
-        {
+        if (!Arrays.equals(lastPortMapping, portMapping)) {
             Utils.copyIntArray(portMapping, lastPortMapping);
             PacketDistributor.sendToPlayer(player, new ClientboundUpdatePortMappingPayload(containerId, portMapping));
         }
         PacketDistributor.sendToPlayer(player, ClientboundUpdateStatusPayload.of(containerId, interpreter));
     }
 
-    public Direction getFacing()
-    {
+    public Direction getFacing() {
         return facing;
     }
 
-    public PortConfig[] getPortConfigs()
-    {
+    public PortConfig[] getPortConfigs() {
         return portConfigs;
     }
 
-    public Code getCode()
-    {
+    public Code getCode() {
         return code;
     }
 
-    public boolean isRunning()
-    {
+    public boolean isRunning() {
         return runningSlot.get() != 0;
     }
 
-    public void updatePortConfigs(Direction facing, PortConfig[] configs)
-    {
+    public void updatePortConfigs(Direction facing, PortConfig[] configs) {
         this.facing = facing;
         Utils.copyArray(configs, this.portConfigs);
     }
 
-    public void updateCode(Code code)
-    {
+    public void updateCode(Code code) {
         this.code = code;
     }
 
-    public void setPortConfig(int port, PortConfig config)
-    {
+    public void setPortConfig(int port, PortConfig config) {
         Objects.requireNonNull(redstone).setPortConfig(port, config);
     }
 
-    public void loadRomFromCard()
-    {
-        if (Objects.requireNonNull(cardSlot).getItem().has(RCUContent.COMPONENT_TYPE_CODE))
-        {
+    public void loadRomFromCard() {
+        if (Objects.requireNonNull(cardSlot).getItem().has(RCUContent.COMPONENT_TYPE_CODE)) {
             loadCode(cardSlot.getItem().get(RCUContent.COMPONENT_TYPE_CODE));
         }
     }
 
-    public void saveRomToCard()
-    {
-        if (Objects.requireNonNull(cardSlot).getItem().has(RCUContent.COMPONENT_TYPE_CODE))
-        {
+    public void saveRomToCard() {
+        if (Objects.requireNonNull(cardSlot).getItem().has(RCUContent.COMPONENT_TYPE_CODE)) {
             levelAccess.evaluate(Level::getBlockEntity)
                     .filter(ControllerBlockEntity.class::isInstance)
                     .map(ControllerBlockEntity.class::cast)
-                    .ifPresent(be ->
-                    {
+                    .ifPresent(be -> {
                         ItemStack stack = cardSlot.getItem();
                         Code code = be.getInterpreter().getCode();
                         stack.set(RCUContent.COMPONENT_TYPE_CODE, code);
@@ -197,84 +177,68 @@ public final class ControllerMenu extends CardInventoryContainerMenu
         }
     }
 
-    public void clearRom()
-    {
+    public void clearRom() {
         loadCode(null);
     }
 
-    private void loadCode(@Nullable Code code)
-    {
+    private void loadCode(@Nullable Code code) {
         levelAccess.evaluate(Level::getBlockEntity)
                 .filter(ControllerBlockEntity.class::isInstance)
                 .map(ControllerBlockEntity.class::cast)
                 .ifPresent(be -> be.loadCode(code));
     }
 
-    public void togglePauseResume()
-    {
-        if (interpreter == null) return;
-
-        if (interpreter.isPaused())
-        {
-            interpreter.resume();
+    public void togglePauseResume() {
+        if (interpreter == null) {
+            return;
         }
-        else
-        {
+
+        if (interpreter.isPaused()) {
+            interpreter.resume();
+        } else {
             interpreter.pause();
         }
     }
 
-    public void requestStep()
-    {
-        if (interpreter != null && interpreter.isPaused())
-        {
+    public void requestStep() {
+        if (interpreter != null && interpreter.isPaused()) {
             interpreter.step();
         }
     }
 
-    public void requestReset()
-    {
-        if (interpreter != null)
-        {
-            interpreter.writeLockGuarded(null, (interp, $) -> interp.reset(false));
+    public void requestReset() {
+        if (interpreter != null) {
+            interpreter.writeLockGuarded(null, (interp, _) -> interp.reset(false));
         }
     }
 
-    public boolean isPortMapShown()
-    {
+    public boolean isPortMapShown() {
         return showPortMapSlot.get() != 0;
     }
 
-    public void togglePortMapRender()
-    {
-        if (blockEntity != null)
-        {
+    public void togglePortMapRender() {
+        if (blockEntity != null) {
             BlockState state = blockEntity.getBlockState().cycle(PropertyHolder.SHOW_PORT_MAPPING);
             blockEntity.level().setBlockAndUpdate(blockEntity.getBlockPos(), state);
         }
     }
 
-    public int[] getPortMapping()
-    {
+    public int[] getPortMapping() {
         return portMapping;
     }
 
-    public void updatePortMapping(int[] mapping)
-    {
+    public void updatePortMapping(int[] mapping) {
         Utils.copyIntArray(mapping, this.portMapping);
     }
 
-    public void setPortMapping(int[] mapping)
-    {
-        if (RedstoneInterface.validatePortMapping(mapping))
-        {
+    public void setPortMapping(int[] mapping) {
+        if (RedstoneInterface.validatePortMapping(mapping)) {
             Objects.requireNonNull(redstone).setPortMapping(mapping);
         }
     }
 
     @Override
-    public boolean stillValid(Player player)
-    {
+    public boolean stillValid(Player player) {
         return stillValid(levelAccess, player, RCUContent.BLOCK_CONTROLLER.value());
     }
 }

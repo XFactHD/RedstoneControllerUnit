@@ -12,12 +12,10 @@ import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundSe
 import io.github.xfacthd.rsctrlunit.common.net.payload.serverbound.ServerboundWriteToTargetPayload;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
-public final class NetworkSetup
-{
+public final class NetworkSetup {
     private static final String NET_VERSION = "1";
 
-    public static void onRegisterPayloadHandlers(final RegisterPayloadHandlersEvent event)
-    {
+    public static void onRegisterPayloadHandlers(final RegisterPayloadHandlersEvent event) {
         event.registrar(NET_VERSION)
                 .playToClient(
                         ClientboundUpdateStatusPayload.TYPE,
@@ -65,8 +63,6 @@ public final class NetworkSetup
                         ServerboundSetPortMappingPayload::handle
                 );
     }
-
-
 
     private NetworkSetup() { }
 }

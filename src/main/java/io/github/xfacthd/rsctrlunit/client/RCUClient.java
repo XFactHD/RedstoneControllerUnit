@@ -16,29 +16,24 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterSpriteSourcesEvent;
 
 @Mod(value = RedstoneControllerUnit.MOD_ID, dist = Dist.CLIENT)
-public final class RCUClient
-{
-    public RCUClient(IEventBus modBus)
-    {
+public final class RCUClient {
+    public RCUClient(IEventBus modBus) {
         modBus.addListener(RCUClient::onRegisterMenuScreens);
         modBus.addListener(RCUClient::onRegisterBlockStateModels);
         modBus.addListener(RCUClient::onRegisterSpriteSourceTypes);
         modBus.addListener(ClientNetworkHandler::onRegisterPayloadHandlers);
     }
 
-    private static void onRegisterMenuScreens(final RegisterMenuScreensEvent event)
-    {
+    private static void onRegisterMenuScreens(final RegisterMenuScreensEvent event) {
         event.register(RCUContent.MENU_TYPE_CONTROLLER.get(), ControllerScreen::new);
         event.register(RCUContent.MENU_TYPE_PROGRAMMER.get(), ProgrammerScreen::new);
     }
 
-    private static void onRegisterBlockStateModels(final RegisterBlockStateModels event)
-    {
+    private static void onRegisterBlockStateModels(final RegisterBlockStateModels event) {
         event.registerModel(Utils.rl("controller"), UnbakedControllerModel.CODEC);
     }
 
-    private static void onRegisterSpriteSourceTypes(final RegisterSpriteSourcesEvent event)
-    {
+    private static void onRegisterSpriteSourceTypes(final RegisterSpriteSourcesEvent event) {
         event.register(AreaMaskSource.ID, AreaMaskSource.CODEC);
     }
 }

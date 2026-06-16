@@ -11,86 +11,71 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public final class ActionButton extends Button.Plain
-{
+public final class ActionButton extends Button.Plain {
     private final ControllerScreen owner;
     private final ServerboundControllerActionPayload.Action action;
 
-    public ActionButton(Button.Builder builder, ControllerScreen owner, ServerboundControllerActionPayload.Action action)
-    {
+    public ActionButton(Button.Builder builder, ControllerScreen owner, ServerboundControllerActionPayload.Action action) {
         super(builder);
         this.owner = owner;
         this.action = action;
     }
 
     @Override
-    public void onPress(InputWithModifiers input)
-    {
+    public void onPress(InputWithModifiers input) {
         ClientPacketDistributor.sendToServer(new ServerboundControllerActionPayload(owner.getMenu().containerId, action));
     }
 
-    public static Builder builder(Component message)
-    {
+    public static Builder builder(Component message) {
         return new Builder(message);
     }
 
-    public static final class Builder extends Button.Builder
-    {
-        private Builder(Component message)
-        {
-            super(message, btn -> {});
+    public static final class Builder extends Button.Builder {
+        private Builder(Component message) {
+            super(message, _ -> { });
         }
 
         @Override
-        public Builder pos(int x, int y)
-        {
+        public Builder pos(int x, int y) {
             return (Builder) super.pos(x, y);
         }
 
         @Override
-        public Builder width(int width)
-        {
+        public Builder width(int width) {
             return (Builder) super.width(width);
         }
 
         @Override
-        public Builder size(int width, int height)
-        {
+        public Builder size(int width, int height) {
             return (Builder) super.size(width, height);
         }
 
         @Override
-        public Builder bounds(int x, int y, int width, int height)
-        {
+        public Builder bounds(int x, int y, int width, int height) {
             return (Builder) super.bounds(x, y, width, height);
         }
 
         @Override
-        public Builder tooltip(@Nullable Tooltip tooltip)
-        {
+        public Builder tooltip(@Nullable Tooltip tooltip) {
             return (Builder) super.tooltip(tooltip);
         }
 
         @Override
-        public Builder createNarration(CreateNarration createNarration)
-        {
+        public Builder createNarration(CreateNarration createNarration) {
             return (Builder) super.createNarration(createNarration);
         }
 
         @Override
-        public Button build()
-        {
+        public Button build() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public Button build(Function<Button.Builder, Button> builder)
-        {
+        public Button build(Function<Button.Builder, Button> builder) {
             throw new UnsupportedOperationException();
         }
 
-        public ActionButton build(ControllerScreen owner, ServerboundControllerActionPayload.Action action)
-        {
+        public ActionButton build(ControllerScreen owner, ServerboundControllerActionPayload.Action action) {
             return new ActionButton(this, owner, action);
         }
     }

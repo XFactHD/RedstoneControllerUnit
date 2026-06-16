@@ -5,10 +5,8 @@ import io.github.xfacthd.rsctrlunit.common.emulator.opcode.Opcode;
 import java.util.Arrays;
 import java.util.Locale;
 
-public record ErrorNode(int line, String error) implements Node
-{
-    public static ErrorNode operandCount(Opcode opcode, int operands, int line)
-    {
+public record ErrorNode(int line, String error) implements Node {
+    public static ErrorNode operandCount(Opcode opcode, int operands, int line) {
         return new ErrorNode(line, String.format(
                 Locale.ROOT,
                 "Expected %d operands for '%s' on line %d, got %d",
@@ -16,8 +14,7 @@ public record ErrorNode(int line, String error) implements Node
         ));
     }
 
-    public static ErrorNode invalidOperand(Opcode opcode, String[] operands, int line)
-    {
+    public static ErrorNode invalidOperand(Opcode opcode, String[] operands, int line) {
         return new ErrorNode(line, String.format(
                 Locale.ROOT,
                 "Operands '%s' are invalid for '%s' on line %d",
@@ -25,8 +22,7 @@ public record ErrorNode(int line, String error) implements Node
         ));
     }
 
-    public static ErrorNode unrecognizedOpcode(String mnemonic, int line)
-    {
+    public static ErrorNode unrecognizedOpcode(String mnemonic, int line) {
         return new ErrorNode(line, String.format(Locale.ROOT, "Unrecognized mnemonic: '%s'", mnemonic));
     }
 }

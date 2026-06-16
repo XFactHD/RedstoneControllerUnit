@@ -9,8 +9,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record ClientboundUpdateStatusPayload(int windowId, InterpreterState state) implements CustomPacketPayload
-{
+public record ClientboundUpdateStatusPayload(int windowId, InterpreterState state) implements CustomPacketPayload {
     public static final Type<ClientboundUpdateStatusPayload> TYPE = Utils.payloadType("clientbound_update_status");
     public static final StreamCodec<ByteBuf, ClientboundUpdateStatusPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
@@ -20,10 +19,8 @@ public record ClientboundUpdateStatusPayload(int windowId, InterpreterState stat
             ClientboundUpdateStatusPayload::new
     );
 
-    public static ClientboundUpdateStatusPayload of(int windowId, Interpreter interpreter)
-    {
-        return new ClientboundUpdateStatusPayload(windowId, interpreter.readLockGuarded(interp ->
-        {
+    public static ClientboundUpdateStatusPayload of(int windowId, Interpreter interpreter) {
+        return new ClientboundUpdateStatusPayload(windowId, interpreter.readLockGuarded(interp -> {
             byte[] ram = interp.getRam().clone();
             byte[] sfr = interp.getSfr().clone();
             IOPorts ports = interp.getIoPorts();
@@ -33,15 +30,11 @@ public record ClientboundUpdateStatusPayload(int windowId, InterpreterState stat
     }
 
     @Override
-    public Type<ClientboundUpdateStatusPayload> type()
-    {
+    public Type<ClientboundUpdateStatusPayload> type() {
         return TYPE;
     }
 
-
-
-    public record InterpreterState(byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter)
-    {
+    public record InterpreterState(byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter) {
         private static final StreamCodec<ByteBuf, InterpreterState> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.byteArray(Constants.RAM_SIZE),
                 InterpreterState::ram,

@@ -15,8 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public final class InterpreterThreadPool
-{
+public final class InterpreterThreadPool {
     private static final int TASK_INTERVAL_MS = 1;
     private static final Map<Interpreter, Future<?>> ACTIVE_INTEPRETERS = new IdentityHashMap<>();
     @Nullable
@@ -24,60 +23,46 @@ public final class InterpreterThreadPool
     @Nullable
     private static ScheduledExecutorService executors = null;
 
-    public static void init()
-    {
+    public static void init() {
         NeoForge.EVENT_BUS.addListener(InterpreterThreadPool::onServerStarting);
         NeoForge.EVENT_BUS.addListener(InterpreterThreadPool::onServerStopped);
     }
 
-    public static void addInterpreter(Interpreter interpreter)
-    {
+    public static void addInterpreter(Interpreter interpreter) {
         Objects.requireNonNull(currentServer, "No server present!");
         Objects.requireNonNull(executors, "Executor service not started!");
         Future<?> future = executors.scheduleAtFixedRate(new InterpreterTask(interpreter), 0, TASK_INTERVAL_MS, TimeUnit.MILLISECONDS);
         ACTIVE_INTEPRETERS.put(interpreter, future);
     }
 
-    public static void removeInterpreter(Interpreter interpreter)
-    {
+    public static void removeInterpreter(Interpreter interpreter) {
         Future<?> future = ACTIVE_INTEPRETERS.remove(interpreter);
         Objects.requireNonNull(future, "Tried to remove unregistered interpreter");
         future.cancel(false);
     }
 
-    private static void onServerStarting(ServerAboutToStartEvent event)
-    {
+    private static void onServerStarting(ServerAboutToStartEvent event) {
         currentServer = event.getServer();
         executors = Executors.newScheduledThreadPool(1, Thread.ofVirtual().factory());
     }
 
-    private static void onServerStopped(ServerStoppedEvent event)
-    {
+    private static void onServerStopped(ServerStoppedEvent event) {
         Objects.requireNonNull(executors, "Executor service not started!");
         executors.shutdownNow();
-        try
-        {
-            if (!executors.awaitTermination(1000, TimeUnit.MILLISECONDS))
-            {
+        try {
+            if (!executors.awaitTermination(1000, TimeUnit.MILLISECONDS)) {
                 RedstoneControllerUnit.LOGGER.error("Interpreter thread pool failed to shut down");
             }
-        }
-        catch (InterruptedException ignored) { }
+        } catch (InterruptedException ignored) { }
         executors = null;
         currentServer = null;
     }
 
-
-
-    private record InterpreterTask(Interpreter interpreter) implements Runnable
-    {
+    private record InterpreterTask(Interpreter interpreter) implements Runnable {
         @Override
-        public void run()
-        {
-            if (!Objects.requireNonNull(currentServer).isPaused())
-            {
-                if (!interpreter().isPaused() || interpreter.isStepRequested())
-                {
+        public void run() {
+            if (!Objects.requireNonNull(currentServer).isPaused()) {
+                if (!interpreter().isPaused() || interpreter.isStepRequested()) {
                     interpreter.run();
                 }
             }

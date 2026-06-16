@@ -45,8 +45,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-public final class ProgrammerScreen extends CardInventoryContainerScreen<ProgrammerMenu>
-{
+public final class ProgrammerScreen extends CardInventoryContainerScreen<ProgrammerMenu> {
     private static final Identifier BACKGROUND = Utils.rl("background");
     private static final Identifier INVENTORY = Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final Identifier LOCK_ICON = Identifier.withDefaultNamespace("container/cartography_table/locked");
@@ -149,8 +148,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     private List<FormattedCharSequence> lastInfoMsg = null;
     private long lastInfoStamp = 0;
 
-    public ProgrammerScreen(ProgrammerMenu menu, Inventory inventory, Component title)
-    {
+    public ProgrammerScreen(ProgrammerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
         this.forBlock = menu.isForBlock();
         this.inventoryLabelX = INVENTORY_X;
@@ -158,8 +156,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     }
 
     @Override
-    protected void init()
-    {
+    protected void init() {
         super.init();
 
         buttonX = leftPos + IMAGE_WIDTH - EDGE_PADDING - BUTTON_WIDTH;
@@ -186,8 +183,7 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         maxPathWidth = IMAGE_WIDTH - EDGE_PADDING + leftPos - descX;
     }
 
-    private Button addButton(Component title, int line, Runnable action)
-    {
+    private Button addButton(Component title, int line, Runnable action) {
         return addRenderableWidget(Button.builder(title, _ -> action.run())
                 .pos(buttonX, topPos + BUTTON_TOP_Y + BUTTON_Y_OFF * line)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -196,14 +192,12 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
-    {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
         graphics.blit(RenderPipelines.GUI_TEXTURED, INVENTORY, leftPos + INVENTORY_X, topPos + INVENTORY_Y, 7, 139, INVENTORY_WIDTH, INVENTORY_HEIGHT, 256, 256);
-        if (!forBlock)
-        {
+        if (!forBlock) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
             drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
         }
@@ -217,81 +211,52 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         graphics.text(font, LABEL_CODE_INFO, leftPos + LABEL_X, topPos + LINE_CODE_INFO, 0xFF404040, false);
         graphics.text(font, codeInfo, descX, topPos + LINE_CODE_INFO, 0xFF404040, false);
 
-        if (lastErrorMsg != null)
-        {
+        if (lastErrorMsg != null) {
             drawMessage(graphics, LABEL_ERROR, lastErrorMsg);
-        }
-        else if (lastInfoMsg != null)
-        {
+        } else if (lastInfoMsg != null) {
             drawMessage(graphics, LABEL_INFO, lastInfoMsg);
         }
     }
 
-    private void drawMessage(GuiGraphicsExtractor graphics, Component label, List<FormattedCharSequence> message)
-    {
+    private void drawMessage(GuiGraphicsExtractor graphics, Component label, List<FormattedCharSequence> message) {
         graphics.text(font, label, leftPos + LABEL_X, topPos + LINE_MESSAGE, 0xFF404040, false);
         int y = topPos + LINE_MESSAGE;
-        for (FormattedCharSequence line : message)
-        {
+        for (FormattedCharSequence line : message) {
             graphics.text(font, line, descX, y, 0xFF404040, false);
             y += LINE_HEIGHT;
         }
     }
 
     @Override
-    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
-    {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractTooltip(graphics, mouseX, mouseY);
-        if (filePath != null && pathCropped && mouseX >= descX && mouseX < descX + maxPathWidth && mouseY >= topPos + LINE_FILE_PATH && mouseY < topPos + LINE_FILE_PATH + LINE_HEIGHT)
-        {
+        if (filePath != null && pathCropped && mouseX >= descX && mouseX < descX + maxPathWidth && mouseY >= topPos + LINE_FILE_PATH && mouseY < topPos + LINE_FILE_PATH + LINE_HEIGHT) {
             renderFixedTooltip(graphics, Component.literal(filePath.toString()), LINE_FILE_PATH);
-        }
-        else if (codeInfoFull != null && mouseX >= descX && mouseX < buttonX - PADDING && mouseY >= topPos + LINE_CODE_INFO && mouseY < topPos + LINE_CODE_INFO + LINE_HEIGHT)
-        {
+        } else if (codeInfoFull != null && mouseX >= descX && mouseX < buttonX - PADDING && mouseY >= topPos + LINE_CODE_INFO && mouseY < topPos + LINE_CODE_INFO + LINE_HEIGHT) {
             renderFixedTooltip(graphics, codeInfoFull, LINE_CODE_INFO);
-        }
-        else if (isInactiveHovered(buttonRevealInExplorer, mouseX, mouseY) || isInactiveHovered(buttonAssemble, mouseX, mouseY))
-        {
-            if (binaryFromFile || filePath == null)
-            {
+        } else if (isInactiveHovered(buttonRevealInExplorer, mouseX, mouseY) || isInactiveHovered(buttonAssemble, mouseX, mouseY)) {
+            if (binaryFromFile || filePath == null) {
                 graphics.setTooltipForNextFrame(font, TOOLTIP_NO_SOURCE, mouseX, mouseY);
             }
-        }
-        else if (isInactiveHovered(buttonSaveBinary, mouseX, mouseY))
-        {
-            if (assembledCode == null)
-            {
+        } else if (isInactiveHovered(buttonSaveBinary, mouseX, mouseY)) {
+            if (assembledCode == null) {
                 graphics.setTooltipForNextFrame(font, TOOLTIP_NO_ASSEMBLY, mouseX, mouseY);
             }
-        }
-        else if (isInactiveHovered(buttonReadBinary, mouseX, mouseY))
-        {
-            if (!menu.isTargetValid())
-            {
+        } else if (isInactiveHovered(buttonReadBinary, mouseX, mouseY)) {
+            if (!menu.isTargetValid()) {
                 graphics.setTooltipForNextFrame(font, forBlock ? TOOLTIP_BLOCK_REMOVED : TOOLTIP_NO_CARD_ITEM, mouseX, mouseY);
-            }
-            else if (forBlock && menu.isInterpreterEmpty())
-            {
+            } else if (forBlock && menu.isInterpreterEmpty()) {
                 graphics.setTooltipForNextFrame(font, TOOLTIP_NO_CODE_BLOCK, mouseX, mouseY);
-            }
-            else if (!forBlock && isMemoryCardEmpty())
-            {
+            } else if (!forBlock && isMemoryCardEmpty()) {
                 graphics.setTooltipForNextFrame(font, TOOLTIP_NO_CODE_CARD, mouseX, mouseY);
             }
-        }
-        else if (isInactiveHovered(buttonWriteBinary, mouseX, mouseY))
-        {
-            if (assembledCode == null)
-            {
+        } else if (isInactiveHovered(buttonWriteBinary, mouseX, mouseY)) {
+            if (assembledCode == null) {
                 graphics.setTooltipForNextFrame(font, TOOLTIP_NO_ASSEMBLY, mouseX, mouseY);
-            }
-            else if (!menu.isTargetValid())
-            {
+            } else if (!menu.isTargetValid()) {
                 graphics.setTooltipForNextFrame(font, forBlock ? TOOLTIP_BLOCK_REMOVED : TOOLTIP_NO_CARD_ITEM, mouseX, mouseY);
             }
-        }
-        else if (lastError != null && lastErrorMsg != null && mouseX >= descX && mouseX < descX + descWidth && mouseY >= topPos + LINE_MESSAGE && mouseY < topPos + LINE_MESSAGE + (lastErrorMsg.size() * LINE_HEIGHT))
-        {
+        } else if (lastError != null && lastErrorMsg != null && mouseX >= descX && mouseX < descX + descWidth && mouseY >= topPos + LINE_MESSAGE && mouseY < topPos + LINE_MESSAGE + (lastErrorMsg.size() * LINE_HEIGHT)) {
             graphics.setTooltipForNextFrame(font, List.of(
                     Component.literal(lastError.getClass().getName()),
                     Component.literal(lastError.getMessage())
@@ -299,75 +264,63 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         }
     }
 
-    private static boolean isInactiveHovered(Button button, int mouseX, int mouseY)
-    {
+    private static boolean isInactiveHovered(Button button, int mouseX, int mouseY) {
         return !button.active &&
-               mouseX >= button.getX() &&
-               mouseX < button.getX() + button.getWidth() &&
-               mouseY >= button.getY() &&
-               mouseY < button.getY() + button.getHeight();
+                mouseX >= button.getX() &&
+                mouseX < button.getX() + button.getWidth() &&
+                mouseY >= button.getY() &&
+                mouseY < button.getY() + button.getHeight();
     }
 
-    private void renderFixedTooltip(GuiGraphicsExtractor graphics, Component line, int y)
-    {
+    private void renderFixedTooltip(GuiGraphicsExtractor graphics, Component line, int y) {
         int lineWidth = font.width(line);
         int x = descX;
-        if (x + lineWidth + TooltipRenderUtil.PADDING_RIGHT > width)
-        {
+        if (x + lineWidth + TooltipRenderUtil.PADDING_RIGHT > width) {
             x = width - lineWidth - 1 - TooltipRenderUtil.PADDING_RIGHT;
         }
         graphics.setTooltipForNextFrame(font, List.of(line.getVisualOrderText()), FixedTooltipPositioner.INSTANCE, x, topPos + y, false);
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack stack, Slot slot, @Nullable String countString)
-    {
+    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack stack, Slot slot, @Nullable String countString) {
         super.renderSlotContents(graphics, stack, slot, countString);
-        if (slot instanceof Lockable lockable && lockable.isLocked())
-        {
+        if (slot instanceof Lockable lockable && lockable.isLocked()) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LOCK_ICON, slot.x + SLOT_SIZE_INNER - 5, slot.y + SLOT_SIZE_INNER - 7, 5, 7);
         }
     }
 
     @Override
-    protected void containerTick()
-    {
+    protected void containerTick() {
         buttonRevealInExplorer.active = filePath != null && !binaryFromFile;
         buttonAssemble.active = filePath != null && !binaryFromFile;
         buttonSaveBinary.active = assembledCode != null;
         buttonReadBinary.active = forBlock ? !menu.isInterpreterEmpty() : !isMemoryCardEmpty();
         buttonWriteBinary.active = assembledCode != null && menu.isTargetValid();
 
-        if (lastInfoStamp > 0 && System.currentTimeMillis() - lastInfoStamp > INFO_MSG_TIMEOUT)
-        {
+        if (lastInfoStamp > 0 && System.currentTimeMillis() - lastInfoStamp > INFO_MSG_TIMEOUT) {
             lastInfoMsg = null;
             lastInfoStamp = 0;
         }
     }
 
-    private void setFilePath(@Nullable Path path, boolean binary)
-    {
+    private void setFilePath(@Nullable Path path, boolean binary) {
         filePath = path;
         binaryFromFile = binary;
         pathCropped = false;
 
-        if (path == null)
-        {
+        if (path == null) {
             pathDisplay = DESC_PATH_NONE;
             fileType = DESC_TYPE_NONE;
             return;
         }
 
         String pathString = path.toString();
-        if (font.width(pathString) > maxPathWidth)
-        {
+        if (font.width(pathString) > maxPathWidth) {
             String[] pathParts = pathString.split(Pattern.quote(File.separator));
             String newPathString = "";
-            for (int i = pathParts.length - 1; i >= 0; i--)
-            {
+            for (int i = pathParts.length - 1; i >= 0; i--) {
                 String newPathTemp = File.separator + pathParts[i] + newPathString;
-                if (font.width(newPathTemp) >= maxPathWidth)
-                {
+                if (font.width(newPathTemp) >= maxPathWidth) {
                     break;
                 }
                 newPathString = newPathTemp;
@@ -379,85 +332,76 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         fileType = binary ? DESC_TYPE_BINARY : DESC_TYPE_SOURCE;
     }
 
-    private void setAssembledCode(@Nullable Code code)
-    {
+    private void setAssembledCode(@Nullable Code code) {
         assembledCode = code;
-        if (code != null && !code.equals(Code.EMPTY))
-        {
+        if (code != null && !code.equals(Code.EMPTY)) {
             codeInfo = Component.translatable(DESC_CODE_INFO, code.name(), code.rom().length);
             int maxWidth = buttonX - descX - PADDING;
-            if (font.width(codeInfo) > maxWidth)
-            {
+            if (font.width(codeInfo) > maxWidth) {
                 codeInfoFull = codeInfo;
                 String part = font.plainSubstrByWidth(codeInfo.getString(), maxWidth - PADDING);
                 codeInfo = Component.literal(part + "...");
             }
-        }
-        else
-        {
+        } else {
             codeInfo = DESC_CODE_INFO_NONE;
             codeInfoFull = null;
         }
     }
 
-    private void setLastError(Component errorMsg, @Nullable Throwable error)
-    {
+    private void setLastError(Component errorMsg, @Nullable Throwable error) {
         lastErrorMsg = font.split(errorMsg.copy().withStyle(ChatFormatting.DARK_RED), descWidth);
         lastError = error;
     }
 
-    private void clearLastError()
-    {
+    private void clearLastError() {
         lastErrorMsg = null;
         lastError = null;
     }
 
-    private void setLastInfo(Component infoMsg, boolean success)
-    {
-        if (success)
-        {
+    private void setLastInfo(Component infoMsg, boolean success) {
+        if (success) {
             infoMsg = infoMsg.copy().withStyle(ChatFormatting.DARK_GREEN);
         }
         lastInfoMsg = font.split(infoMsg, descWidth);
         lastInfoStamp = System.currentTimeMillis();
     }
 
-    private boolean isMemoryCardEmpty()
-    {
+    private boolean isMemoryCardEmpty() {
         ItemStack stack = menu.slots.getFirst().getItem();
         Code code = stack.getOrDefault(RCUContent.COMPONENT_TYPE_CODE, Code.EMPTY);
         return code.equals(Code.EMPTY);
     }
 
-    private void loadSourceFile()
-    {
+    private void loadSourceFile() {
         clearLastError();
-        FileDialog.openFileDialog(this, LAST_PATH_STORAGE, "Open source file", SOURCE_FILTER, false, path ->
-        {
+        FileDialog.openFileDialog(this, LAST_PATH_STORAGE, "Open source file", SOURCE_FILTER, false, path -> {
             setFilePath(path, false);
             setAssembledCode(null);
         });
     }
 
-    private void revealInFileExplorer()
-    {
-        if (filePath == null || binaryFromFile) return;
+    private void revealInFileExplorer() {
+        if (filePath == null || binaryFromFile) {
+            return;
+        }
 
-        if (!Explorer.revealInFileExplorer(filePath))
-        {
+        if (!Explorer.revealInFileExplorer(filePath)) {
             setLastError(Component.translatable(MSG_ERROR_REVEAL_IN_EXPLORER, filePath.toString()), null);
         }
     }
 
-    private void assemble()
-    {
-        if (filePath == null || binaryFromFile) return;
+    private void assemble() {
+        if (filePath == null || binaryFromFile) {
+            return;
+        }
 
         String source = guardOperation(
                 () -> Files.readString(filePath),
                 () -> Component.translatable(MSG_ERROR_READ_SOURCE, filePath.getFileName().toString())
         );
-        if (source == null || source.isBlank()) return;
+        if (source == null || source.isBlank()) {
+            return;
+        }
 
         String name = Utils.getFileNameNoExt(filePath);
         List<Component> lines = new ArrayList<>();
@@ -465,35 +409,30 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
                 () -> Assembler.assemble(name, source, new ErrorPrinter.Collecting(lines)),
                 () -> Component.translatable(MSG_ERROR_ASSEMBLE, filePath.getFileName().toString())
         );
-        if (Code.EMPTY.equals(code))
-        {
+        if (Code.EMPTY.equals(code)) {
             code = null;
         }
         setAssembledCode(code);
-        if (code != null)
-        {
+        if (code != null) {
             setLastInfo(MSG_INFO_ASSEMBLY_SUCCESS, true);
-        }
-        else if (!lines.isEmpty())
-        {
+        } else if (!lines.isEmpty()) {
             lines.addFirst(MSG_ERROR_ASSEMBLY_FAILED);
             Minecraft.getInstance().gui.pushScreenLayer(MessageScreen.error(lines));
         }
     }
 
-    private void loadBinaryFile()
-    {
+    private void loadBinaryFile() {
         FileDialog.openFileDialog(this, LAST_PATH_STORAGE, "Open binary file", BINARY_FILTER, false, this::loadBinaryFile);
     }
 
-    private void loadBinaryFile(@Nullable Path path)
-    {
-        if (path == null) return;
+    private void loadBinaryFile(@Nullable Path path) {
+        if (path == null) {
+            return;
+        }
 
         setFilePath(path, true);
 
-        setAssembledCode(guardOperation(() ->
-        {
+        setAssembledCode(guardOperation(() -> {
             byte[] bytes = Files.readAllBytes(Objects.requireNonNull(filePath));
             String fileName = Utils.getFileNameNoExt(filePath);
             Labels labels = Labels.readFromFile(filePath, bytes);
@@ -502,12 +441,12 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void saveBinaryFile()
-    {
-        if (assembledCode == null) return;
+    private void saveBinaryFile() {
+        if (assembledCode == null) {
+            return;
+        }
         FileDialog.openFileDialog(this, LAST_PATH_STORAGE, "Save binary file", BINARY_FILTER, true, path -> guardOperation(
-                () ->
-                {
+                () -> {
                     Files.write(path, assembledCode.rom(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
                     Labels.of(assembledCode).writeToFile(path);
                     return null;
@@ -516,60 +455,56 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
         ));
     }
 
-    private void readBinaryFromTarget()
-    {
+    private void readBinaryFromTarget() {
         clearLastError();
 
-        if (!menu.isTargetValid()) return;
-        if (forBlock && menu.isInterpreterEmpty()) return;
-        if (!forBlock && isMemoryCardEmpty()) return;
+        if (!menu.isTargetValid()) {
+            return;
+        }
+        if (forBlock && menu.isInterpreterEmpty()) {
+            return;
+        }
+        if (!forBlock && isMemoryCardEmpty()) {
+            return;
+        }
 
         setFilePath(null, false);
-        if (forBlock)
-        {
+        if (forBlock) {
             setLastInfo(MSG_INFO_WAITING_FOR_RESPONSE, false);
             ClientPacketDistributor.sendToServer(new ServerboundRequestCodePayload(menu.containerId));
-        }
-        else
-        {
+        } else {
             ItemStack stack = menu.slots.getFirst().getItem();
             setAssembledCode(stack.get(RCUContent.COMPONENT_TYPE_CODE));
             setLastInfo(MSG_INFO_ROM_READ, true);
         }
     }
 
-    public void receiveBlockCodeFromServer(Code code)
-    {
+    public void receiveBlockCodeFromServer(Code code) {
         setAssembledCode(code);
         setLastInfo(MSG_INFO_ROM_READ, true);
     }
 
-    private void writeBinaryToTarget(boolean checkEmpty)
-    {
+    private void writeBinaryToTarget(boolean checkEmpty) {
         clearLastError();
 
-        if (binaryFromFile)
-        {
+        if (binaryFromFile) {
             loadBinaryFile(filePath);
         }
 
-        if (assembledCode == null || !menu.isTargetValid()) return;
+        if (assembledCode == null || !menu.isTargetValid()) {
+            return;
+        }
 
-        if (forBlock)
-        {
-            if (checkEmpty && !menu.isInterpreterEmpty())
-            {
+        if (forBlock) {
+            if (checkEmpty && !menu.isInterpreterEmpty()) {
                 Minecraft.getInstance().gui.pushScreenLayer(MessageScreen.confirm(
                         List.of(MSG_CONFIRM_NOT_EMPTY_BLOCK),
                         () -> writeBinaryToTarget(false)
                 ));
                 return;
             }
-        }
-        else
-        {
-            if (checkEmpty && !isMemoryCardEmpty())
-            {
+        } else {
+            if (checkEmpty && !isMemoryCardEmpty()) {
                 Minecraft.getInstance().gui.pushScreenLayer(MessageScreen.confirm(
                         List.of(MSG_CONFIRM_NOT_EMPTY_CARD),
                         () -> writeBinaryToTarget(false)
@@ -583,18 +518,13 @@ public final class ProgrammerScreen extends CardInventoryContainerScreen<Program
     }
 
     @UnknownNullability
-    private <R, T extends Throwable> R guardOperation(ThrowingSupplier<R, T> operation, Supplier<MutableComponent> errorSupplier)
-    {
+    private <R, T extends Throwable> R guardOperation(ThrowingSupplier<R, T> operation, Supplier<MutableComponent> errorSupplier) {
         clearLastError();
-        try
-        {
+        try {
             return operation.get();
-        }
-        catch (Throwable e)
-        {
+        } catch (Throwable e) {
             Throwable error = e;
-            while (error.getCause() != null)
-            {
+            while (error.getCause() != null) {
                 error = error.getCause();
             }
             setLastError(errorSupplier.get(), error);

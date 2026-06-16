@@ -24,8 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public final class RedstoneInterface
-{
+public final class RedstoneInterface {
     public static final StreamCodec<FriendlyByteBuf, int[]> PORT_MAPPING_STREAM_CODEC = RCUByteBufCodecs.intArray(4);
 
     private final ControllerBlockEntity be;
@@ -39,53 +38,48 @@ public final class RedstoneInterface
     private final int[] invPortMapping = new int[] { 0, 1, 2, 3 };
     private Direction facing = Direction.DOWN;
 
-    public RedstoneInterface(ControllerBlockEntity be)
-    {
+    public RedstoneInterface(ControllerBlockEntity be) {
         this.be = be;
         this.ports = be.getInterpreter().getIoPorts();
         Arrays.fill(portConfigs, NonePortConfig.INSTANCE);
     }
 
-    public void tick()
-    {
-        for (int port = 0; port < portStatesOut.length; port++)
-        {
-            if (portConfigs[port].hasOutputs())
-            {
+    public void tick() {
+        for (int port = 0; port < portStatesOut.length; port++) {
+            if (portConfigs[port].hasOutputs()) {
                 updateOutputOnSide(port, false);
             }
         }
     }
 
-    public void handleNeighborUpdate(BlockState state, BlockPos adjPos, Direction side)
-    {
+    public void handleNeighborUpdate(BlockState state, BlockPos adjPos, Direction side) {
         updateInputOnSide(state, adjPos, side, false);
     }
 
-    private void updateInputOnSide(BlockState state, BlockPos adjPos, Direction side, boolean force)
-    {
+    private void updateInputOnSide(BlockState state, BlockPos adjPos, Direction side, boolean force) {
         int extPort = PortMapping.getPortIndex(facing, side);
-        if (extPort == -1) return;
+        if (extPort == -1) {
+            return;
+        }
 
         int port = invPortMapping[extPort];
         PortConfig config = portConfigs[port];
-        if (!config.hasInputs() && !force) return;
+        if (!config.hasInputs() && !force) {
+            return;
+        }
 
         byte portState = portStatesIn[port];
         byte newState = config.updateInput(be.level(), state, be.getBlockPos(), facing, adjPos, side);
-        if (portState != newState)
-        {
+        if (portState != newState) {
             portStatesIn[port] = newState;
             ports.writeInputPort(port, newState);
             be.setChangedWithoutSignalUpdate();
         }
     }
 
-    private void updateOutputOnSide(int port, boolean force)
-    {
+    private void updateOutputOnSide(int port, boolean force) {
         byte portState = ports.readOutputPort(port);
-        if (portState != portStatesOut[port] || force)
-        {
+        if (portState != portStatesOut[port] || force) {
             portStatesOut[port] = portState;
             int extPort = portMapping[port];
             RedstoneType type = portConfigs[port].getType();
@@ -93,45 +87,36 @@ public final class RedstoneInterface
         }
     }
 
-    public int getRedstoneOutput(Direction side)
-    {
+    public int getRedstoneOutput(Direction side) {
         int extPort = PortMapping.getPortIndex(facing, side);
-        if (extPort != -1)
-        {
+        if (extPort != -1) {
             int port = invPortMapping[extPort];
             return portConfigs[port].getRedstoneOutput(portStatesOut[port]);
         }
         return 0;
     }
 
-    public int getBundledOutput(Direction side, int channel)
-    {
+    public int getBundledOutput(Direction side, int channel) {
         int extPort = PortMapping.getPortIndex(facing, side);
-        if (extPort != -1)
-        {
+        if (extPort != -1) {
             int port = invPortMapping[extPort];
             return portConfigs[port].getBundledOutput(portStatesOut[port], channel);
         }
         return 0;
     }
 
-    public void setFacing(Direction facing)
-    {
+    public void setFacing(Direction facing) {
         this.facing = facing;
     }
 
-    public void setPortConfig(int port, PortConfig config)
-    {
+    public void setPortConfig(int port, PortConfig config) {
         PortConfig oldConfig = portConfigs[port];
         portConfigs[port] = config;
         int extPort = portMapping[port];
-        if (oldConfig.getType() != config.getType())
-        {
+        if (oldConfig.getType() != config.getType()) {
             EnumProperty<RedstoneType> prop = PropertyHolder.RS_CON_PROPS[extPort];
             be.level().setBlockAndUpdate(be.getBlockPos(), be.getBlockState().setValue(prop, config.getType()));
-        }
-        else
-        {
+        } else {
             updateNeighborOnSide(PortMapping.getPortSide(facing, extPort), config.getType() == RedstoneType.BUNDLED);
         }
         Direction side = PortMapping.getPortSide(facing, extPort);
@@ -140,15 +125,13 @@ public final class RedstoneInterface
         be.setChangedWithoutSignalUpdate();
     }
 
-    public void setPortMapping(int[] mapping)
-    {
+    public void setPortMapping(int[] mapping) {
         Utils.copyIntArray(mapping, portMapping);
         setupInvPortMapping();
         be.markForSyncAndSave();
 
         BlockState state = be.getBlockState();
-        for (int port = 0; port < 4; port++)
-        {
+        for (int port = 0; port < 4; port++) {
             PortConfig config = portConfigs[port];
             int extPort = portMapping[port];
             state = state.setValue(PropertyHolder.RS_CON_PROPS[extPort], config.getType());
@@ -159,39 +142,30 @@ public final class RedstoneInterface
         be.level().setBlockAndUpdate(be.getBlockPos(), state);
     }
 
-    public Direction getFacing()
-    {
+    public Direction getFacing() {
         return facing;
     }
 
-    public PortConfig[] getPortConfigs()
-    {
+    public PortConfig[] getPortConfigs() {
         return portConfigs;
     }
 
-    public int[] getPortMapping()
-    {
+    public int[] getPortMapping() {
         return portMapping;
     }
 
-    private void updateNeighborOnSide(Direction side, boolean bundled)
-    {
+    private void updateNeighborOnSide(Direction side, boolean bundled) {
         BlockPos adjPos = be.getBlockPos().relative(side);
-        if (bundled)
-        {
+        if (bundled) {
             be.level().getBlockState(adjPos).onNeighborChange(be.level(), adjPos, be.getBlockPos());
-        }
-        else
-        {
+        } else {
             // FIXME: the whole Orientation thing makes zero sense...
             be.level().neighborChanged(adjPos, be.getBlockState().getBlock(), null);
         }
     }
 
-    public BlockState updateStateFromConfigs(BlockState state)
-    {
-        for (int port = 0; port < 4; port++)
-        {
+    public BlockState updateStateFromConfigs(BlockState state) {
+        for (int port = 0; port < 4; port++) {
             PortConfig config = portConfigs[port];
             int extPort = portMapping[port];
             state = state.setValue(PropertyHolder.RS_CON_PROPS[extPort], config.getType());
@@ -199,11 +173,9 @@ public final class RedstoneInterface
         return state;
     }
 
-    public boolean readFromNetwork(ValueInput valueInput)
-    {
+    public boolean readFromNetwork(ValueInput valueInput) {
         Optional<int[]> mapping = valueInput.getIntArray("mapping");
-        if (mapping.isPresent() && !Arrays.equals(mapping.get(), portMapping))
-        {
+        if (mapping.isPresent() && !Arrays.equals(mapping.get(), portMapping)) {
             Utils.copyIntArray(mapping.get(), portMapping);
             setupInvPortMapping();
             return true;
@@ -211,15 +183,13 @@ public final class RedstoneInterface
         return false;
     }
 
-    public CompoundTag writeToNetwork()
-    {
+    public CompoundTag writeToNetwork() {
         CompoundTag tag = new CompoundTag();
         tag.putIntArray("mapping", Arrays.copyOf(portMapping, portMapping.length));
         return tag;
     }
 
-    public void load(ValueInput valueInput)
-    {
+    public void load(ValueInput valueInput) {
         List<PortConfig> configs = valueInput.read("config", RedstoneType.PORT_LIST_CODEC).orElse(List.of());
         Utils.copyArray(configs.toArray(PortConfig[]::new), portConfigs);
         Utils.copyByteArray(valueInput.read("states_out", RCUCodecs.BYTE_ARRAY), portStatesOut);
@@ -228,31 +198,24 @@ public final class RedstoneInterface
         setupInvPortMapping();
     }
 
-    public void save(ValueOutput valueOutput)
-    {
+    public void save(ValueOutput valueOutput) {
         valueOutput.store("config", RedstoneType.PORT_LIST_CODEC, Arrays.asList(portConfigs));
         valueOutput.store("states_out", RCUCodecs.BYTE_ARRAY, Arrays.copyOf(portStatesOut, portStatesOut.length));
         valueOutput.store("states_in", RCUCodecs.BYTE_ARRAY, Arrays.copyOf(portStatesIn, portStatesIn.length));
         valueOutput.putIntArray("mapping", Arrays.copyOf(portMapping, portMapping.length));
     }
 
-    private void setupInvPortMapping()
-    {
-        for (int i = 0; i < 4; i++)
-        {
+    private void setupInvPortMapping() {
+        for (int i = 0; i < 4; i++) {
             int mapping = portMapping[i];
             invPortMapping[mapping] = i;
         }
     }
 
-    public static boolean validatePortMapping(int[] mapping)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = i + 1; j < 4; j++)
-            {
-                if (mapping[i] == mapping[j])
-                {
+    public static boolean validatePortMapping(int[] mapping) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = i + 1; j < 4; j++) {
+                if (mapping[i] == mapping[j]) {
                     return false;
                 }
             }

@@ -7,8 +7,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record ClientboundUpdatePortMappingPayload(int windowId, int[] portMapping) implements CustomPacketPayload
-{
+public record ClientboundUpdatePortMappingPayload(int windowId, int[] portMapping) implements CustomPacketPayload {
     public static final Type<ClientboundUpdatePortMappingPayload> TYPE = Utils.payloadType("clientbound_update_port_mapping");
     public static final StreamCodec<FriendlyByteBuf, ClientboundUpdatePortMappingPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
@@ -19,8 +18,7 @@ public record ClientboundUpdatePortMappingPayload(int windowId, int[] portMappin
     );
 
     @Override
-    public Type<ClientboundUpdatePortMappingPayload> type()
-    {
+    public Type<ClientboundUpdatePortMappingPayload> type() {
         return TYPE;
     }
 }

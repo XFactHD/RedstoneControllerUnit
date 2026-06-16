@@ -7,35 +7,29 @@ import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import net.neoforged.neoforge.client.model.generators.blockstate.CustomBlockStateModelBuilder;
 import net.neoforged.neoforge.client.model.generators.blockstate.UnbakedMutator;
 
-public final class UnbakedControllerModelBuilder extends CustomBlockStateModelBuilder
-{
+public final class UnbakedControllerModelBuilder extends CustomBlockStateModelBuilder {
     private final Variant variant;
 
-    public UnbakedControllerModelBuilder(Identifier baseModel, Variant.SimpleModelState modelState)
-    {
+    public UnbakedControllerModelBuilder(Identifier baseModel, Variant.SimpleModelState modelState) {
         this(new Variant(baseModel, modelState));
     }
 
-    private UnbakedControllerModelBuilder(Variant variant)
-    {
+    private UnbakedControllerModelBuilder(Variant variant) {
         this.variant = variant;
     }
 
     @Override
-    public CustomBlockStateModelBuilder with(VariantMutator variantMutator)
-    {
+    public CustomBlockStateModelBuilder with(VariantMutator variantMutator) {
         return new UnbakedControllerModelBuilder(variantMutator.apply(variant));
     }
 
     @Override
-    public CustomBlockStateModelBuilder with(UnbakedMutator variantMutator)
-    {
+    public CustomBlockStateModelBuilder with(UnbakedMutator variantMutator) {
         return this;
     }
 
     @Override
-    public CustomUnbakedBlockStateModel toUnbaked()
-    {
+    public CustomUnbakedBlockStateModel toUnbaked() {
         return new UnbakedControllerModel(variant.modelLocation(), variant.modelState());
     }
 }

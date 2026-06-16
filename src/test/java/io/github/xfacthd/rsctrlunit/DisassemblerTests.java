@@ -9,11 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-public class DisassemblerTests
-{
+public class DisassemblerTests {
     @Test
-    void testOne()
-    {
+    void testOne() {
         Code code = makeCode(
                 "RedstoneBlinker",
                 new int[] { 0x63, 0x80, 0xFF, 0x74, 0x14, 0xD5, 0xE0, 0xFD, 0x01, 0x00 },
@@ -31,8 +29,7 @@ public class DisassemblerTests
     }
 
     @Test
-    void testTwo()
-    {
+    void testTwo() {
         Code code = makeCode(
                 "RedstoneForward",
                 new int[] { 0x85, 0xA0, 0x80, 0x01, 0x00 },
@@ -47,8 +44,7 @@ public class DisassemblerTests
     }
 
     @Test
-    void testThree()
-    {
+    void testThree() {
         Code code = makeCode(
                 "RedstoneTimerBlinker",
                 new int[] { 0x75, 0x8C, 0xEB, 0x75, 0x8A, 0xEB, 0x43, 0x89, 0x02, 0x43, 0x88, 0x10, 0x63, 0x80, 0xFF, 0x30, 0x8D, 0xFD, 0xC2, 0x8D, 0x01, 0x0C },
@@ -69,23 +65,19 @@ public class DisassemblerTests
         test(code, expectedLines);
     }
 
-    private static Code makeCode(String name, int[] rom, Map<Integer, String> labels)
-    {
+    private static Code makeCode(String name, int[] rom, Map<Integer, String> labels) {
         byte[] romBytes = new byte[rom.length];
-        for (int i = 0; i < rom.length; i++)
-        {
+        for (int i = 0; i < rom.length; i++) {
             romBytes[i] = (byte) (rom[i] & 0xFF);
         }
         return new Code(name, romBytes, new Int2ObjectOpenHashMap<>(labels));
     }
 
-    private static void test(Code code, List<String> expectedLines)
-    {
+    private static void test(Code code, List<String> expectedLines) {
         Disassembly disassembly = Assertions.assertDoesNotThrow(() -> Disassembler.disassemble(code));
         List<String> lines = disassembly.getLines();
         Assertions.assertEquals(lines.size(), expectedLines.size());
-        for (int i = 0; i < expectedLines.size(); i++)
-        {
+        for (int i = 0; i < expectedLines.size(); i++) {
             Assertions.assertEquals(expectedLines.get(i), lines.get(i), "Disassembly mismatch on line " + (i + 1));
         }
     }

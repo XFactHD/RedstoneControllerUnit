@@ -1,5 +1,6 @@
 package io.github.xfacthd.rsctrlunit.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import io.github.xfacthd.rsctrlunit.client.screen.popup.EditPortMappingScreen;
 import io.github.xfacthd.rsctrlunit.client.screen.widget.ActionButton;
 import io.github.xfacthd.rsctrlunit.client.screen.widget.RedstoneConfig;
@@ -32,13 +33,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.UnknownNullability;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ControllerScreen extends CardInventoryContainerScreen<ControllerMenu>
-{
+public final class ControllerScreen extends CardInventoryContainerScreen<ControllerMenu> {
     private static final Identifier BACKGROUND = Utils.rl("background");
     private static final Identifier INVENTORY = Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final Identifier REGISTERS = Utils.rl("textures/gui/controller_registers.png");
@@ -165,16 +164,14 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     private boolean dragScrollingHor = false;
     private boolean dragScrollingVert = false;
 
-    public ControllerScreen(ControllerMenu menu, Inventory inventory, Component title)
-    {
+    public ControllerScreen(ControllerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
         inventoryLabelX = INVENTORY_X;
         inventoryLabelY = INVENTORY_Y - 10;
     }
 
     @Override
-    protected void init()
-    {
+    protected void init() {
         super.init();
 
         new TabGroup(leftPos, topPos, IMAGE_WIDTH, TAB_HEIGHT, this::setTab)
@@ -231,8 +228,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         registers.clear();
         int yTop = topPos + REGISTER_Y;
         int xLeft = leftPos + REGISTER_LEFT_X;
-        for (int i = 0; i < 8; i++)
-        {
+        for (int i = 0; i < 8; i++) {
             registers.add(new Register(xLeft, yTop + i * Register.HEIGHT, i));
         }
         registers.add(new Register.Port(xLeft, yTop + Register.HEIGHT * 10, 0, outputs, inputs));
@@ -267,8 +263,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         redstoneConfigs.clear();
         int rsCfgX = leftPos + REDSTONE_CFG_X;
         int rsCfgY = topPos + REDSTONE_CFG_Y;
-        for (int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             redstoneConfigs.add(new RedstoneConfig(this, i, rsCfgX, rsCfgY + i * RedstoneConfig.HEIGHT_PADDED));
         }
 
@@ -277,13 +272,11 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
-    {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos, topPos + BACKGROUND_Y, IMAGE_WIDTH, IMAGE_HEIGHT - BACKGROUND_Y);
-        switch (tab)
-        {
+        switch (tab) {
             case TAB_STATUS -> renderStatusTab(graphics, mouseX, mouseY);
             case TAB_CODE -> renderCodeTab(graphics, mouseX, mouseY);
             case TAB_REDSTONE -> renderRedstoneTab(graphics, mouseX, mouseY);
@@ -291,38 +284,29 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
-    {
-        if (tab == TAB_CODE)
-        {
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        if (tab == TAB_CODE) {
             graphics.text(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF404040, false);
         }
     }
 
     @Override
-    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
-    {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractTooltip(graphics, mouseX, mouseY);
-        switch (tab)
-        {
-            case TAB_STATUS ->
-            {
-                for (Register reg : registers)
-                {
+        switch (tab) {
+            case TAB_STATUS -> {
+                for (Register reg : registers) {
                     reg.extractTooltip(graphics, font, ramView, sfrView, mouseX, mouseY);
                 }
-                if (mouseX >= leftPos + INDICATOR_X && mouseX < leftPos + INDICATOR_X + INDICATOR_SIZE && mouseY >= topPos + INDICATOR_Y && mouseY < topPos + INDICATOR_Y + INDICATOR_SIZE)
-                {
+                if (mouseX >= leftPos + INDICATOR_X && mouseX < leftPos + INDICATOR_X + INDICATOR_SIZE && mouseY >= topPos + INDICATOR_Y && mouseY < topPos + INDICATOR_Y + INDICATOR_SIZE) {
                     Component tooltip = menu.isRunning() ? TOOLTIP_RUNNING : TOOLTIP_PAUSED;
                     graphics.setTooltipForNextFrame(font, tooltip, mouseX, mouseY);
                 }
             }
             case TAB_CODE -> { }
-            case TAB_REDSTONE ->
-            {
+            case TAB_REDSTONE -> {
                 PortConfig[] configs = menu.getPortConfigs();
-                for (RedstoneConfig cfg : redstoneConfigs)
-                {
+                for (RedstoneConfig cfg : redstoneConfigs) {
                     cfg.drawTooltip(graphics, font, mouseX, mouseY, configs);
                 }
             }
@@ -330,8 +314,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    protected void containerTick()
-    {
+    protected void containerTick() {
         boolean running = menu.isRunning();
         buttonPauseResume.setMessage(running ? BUTTON_PAUSE : BUTTON_RESUME);
         buttonStep.active = !running;
@@ -340,41 +323,31 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
-    {
-        if (tab == TAB_REDSTONE)
-        {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (tab == TAB_REDSTONE) {
             PortConfig[] configs = menu.getPortConfigs();
-            for (RedstoneConfig config : redstoneConfigs)
-            {
-                if (config.mouseClicked(event, configs))
-                {
+            for (RedstoneConfig config : redstoneConfigs) {
+                if (config.mouseClicked(event, configs)) {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
                     return true;
                 }
             }
-        }
-        else if (horScrollBar && isHoveringHorBar(event.x(), event.y()))
-        {
+        } else if (horScrollBar && isHoveringHorBar(event.x(), event.y())) {
             dragScrollingHor = true;
-        }
-        else if (vertScrollBar && isHoveringVertBar(event.x(), event.y()))
-        {
+        } else if (vertScrollBar && isHoveringVertBar(event.x(), event.y())) {
             dragScrollingVert = true;
         }
         return super.mouseClicked(event, doubleClick);
     }
 
-    private boolean isHoveringHorBar(double mouseX, double mouseY)
-    {
+    private boolean isHoveringHorBar(double mouseX, double mouseY) {
         int x = leftPos + DISASSEMBLY_X + 1;
         int y = topPos + DISASSEMBLY_Y + DISASSEMBLY_HEIGHT_HOR_SCROLL + 1;
         int width = (vertScrollBar ? DISASSEMBLY_WIDTH_VERT_SCROLL : DISASSEMBLY_WIDTH) - 2;
         return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + SCROLL_BAR_WIDTH;
     }
 
-    private boolean isHoveringVertBar(double mouseX, double mouseY)
-    {
+    private boolean isHoveringVertBar(double mouseX, double mouseY) {
         int x = leftPos + DISASSEMBLY_X + DISASSEMBLY_WIDTH_VERT_SCROLL + 1;
         int y = topPos + DISASSEMBLY_Y + 1;
         int height = (horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT) - 2;
@@ -382,10 +355,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public boolean mouseReleased(MouseButtonEvent event)
-    {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_1)
-        {
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             dragScrollingHor = false;
             dragScrollingVert = false;
         }
@@ -393,24 +364,17 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY)
-    {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         int x = leftPos + DISASSEMBLY_X;
         int y = topPos + DISASSEMBLY_Y;
         int width = vertScrollBar ? DISASSEMBLY_WIDTH_VERT_SCROLL : DISASSEMBLY_WIDTH;
         int height = horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT;
-        if (tab != TAB_REDSTONE && mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height)
-        {
-            if (scrollX != 0D)
-            {
+        if (tab != TAB_REDSTONE && mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height) {
+            if (scrollX != 0D) {
                 codeHorOffset = scroll(codeHorOffset, scrollX, codeWidth, width);
-            }
-            else if (Minecraft.getInstance().hasShiftDown())
-            {
+            } else if (Minecraft.getInstance().hasShiftDown()) {
                 codeHorOffset = scroll(codeHorOffset, scrollY, codeWidth, width);
-            }
-            else
-            {
+            } else {
                 codeVertOffset = scroll(codeVertOffset, scrollY, codeHeight, height);
             }
             return true;
@@ -418,53 +382,44 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
-    private static int scroll(int offset, double scrollOffset, int codeSize, int frameSize)
-    {
+    private static int scroll(int offset, double scrollOffset, int codeSize, int frameSize) {
         return (int) Mth.clamp(offset - scrollOffset * 2, 0, Math.max(codeSize - (frameSize - 4), 0));
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY)
-    {
-        if (dragScrollingHor)
-        {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (dragScrollingHor) {
             int width = vertScrollBar ? DISASSEMBLY_WIDTH_VERT_SCROLL : DISASSEMBLY_WIDTH;
             codeHorOffset = drag(leftPos + DISASSEMBLY_X, width, event.x(), codeWidth);
-        }
-        else if (dragScrollingVert)
-        {
+        } else if (dragScrollingVert) {
             int height = horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT;
             codeVertOffset = drag(topPos + DISASSEMBLY_Y, height, event.y(), codeHeight);
         }
         return super.mouseDragged(event, dragX, dragY);
     }
 
-    private static int drag(int origin, int barSize, double mousePos, int codeSize)
-    {
+    private static int drag(int origin, int barSize, double mousePos, int codeSize) {
         float freeScrollWidth = barSize - SCROLL_BAR_HEIGHT;
         float factor = ((float) mousePos - origin - (SCROLL_BAR_HEIGHT / 2F)) / freeScrollWidth;
         float size = codeSize - (barSize - 4);
         return (int) Mth.clamp(factor * size, 0, Math.max(size, 0));
     }
 
-    private void renderDisassembly(GuiGraphicsExtractor graphics, boolean renderCursor)
-    {
+    private void renderDisassembly(GuiGraphicsExtractor graphics, boolean renderCursor) {
         graphics.text(font, TITLE_DISASSEMBLY, leftPos + DISASSEMBLY_X, topPos + TITLE_Y, 0xFF404040, false);
 
         int x = leftPos + DISASSEMBLY_X;
         int y = topPos + DISASSEMBLY_Y;
         int width = vertScrollBar ? DISASSEMBLY_WIDTH_VERT_SCROLL : DISASSEMBLY_WIDTH;
         int height = horScrollBar ? DISASSEMBLY_HEIGHT_HOR_SCROLL : DISASSEMBLY_HEIGHT;
-        if (vertScrollBar)
-        {
+        if (vertScrollBar) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CODE_BACKGROUND, x + width, y, SCROLL_BAR_WIDTH + 2, height);
-            int off = (int)((float)codeVertOffset / (codeHeight - height + 4) * (height - 2 - SCROLL_BAR_HEIGHT));
+            int off = (int) ((float) codeVertOffset / (codeHeight - height + 4) * (height - 2 - SCROLL_BAR_HEIGHT));
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CODE_SCROLLER_VERT, x + width + 1, y + 1 + off, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT);
         }
-        if (horScrollBar)
-        {
+        if (horScrollBar) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CODE_BACKGROUND, x, y + height, width, SCROLL_BAR_WIDTH + 2);
-            int off = (int)((float)codeHorOffset / (codeWidth - width + 4) * (width - 2 - SCROLL_BAR_HEIGHT));
+            int off = (int) ((float) codeHorOffset / (codeWidth - width + 4) * (width - 2 - SCROLL_BAR_HEIGHT));
             //noinspection SuspiciousNameCombination
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CODE_SCROLLER_HOR, x + 1 + off, y + height + 1, SCROLL_BAR_HEIGHT, SCROLL_BAR_WIDTH);
         }
@@ -476,10 +431,8 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         int minLine = codeVertOffset / lineHeight;
         int maxLine = Math.min((height - 4) / lineHeight + minLine + 2, disassembly.getLines().size());
         int pcLine = disassembly.getLineIndexForProgramCounter(programCounter);
-        for (int i = minLine; i < maxLine; i++)
-        {
-            if (renderCursor && i == pcLine)
-            {
+        for (int i = minLine; i < maxLine; i++) {
+            if (renderCursor && i == pcLine) {
                 graphics.text(font, ">", x - codeHorOffset, y, 0xFFFFFFFF, false);
             }
             graphics.text(font, disassembly.getLines().get(i), x + 7 - codeHorOffset, y, 0xFFFFFFFF, false);
@@ -488,12 +441,10 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         graphics.disableScissor();
     }
 
-    private void renderStatusTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
-    {
+    private void renderStatusTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.text(font, TITLE_REGISTERS, leftPos + REGISTER_X, topPos + TITLE_Y, 0xFF404040, false);
         graphics.blit(RenderPipelines.GUI_TEXTURED, REGISTERS, leftPos + REGISTER_X, topPos + REGISTER_Y, 0, 0, REGISTER_WIDTH, REGISTER_HEIGHT, 256, 256);
-        for (Register reg : registers)
-        {
+        for (Register reg : registers) {
             reg.extract(graphics, font, ramView, sfrView);
         }
 
@@ -510,22 +461,18 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         renderDisassembly(graphics, true);
     }
 
-    private void renderCodeTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
-    {
+    private void renderCodeTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Component program = Component.translatable(LABEL_PROGRAM_KEY, menu.getCode().displayName());
         graphics.text(font, program, leftPos + INVENTORY_X, topPos + LABEL_PROGRAM_Y, 0xFF404040, false);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_BACKGROUND, leftPos + INVENTORY_X, topPos + CARD_SLOT_Y, SLOT_SIZE, SLOT_SIZE);
         Slot slot = menu.slots.getFirst();
-        if (slot.hasItem())
-        {
+        if (slot.hasItem()) {
             Code code = slot.getItem().get(RCUContent.COMPONENT_TYPE_CODE);
             boolean hasCode = code != null && !code.equals(Code.EMPTY);
             buttonLoad.active = hasCode;
             buttonSave.active = !hasCode;
-        }
-        else
-        {
+        } else {
             buttonLoad.active = buttonSave.active = false;
         }
         drawGhostCard(graphics, leftPos + INVENTORY_X + 1, topPos + CARD_SLOT_Y + 1);
@@ -535,8 +482,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         renderDisassembly(graphics, false);
     }
 
-    private void renderRedstoneTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
-    {
+    private void renderRedstoneTab(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int x = leftPos + REDSTONE_CFG_X;
         int y = topPos + REDSTONE_HEADER_Y;
         int xBg = x - RedstoneConfig.FRAME_PADDING;
@@ -551,14 +497,12 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
 
         Direction facing = menu.getFacing();
         PortConfig[] configs = menu.getPortConfigs();
-        for (RedstoneConfig config : redstoneConfigs)
-        {
+        for (RedstoneConfig config : redstoneConfigs) {
             config.draw(graphics, font, facing, configs, mouseX, mouseY);
         }
     }
 
-    private void setTab(int tab)
-    {
+    private void setTab(int tab) {
         this.tab = tab;
         menu.slots.stream()
                 .filter(Hideable.class::isInstance)
@@ -574,13 +518,11 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         buttonTogglePortMap.visible = tab == TAB_REDSTONE;
     }
 
-    private void editPortMap()
-    {
+    private void editPortMap() {
         Minecraft.getInstance().gui.pushScreenLayer(new EditPortMappingScreen(this));
     }
 
-    public void updateStatus(byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter)
-    {
+    public void updateStatus(byte[] ram, byte[] sfr, byte[] output, byte[] input, int programCounter) {
         Utils.copyByteArray(ram, this.ramView);
         Utils.copyByteArray(sfr, this.sfrView);
         Utils.copyByteArray(output, this.outputs);
@@ -588,8 +530,7 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         this.programCounter = programCounter;
     }
 
-    public void updateDisassembly()
-    {
+    public void updateDisassembly() {
         disassembly = Disassembler.disassemble(menu.getCode());
         codeHorOffset = 0;
         codeVertOffset = 0;
@@ -598,28 +539,23 @@ public final class ControllerScreen extends CardInventoryContainerScreen<Control
         int height = DISASSEMBLY_HEIGHT;
         codeHeight = disassembly.getLines().size() * lineHeight;
         vertScrollBar = codeHeight > height - 4;
-        if (vertScrollBar)
-        {
+        if (vertScrollBar) {
             width = DISASSEMBLY_WIDTH_VERT_SCROLL;
         }
         codeWidth = 0;
-        for (String line : disassembly.getLines())
-        {
+        for (String line : disassembly.getLines()) {
             codeWidth = Math.max(codeWidth, font.width(line) + 7);
         }
         horScrollBar = codeWidth > width - 4;
-        if (horScrollBar)
-        {
+        if (horScrollBar) {
             height = DISASSEMBLY_HEIGHT_HOR_SCROLL;
         }
-        if (!vertScrollBar && disassembly.getLines().size() * lineHeight > height - 4)
-        {
+        if (!vertScrollBar && disassembly.getLines().size() * lineHeight > height - 4) {
             vertScrollBar = true;
         }
     }
 
-    public void setPortConfig(int port, PortConfig config)
-    {
+    public void setPortConfig(int port, PortConfig config) {
         ClientPacketDistributor.sendToServer(new ServerboundSetPortConfigPayload(menu.containerId, port, config));
     }
 }

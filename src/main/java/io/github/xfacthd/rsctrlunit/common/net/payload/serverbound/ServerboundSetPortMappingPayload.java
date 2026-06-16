@@ -9,8 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record ServerboundSetPortMappingPayload(int windowId, int[] portMapping) implements CustomPacketPayload
-{
+public record ServerboundSetPortMappingPayload(int windowId, int[] portMapping) implements CustomPacketPayload {
     public static final Type<ServerboundSetPortMappingPayload> TYPE = Utils.payloadType("serverbound_set_port_mapping");
     public static final StreamCodec<FriendlyByteBuf, ServerboundSetPortMappingPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
@@ -20,17 +19,14 @@ public record ServerboundSetPortMappingPayload(int windowId, int[] portMapping) 
             ServerboundSetPortMappingPayload::new
     );
 
-    public void handle(IPayloadContext ctx)
-    {
-        if (ctx.player().containerMenu instanceof ControllerMenu ctrlMenu && ctrlMenu.containerId == windowId)
-        {
+    public void handle(IPayloadContext ctx) {
+        if (ctx.player().containerMenu instanceof ControllerMenu ctrlMenu && ctrlMenu.containerId == windowId) {
             ctrlMenu.setPortMapping(portMapping);
         }
     }
 
     @Override
-    public Type<ServerboundSetPortMappingPayload> type()
-    {
+    public Type<ServerboundSetPortMappingPayload> type() {
         return TYPE;
     }
 }

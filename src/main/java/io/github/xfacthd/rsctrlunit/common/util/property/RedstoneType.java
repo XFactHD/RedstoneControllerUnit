@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.IntFunction;
 
-public enum RedstoneType implements StringRepresentable
-{
+public enum RedstoneType implements StringRepresentable {
     NONE(NonePortConfig.MAP_CODEC, NonePortConfig.STREAM_CODEC),
     SINGLE(SinglePortConfig.MAP_CODEC, SinglePortConfig.STREAM_CODEC),
     BUNDLED(BundledPortConfig.MAP_CODEC, BundledPortConfig.STREAM_CODEC);
@@ -38,30 +37,25 @@ public enum RedstoneType implements StringRepresentable
     private final MapCodec<? extends PortConfig> portConfigCodec;
     private final StreamCodec<ByteBuf, ? extends PortConfig> portConfigStreamCodec;
 
-    RedstoneType(MapCodec<? extends PortConfig> portConfigCodec, StreamCodec<ByteBuf, ? extends PortConfig> portConfigStreamCodec)
-    {
+    RedstoneType(MapCodec<? extends PortConfig> portConfigCodec, StreamCodec<ByteBuf, ? extends PortConfig> portConfigStreamCodec) {
         this.portConfigCodec = portConfigCodec;
         this.portConfigStreamCodec = portConfigStreamCodec;
     }
 
-    public MapCodec<? extends PortConfig> getPortConfigCodec()
-    {
+    public MapCodec<? extends PortConfig> getPortConfigCodec() {
         return portConfigCodec;
     }
 
-    public StreamCodec<ByteBuf, ? extends PortConfig> getPortConfigStreamCodec()
-    {
+    public StreamCodec<ByteBuf, ? extends PortConfig> getPortConfigStreamCodec() {
         return portConfigStreamCodec;
     }
 
-    public Component getTranslatedName()
-    {
+    public Component getTranslatedName() {
         return translatedName;
     }
 
     @Override
-    public String getSerializedName()
-    {
+    public String getSerializedName() {
         return name;
     }
 }

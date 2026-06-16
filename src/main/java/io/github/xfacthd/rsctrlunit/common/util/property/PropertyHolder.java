@@ -3,8 +3,7 @@ package io.github.xfacthd.rsctrlunit.common.util.property;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public final class PropertyHolder
-{
+public final class PropertyHolder {
     public static final EnumProperty<RedstoneType> RS_CON_0 = EnumProperty.create("rs_con_0", RedstoneType.class);
     public static final EnumProperty<RedstoneType> RS_CON_1 = EnumProperty.create("rs_con_1", RedstoneType.class);
     public static final EnumProperty<RedstoneType> RS_CON_2 = EnumProperty.create("rs_con_2", RedstoneType.class);

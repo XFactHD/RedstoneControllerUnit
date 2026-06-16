@@ -12,43 +12,36 @@ import java.util.Locale;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-public final class ParseHelpers
-{
+public final class ParseHelpers {
     private static final Pattern HEX_PATTERN = Pattern.compile("[0-9][0-9a-fA-F]*h");
     private static final Pattern BIN_PATTERN = Pattern.compile("[01]{1,16}b");
 
     private ParseHelpers() { }
 
-    public static NodeParser makeOneConstArgParser(String operand)
-    {
-        return (line, op, operands) ->
-        {
-            if (operands[0].equalsIgnoreCase(operand))
-            {
+    public static NodeParser makeOneConstArgParser(String operand) {
+        return (line, op, operands) -> {
+            if (operands[0].equalsIgnoreCase(operand)) {
                 return new NoArgOpNode(line, op);
             }
             return null;
         };
     }
 
-    public static NodeParser makeTwoConstArgParser(String firstOperand, String secondOperand)
-    {
-        return (line, op, operands) ->
-        {
-            if (operands[0].equalsIgnoreCase(firstOperand) && operands[1].equalsIgnoreCase(secondOperand))
-            {
+    public static NodeParser makeTwoConstArgParser(String firstOperand, String secondOperand) {
+        return (line, op, operands) -> {
+            if (operands[0].equalsIgnoreCase(firstOperand) && operands[1].equalsIgnoreCase(secondOperand)) {
                 return new NoArgOpNode(line, op);
             }
             return null;
         };
     }
 
-    public static NodeParser makeTwoArgOneConstOneBitParser(String constOperand, boolean secondConst, boolean bitComplement)
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeTwoArgOneConstOneBitParser(String constOperand, boolean secondConst, boolean bitComplement) {
+        return (line, op, operands) -> {
             int constOpIndex = secondConst ? 1 : 0;
-            if (!operands[constOpIndex].equalsIgnoreCase(constOperand)) return null;
+            if (!operands[constOpIndex].equalsIgnoreCase(constOperand)) {
+                return null;
+            }
 
             int bitOpIndex = secondConst ? 0 : 1;
             Byte bitOperand = parseBitOperand(operands[bitOpIndex], bitComplement);
@@ -56,149 +49,123 @@ public final class ParseHelpers
         };
     }
 
-    public static NodeParser makeTwoArgOneConstOneImmediateParser(String constOperand, boolean secondConst)
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeTwoArgOneConstOneImmediateParser(String constOperand, boolean secondConst) {
+        return (line, op, operands) -> {
             int constOpIndex = secondConst ? 1 : 0;
-            if (!operands[constOpIndex].equalsIgnoreCase(constOperand)) return null;
+            if (!operands[constOpIndex].equalsIgnoreCase(constOperand)) {
+                return null;
+            }
 
             Byte immediateOp = parseImmediateOperand(operands[secondConst ? 0 : 1]);
-            if (immediateOp != null)
-            {
+            if (immediateOp != null) {
                 return new SimpleOpNode(line, op, immediateOp);
             }
             return null;
         };
     }
 
-    public static NodeParser makeOneBitArgParser(boolean bitComplement)
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeOneBitArgParser(boolean bitComplement) {
+        return (line, op, operands) -> {
             Byte bitOperand = parseBitOperand(operands[0], bitComplement);
             return bitOperand != null ? new SimpleOpNode(line, op, bitOperand) : null;
         };
     }
 
-    public static NodeParser makeTwoArgOneConstOneAddressParser(String constOperand, boolean secondConst)
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeTwoArgOneConstOneAddressParser(String constOperand, boolean secondConst) {
+        return (line, op, operands) -> {
             int constOpIndex = secondConst ? 1 : 0;
-            if (!operands[constOpIndex].equalsIgnoreCase(constOperand)) return null;
+            if (!operands[constOpIndex].equalsIgnoreCase(constOperand)) {
+                return null;
+            }
 
             int addrOpIndex = secondConst ? 0 : 1;
             Byte addrOperand = parseAddressOperand(operands[addrOpIndex]);
-            if (addrOperand != null)
-            {
+            if (addrOperand != null) {
                 return new SimpleOpNode(line, op, addrOperand);
             }
             return null;
         };
     }
 
-    public static NodeParser makeTwoArgOneAddressOneImmediateParser()
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeTwoArgOneAddressOneImmediateParser() {
+        return (line, op, operands) -> {
             Byte addrOperand = parseAddressOperand(operands[0]);
             Byte immediateOp = parseImmediateOperand(operands[1]);
-            if (addrOperand != null && immediateOp != null)
-            {
+            if (addrOperand != null && immediateOp != null) {
                 return new SimpleOpNode(line, op, addrOperand, immediateOp);
             }
             return null;
         };
     }
 
-    public static NodeParser makeOneAddressArgParser()
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeOneAddressArgParser() {
+        return (line, op, operands) -> {
             Byte operandZero = parseAddressOperand(operands[0]);
-            if (operandZero != null)
-            {
+            if (operandZero != null) {
                 return new SimpleOpNode(line, op, operandZero);
             }
             return null;
         };
     }
 
-    public static NodeParser makeTwoAddressArgParser()
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeTwoAddressArgParser() {
+        return (line, op, operands) -> {
             Byte operandZero = parseAddressOperand(operands[0]);
             Byte operandOne = parseAddressOperand(operands[1]);
-            if (operandZero != null && operandOne != null)
-            {
+            if (operandZero != null && operandOne != null) {
                 return new SimpleOpNode(line, op, operandZero, operandOne);
             }
             return null;
         };
     }
 
-    public static NodeParser makeOneLabelArgJumpParser()
-    {
+    public static NodeParser makeOneLabelArgJumpParser() {
         return (line, op, operands) -> new JumpNode(line, op, operands[0]);
     }
 
-    public static NodeParser makeOneBitArgJumpParser()
-    {
+    public static NodeParser makeOneBitArgJumpParser() {
         return (line, op, operands) -> new JumpNode(line, op, operands[1], parseBitOperand(operands[0], false));
     }
 
-    public static NodeParser makeTwoArgJumpParser(Function<String, Byte> firstOperandParser)
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeTwoArgJumpParser(Function<String, @Nullable Byte> firstOperandParser) {
+        return (line, op, operands) -> {
             Byte firstOperand = firstOperandParser.apply(operands[0]);
-            if (firstOperand != null)
-            {
+            if (firstOperand != null) {
                 return new JumpNode(line, op, operands[1], firstOperand);
             }
             return null;
         };
     }
 
-    public static NodeParser makeTwoArgJumpParser(String firstOperand)
-    {
-        return (line, op, operands) ->
-        {
-            if (operands[0].equalsIgnoreCase(firstOperand))
-            {
+    public static NodeParser makeTwoArgJumpParser(String firstOperand) {
+        return (line, op, operands) -> {
+            if (operands[0].equalsIgnoreCase(firstOperand)) {
                 return new JumpNode(line, op, operands[1]);
             }
             return null;
         };
     }
 
-    public static NodeParser makeThreeArgJumpParser(String firstOperand, Function<String, Byte> secondOperandParser)
-    {
-        return (line, op, operands) ->
-        {
+    public static NodeParser makeThreeArgJumpParser(String firstOperand, Function<String, @Nullable Byte> secondOperandParser) {
+        return (line, op, operands) -> {
             Byte secondOperand = secondOperandParser.apply(operands[1]);
-            if (secondOperand != null && operands[0].equalsIgnoreCase(firstOperand))
-            {
+            if (secondOperand != null && operands[0].equalsIgnoreCase(firstOperand)) {
                 return new JumpNode(line, op, operands[2], secondOperand);
             }
             return null;
         };
     }
 
-    public static NodeParser makeMovDptrParser()
-    {
-        return (line, op, operands) ->
-        {
-            if (!operands[0].equalsIgnoreCase("DPTR") || !operands[1].startsWith("#")) return null;
+    public static NodeParser makeMovDptrParser() {
+        return (line, op, operands) -> {
+            if (!operands[0].equalsIgnoreCase("DPTR") || !operands[1].startsWith("#")) {
+                return null;
+            }
 
             String immOperand = operands[1].substring(1);
-            if (isNumber(immOperand))
-            {
+            if (isNumber(immOperand)) {
                 int value = parseInt(immOperand);
-                if (value <= 65535)
-                {
+                if (value <= 65535) {
                     return new SimpleOpNode(line, op, (byte) (value >> 8 & 0xFF), (byte) (value & 0xFF));
                 }
             }
@@ -206,15 +173,11 @@ public final class ParseHelpers
         };
     }
 
-    @Nullable
-    public static Byte parseAddressOperand(String operand)
-    {
-        if (isNumber(operand))
-        {
+    public static @Nullable Byte parseAddressOperand(String operand) {
+        if (isNumber(operand)) {
             return parseByte(operand);
         }
-        return switch (operand.toLowerCase(Locale.ROOT))
-        {
+        return switch (operand.toLowerCase(Locale.ROOT)) {
             case "p0" ->   (byte) Constants.ADDRESS_IO_PORT0;
             case "sp" ->   (byte) Constants.ADDRESS_STACK_POINTER;
             case "dpl" ->  (byte) Constants.ADDRESS_DATA_POINTER_LOWER;
@@ -240,42 +203,36 @@ public final class ParseHelpers
         };
     }
 
-    @Nullable
-    public static Byte parseImmediateOperand(String operand)
-    {
-        if (!operand.startsWith("#")) return null;
+    public static @Nullable Byte parseImmediateOperand(String operand) {
+        if (!operand.startsWith("#")) {
+            return null;
+        }
 
         String immOperand = operand.substring(1);
-        if (isNumber(immOperand))
-        {
+        if (isNumber(immOperand)) {
             return parseByte(immOperand);
         }
         return null;
     }
 
-    @Nullable
-    public static Byte parseBitOperand(String operand, boolean bitComplement)
-    {
-        if (bitComplement != operand.startsWith("/")) return null;
+    public static @Nullable Byte parseBitOperand(String operand, boolean bitComplement) {
+        if (bitComplement != operand.startsWith("/")) {
+            return null;
+        }
 
-        if (bitComplement)
-        {
+        if (bitComplement) {
             operand = operand.substring(1);
         }
 
-        if (!operand.contains("."))
-        {
-            if (isNumber(operand))
-            {
+        if (!operand.contains(".")) {
+            if (isNumber(operand)) {
                 int value = parseInt(operand);
-                if (value >= 0 && value <= 0x7F)
-                {
+                if (value >= 0 && value <= 0x7F) {
                     return (byte) (value & 0xFF);
                 }
                 return null;
             }
-            return switch (operand.toLowerCase())
-            {
+            return switch (operand.toLowerCase()) {
                 case "it0" -> (byte) Constants.BIT_ADDRESS_TCON_IT0;
                 case "ie0" -> (byte) Constants.BIT_ADDRESS_TCON_IE0;
                 case "it1" -> (byte) Constants.BIT_ADDRESS_TCON_IT1;
@@ -315,12 +272,13 @@ public final class ParseHelpers
         }
 
         String[] parts = operand.split("\\.");
-        if (parts.length != 2) return null;
+        if (parts.length != 2) {
+            return null;
+        }
 
         int baseAdress;
         String register = parts[0].toLowerCase(Locale.ROOT);
-        switch (register)
-        {
+        switch (register) {
             case "p0" -> baseAdress = Constants.ADDRESS_IO_PORT0;
             case "tcon" -> baseAdress = Constants.ADDRESS_TCON;
             case "p1" -> baseAdress = Constants.ADDRESS_IO_PORT1;
@@ -332,13 +290,10 @@ public final class ParseHelpers
             case "psw" -> baseAdress = Constants.ADDRESS_STATUS_WORD;
             case "a" -> baseAdress = Constants.ADDRESS_ACCUMULATOR;
             case "b" -> baseAdress = Constants.ADDRESS_REGISTER_B;
-            default ->
-            {
-                if (isNumber(register))
-                {
+            default -> {
+                if (isNumber(register)) {
                     int value = parseInt(register);
-                    if (value >= 0x20 && value <= 0x2F)
-                    {
+                    if (value >= 0x20 && value <= 0x2F) {
                         baseAdress = (value - 0x20) * 8;
                         break;
                     }
@@ -348,39 +303,31 @@ public final class ParseHelpers
         }
 
         int bitAddress = Integer.parseInt(parts[1]);
-        if (bitAddress >= 0 && bitAddress <= 7)
-        {
+        if (bitAddress >= 0 && bitAddress <= 7) {
             return (byte) (baseAdress | bitAddress);
         }
         return null;
     }
 
-    public static boolean isNumber(String operand)
-    {
-        if (operand.endsWith("h"))
-        {
+    public static boolean isNumber(String operand) {
+        if (operand.endsWith("h")) {
             return HEX_PATTERN.matcher(operand).matches();
         }
-        if (operand.endsWith("b"))
-        {
+        if (operand.endsWith("b")) {
             return BIN_PATTERN.matcher(operand).matches();
         }
         return StringUtils.isNumeric(operand);
     }
 
-    public static byte parseByte(String operand)
-    {
+    public static byte parseByte(String operand) {
         return (byte) (parseInt(operand) & 0xFF);
     }
 
-    public static int parseInt(String operand)
-    {
-        if (operand.endsWith("h"))
-        {
+    public static int parseInt(String operand) {
+        if (operand.endsWith("h")) {
             return Integer.parseInt(operand.substring(0, operand.length() - 1), 16);
         }
-        if (operand.endsWith("b"))
-        {
+        if (operand.endsWith("b")) {
             return Integer.parseInt(operand.substring(0, operand.length() - 1), 2);
         }
         return Integer.parseInt(operand);

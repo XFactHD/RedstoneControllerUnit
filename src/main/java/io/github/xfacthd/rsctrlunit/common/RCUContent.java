@@ -29,8 +29,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Function;
 
-public final class RCUContent
-{
+public final class RCUContent {
     private static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(RedstoneControllerUnit.MOD_ID);
     private static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, RedstoneControllerUnit.MOD_ID);
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(RedstoneControllerUnit.MOD_ID);
@@ -81,8 +80,7 @@ public final class RCUContent
             CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.rsctrlunit"))
                     .icon(() -> BLOCK_CONTROLLER.value().asItem().getDefaultInstance())
-                    .displayItems((_, output) ->
-                    {
+                    .displayItems((_, output) -> {
                         output.accept(BLOCK_CONTROLLER.value());
                         output.accept(BLOCK_ADC.value());
                         output.accept(BLOCK_DAC.value());
@@ -93,15 +91,13 @@ public final class RCUContent
     );
     // endregion
 
-    private static Holder<Block> registerBlock(String name, Function<BlockBehaviour.Properties, Block> blockFactory)
-    {
+    private static Holder<Block> registerBlock(String name, Function<BlockBehaviour.Properties, Block> blockFactory) {
         Holder<Block> block = BLOCKS.registerBlock(name, blockFactory);
         ITEMS.registerSimpleBlockItem(block);
         return block;
     }
 
-    public static void init(IEventBus modBus)
-    {
+    public static void init(IEventBus modBus) {
         BLOCKS.register(modBus);
         DATA_COMPONENTS.register(modBus);
         ITEMS.register(modBus);

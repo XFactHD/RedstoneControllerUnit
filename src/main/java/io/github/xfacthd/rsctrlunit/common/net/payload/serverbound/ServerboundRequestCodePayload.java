@@ -9,8 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record ServerboundRequestCodePayload(int windowId) implements CustomPacketPayload
-{
+public record ServerboundRequestCodePayload(int windowId) implements CustomPacketPayload {
     public static final Type<ServerboundRequestCodePayload> TYPE = Utils.payloadType("serverbound_request_rom");
     public static final StreamCodec<ByteBuf, ServerboundRequestCodePayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
@@ -18,17 +17,14 @@ public record ServerboundRequestCodePayload(int windowId) implements CustomPacke
             ServerboundRequestCodePayload::new
     );
 
-    public void handle(IPayloadContext ctx)
-    {
-        if (ctx.player().containerMenu instanceof ProgrammerMenu progMenu && progMenu.containerId == windowId)
-        {
+    public void handle(IPayloadContext ctx) {
+        if (ctx.player().containerMenu instanceof ProgrammerMenu progMenu && progMenu.containerId == windowId) {
             ctx.reply(new ClientboundReplyCodePayload(windowId, progMenu.getBlockTargetCode()));
         }
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type()
-    {
+    public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

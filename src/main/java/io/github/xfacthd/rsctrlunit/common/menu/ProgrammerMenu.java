@@ -14,8 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public final class ProgrammerMenu extends CardInventoryContainerMenu
-{
+public final class ProgrammerMenu extends CardInventoryContainerMenu {
     public static final Component TITLE = Component.translatable("menu.rsctrlunit.programmer");
 
     private final ItemStack progStack;
@@ -28,15 +27,13 @@ public final class ProgrammerMenu extends CardInventoryContainerMenu
     @Nullable
     private ControllerBlockEntity targetController;
 
-    public static ProgrammerMenu createClient(int windowId, Inventory inventory, RegistryFriendlyByteBuf buf)
-    {
+    public static ProgrammerMenu createClient(int windowId, Inventory inventory, RegistryFriendlyByteBuf buf) {
         int slot = buf.readVarInt();
         boolean forBlock = buf.readBoolean();
         return new ProgrammerMenu(windowId, inventory, ItemStack.EMPTY, slot, forBlock, null);
     }
 
-    public ProgrammerMenu(int windowId, Inventory inventory, ItemStack stack, int slot, boolean forBlock, @Nullable ControllerBlockEntity targetController)
-    {
+    public ProgrammerMenu(int windowId, Inventory inventory, ItemStack stack, int slot, boolean forBlock, @Nullable ControllerBlockEntity targetController) {
         super(RCUContent.MENU_TYPE_PROGRAMMER.get(), windowId, inventory, inventory.player.blockPosition(), new SlotConfig(
                 !forBlock, 9, 129, 9, 93, idx -> idx == slot
         ));
@@ -44,32 +41,24 @@ public final class ProgrammerMenu extends CardInventoryContainerMenu
         this.slot = slot;
         this.forBlock = forBlock;
         this.targetController = targetController;
-        if (forBlock)
-        {
+        if (forBlock) {
             DataSlot dataSlot = addDataSlot(DataSlot.standalone());
             dataSlot.set(1);
             this.targetBlockValidSlot = dataSlot;
             this.interpreterCodeLoadedSlot = addDataSlot(DataSlot.standalone());
-        }
-        else
-        {
+        } else {
             this.targetBlockValidSlot = null;
             this.interpreterCodeLoadedSlot = null;
         }
     }
 
     @Override
-    public void broadcastChanges()
-    {
-        if (forBlock && targetController != null)
-        {
-            if (targetController.isRemoved())
-            {
+    public void broadcastChanges() {
+        if (forBlock && targetController != null) {
+            if (targetController.isRemoved()) {
                 targetController = null;
                 Objects.requireNonNull(targetBlockValidSlot).set(0);
-            }
-            else
-            {
+            } else {
                 boolean loaded = !targetController.getInterpreter().getCode().equals(Code.EMPTY);
                 Objects.requireNonNull(interpreterCodeLoadedSlot).set(loaded ? 1 : 0);
             }
@@ -77,58 +66,45 @@ public final class ProgrammerMenu extends CardInventoryContainerMenu
         super.broadcastChanges();
     }
 
-    public void writeToTarget(Code code)
-    {
-        if (forBlock)
-        {
-            if (targetController != null)
-            {
+    public void writeToTarget(Code code) {
+        if (forBlock) {
+            if (targetController != null) {
                 targetController.loadCode(code);
             }
-        }
-        else
-        {
+        } else {
             ItemStack stack = slots.getFirst().getItem();
-            if (stack.is(RCUContent.ITEM_MEMORY_CARD))
-            {
+            if (stack.is(RCUContent.ITEM_MEMORY_CARD)) {
                 stack.set(RCUContent.COMPONENT_TYPE_CODE, code);
             }
         }
     }
 
-    public boolean isForBlock()
-    {
+    public boolean isForBlock() {
         return forBlock;
     }
 
-    public boolean isTargetValid()
-    {
-        if (forBlock)
-        {
+    public boolean isTargetValid() {
+        if (forBlock) {
             return Objects.requireNonNull(targetBlockValidSlot).get() != 0;
         }
         return slots.getFirst().getItem().is(RCUContent.ITEM_MEMORY_CARD);
     }
 
-    public boolean isInterpreterEmpty()
-    {
+    public boolean isInterpreterEmpty() {
         Preconditions.checkState(forBlock, "Cannot check interpreter code state with non-block target");
         return Objects.requireNonNull(interpreterCodeLoadedSlot).get() == 0;
     }
 
-    public Code getBlockTargetCode()
-    {
+    public Code getBlockTargetCode() {
         Preconditions.checkState(forBlock, "Cannot get interpreter code with non-block target");
-        if (targetController != null)
-        {
+        if (targetController != null) {
             return targetController.getInterpreter().getCode();
         }
         return Code.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player player)
-    {
+    public boolean stillValid(Player player) {
         return player.getInventory().getItem(slot) == progStack;
     }
 }

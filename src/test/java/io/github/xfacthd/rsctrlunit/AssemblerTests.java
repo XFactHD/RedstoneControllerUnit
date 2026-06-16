@@ -10,11 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-public class AssemblerTests
-{
+public class AssemblerTests {
     @Test
-    void testOne()
-    {
+    void testOne() {
         String source = """
                 start:
                 xrl 80h,#0ffh
@@ -32,8 +30,7 @@ public class AssemblerTests
     }
 
     @Test
-    void testTwo()
-    {
+    void testTwo() {
         String source = """
                 start:
                 mov 0a0h,80h
@@ -48,8 +45,7 @@ public class AssemblerTests
     }
 
     @Test
-    void testThree()
-    {
+    void testThree() {
         String source = """
                 mov th0,#0ebh
                 mov tl0,#0ebh
@@ -70,18 +66,15 @@ public class AssemblerTests
         test(source, expected);
     }
 
-    private static Code makeCode(String name, int[] rom, Map<Integer, String> labels)
-    {
+    private static Code makeCode(String name, int[] rom, Map<Integer, String> labels) {
         byte[] romBytes = new byte[rom.length];
-        for (int i = 0; i < rom.length; i++)
-        {
+        for (int i = 0; i < rom.length; i++) {
             romBytes[i] = (byte) (rom[i] & 0xFF);
         }
         return new Code(name, romBytes, new Int2ObjectOpenHashMap<>(labels));
     }
 
-    private static void test(String source, Code expected)
-    {
+    private static void test(String source, Code expected) {
         List<Component> messages = new ArrayList<>();
         Code code = Assertions.assertDoesNotThrow(
                 () -> Assembler.assemble(expected.name(), source, new ErrorPrinter.Collecting(messages))

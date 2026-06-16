@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, int w, int h) implements SpriteSource
-{
+public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, int w, int h) implements SpriteSource {
     public static final MapCodec<AreaMaskSource> CODEC = RecordCodecBuilder.<AreaMaskSource>mapCodec(inst -> inst.group(
             Identifier.CODEC.fieldOf("src").forGetter(AreaMaskSource::src),
             Identifier.CODEC.fieldOf("sprite").forGetter(AreaMaskSource::sprite),
@@ -36,27 +35,27 @@ public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, in
             Codec.intRange(0, 15).fieldOf("y").forGetter(AreaMaskSource::y),
             Codec.intRange(1, 16).fieldOf("width").forGetter(AreaMaskSource::w),
             Codec.intRange(1, 16).fieldOf("height").forGetter(AreaMaskSource::h)
-    ).apply(inst, AreaMaskSource::new)).validate(res ->
-    {
-        if (res.x + res.w > 16) return DataResult.error(() -> "x + width must be <= 16!");
-        if (res.y + res.h > 16) return DataResult.error(() -> "y + height must be <= 16!");
+    ).apply(inst, AreaMaskSource::new)).validate(res -> {
+        if (res.x + res.w > 16) {
+            return DataResult.error(() -> "x + width must be <= 16!");
+        }
+        if (res.y + res.h > 16) {
+            return DataResult.error(() -> "y + height must be <= 16!");
+        }
         return DataResult.success(res);
     });
     public static final Identifier ID = Utils.rl("mask");
 
     @Override
-    public void run(ResourceManager manager, Output out)
-    {
+    public void run(ResourceManager manager, Output out) {
         run(manager, out, Set.of());
     }
 
     @Override
-    public void run(ResourceManager manager, Output out, Set<MetadataSectionType<?>> additionalMetadata)
-    {
+    public void run(ResourceManager manager, Output out, Set<MetadataSectionType<?>> additionalMetadata) {
         Identifier srcPath = TEXTURE_ID_CONVERTER.idToFile(src);
         Optional<Resource> optSource = manager.getResource(srcPath);
-        if (optSource.isEmpty())
-        {
+        if (optSource.isEmpty()) {
             RedstoneControllerUnit.LOGGER.warn("Missing source texture: {}", srcPath);
             return;
         }
@@ -67,8 +66,7 @@ public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, in
     }
 
     @Override
-    public MapCodec<AreaMaskSource> codec()
-    {
+    public MapCodec<AreaMaskSource> codec() {
         return CODEC;
     }
 
@@ -79,14 +77,10 @@ public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, in
             Rect2i rect,
             Identifier sprite,
             Set<MetadataSectionType<?>> additionalMetadata
-    ) implements DiscardableLoader
-    {
+    ) implements DiscardableLoader {
         @Override
-        @Nullable
-        public SpriteContents get(SpriteResourceLoader loader)
-        {
-            try
-            {
+        public @Nullable SpriteContents get(SpriteResourceLoader loader) {
+            try {
                 NativeImage source = srcImg.get();
 
                 ResourceMetadata srcMeta = srcRes.metadata();
@@ -106,36 +100,27 @@ public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, in
                 List<MetadataSectionType.WithValue<?>> metadata = srcMeta.getTypedSections(additionalMetadata);
                 Optional<TextureMetadataSection> texMeta = srcMeta.getSection(TextureMetadataSection.TYPE);
                 return new SpriteContents(sprite, frameSize, imageOut, Optional.ofNullable(sourceAnim), metadata, texMeta);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 RedstoneControllerUnit.LOGGER.error("Failed to create masked texture '{}' from source texture'{}'", sprite, srcPath);
-            }
-            finally
-            {
+            } finally {
                 srcImg.release();
             }
             return null;
         }
 
-        private static FrameSize calculateFrameSize(NativeImage source, @Nullable AnimationMetadataSection sourceAnim)
-        {
-            if (sourceAnim != null)
-            {
+        private static FrameSize calculateFrameSize(NativeImage source, @Nullable AnimationMetadataSection sourceAnim) {
+            if (sourceAnim != null) {
                 return sourceAnim.calculateFrameSize(source.getWidth(), source.getHeight());
             }
             return new FrameSize(source.getWidth(), source.getHeight());
         }
 
-        private static List<FrameInfo> collectFrames(NativeImage image, FrameSize size, @Nullable AnimationMetadataSection animation)
-        {
+        private static List<FrameInfo> collectFrames(NativeImage image, FrameSize size, @Nullable AnimationMetadataSection animation) {
             List<FrameInfo> frames = new ArrayList<>();
             int rowCount = image.getWidth() / size.width();
             // Collect explicitly specified frames
-            if (animation != null && animation.frames().isPresent())
-            {
-                animation.frames().get().forEach(frame ->
-                {
+            if (animation != null && animation.frames().isPresent()) {
+                animation.frames().get().forEach(frame -> {
                     int idx = frame.index();
                     int frameX = (idx % rowCount) * size.width();
                     int frameY = (idx / rowCount) * size.height();
@@ -143,11 +128,9 @@ public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, in
                 });
             }
             // Collect implicit frames if no explicit ones are specified in the animation or no animation is present
-            if (frames.isEmpty())
-            {
+            if (frames.isEmpty()) {
                 int frameCount = rowCount * (image.getHeight() / size.height());
-                for (int idx = 0; idx < frameCount; idx++)
-                {
+                for (int idx = 0; idx < frameCount; idx++) {
                     int frameX = (idx % rowCount) * size.width();
                     int frameY = (idx / rowCount) * size.height();
                     frames.add(new FrameInfo(idx, frameX, frameY));
@@ -156,22 +139,17 @@ public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, in
             return frames;
         }
 
-        private static void buildOutputImage(List<FrameInfo> frames, NativeImage source, Rect2i rect, NativeImage imageOut, FrameSize frameSize)
-        {
-            frames.forEach(frame ->
-            {
+        private static void buildOutputImage(List<FrameInfo> frames, NativeImage source, Rect2i rect, NativeImage imageOut, FrameSize frameSize) {
+            frames.forEach(frame -> {
                 int fx = frame.x();
                 int fy = frame.y();
 
-                for (int y = 0; y < frameSize.height(); y++)
-                {
-                    for (int x = 0; x < frameSize.width(); x++)
-                    {
+                for (int y = 0; y < frameSize.height(); y++) {
+                    for (int x = 0; x < frameSize.width(); x++) {
                         int absX = fx + x;
                         int absY = fy + y;
                         int color = 0;
-                        if (rect.contains(x, y))
-                        {
+                        if (rect.contains(x, y)) {
                             color = source.getPixel(absX, absY);
                         }
                         imageOut.setPixel(absX, absY, color);
@@ -181,8 +159,7 @@ public record AreaMaskSource(Identifier src, Identifier sprite, int x, int y, in
         }
 
         @Override
-        public void discard()
-        {
+        public void discard() {
             srcImg.release();
         }
     }
